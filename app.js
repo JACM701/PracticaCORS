@@ -3,8 +3,12 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
+const cors = require('cors');  // Importar cors
 const app = express();
 const bookController = require('./controllers/bookController');
+
+// Habilitar CORS para todas las rutas
+app.use(cors());
 
 // Configurar Multer para guardar imágenes en la carpeta 'public/uploads'
 const storage = multer.diskStorage({
