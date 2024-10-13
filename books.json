@@ -1,0 +1,641 @@
+[
+  {
+    "id": 1,
+    "titulo": "La sombra del viento",
+    "autor": "Carlos Ruiz Zafón",
+    "descripcion": "Un joven descubre un misterioso libro que cambiará su vida en la Barcelona de posguerra.",
+    "fecha_publicacion": "2001",
+    "genero": "Ficción histórica",
+    "imagen": "https://static0planetadelibroscommx.cdnstatics.com/usuaris/libros/fotos/334/original/portada_la-sombra-del-viento-20-aniversario_carlos-ruiz-zafon_202104291844.jpg"
+  },
+  {
+    "id": 2,
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "descripcion": "Una distopía que muestra un futuro donde el totalitarismo gobierna el mundo.",
+    "fecha_publicacion": "1949",
+    "genero": "Ciencia ficción",
+    "imagen": "https://example.com/1984.jpg"
+  },
+  {
+    "id": 3,
+    "titulo": "Crimen y castigo",
+    "autor": "Fiódor Dostoyevski",
+    "descripcion": "La lucha psicológica de un hombre después de cometer un asesinato.",
+    "fecha_publicacion": "1866",
+    "genero": "Ficción psicológica",
+    "imagen": "https://example.com/crimen_y_castigo.jpg"
+  },
+  {
+    "id": 4,
+    "titulo": "El amor en los tiempos del cólera",
+    "autor": "Gabriel García Márquez",
+    "descripcion": "La historia de un amor que espera durante décadas en medio de una epidemia.",
+    "fecha_publicacion": "1985",
+    "genero": "Romance",
+    "imagen": "https://example.com/el_amor_en_los_tiempos_del_colera.jpg"
+  },
+  {
+    "id": 5,
+    "titulo": "El principito",
+    "autor": "Antoine de Saint-Exupéry",
+    "descripcion": "Un niño que vive en un asteroide cuenta sus aventuras y su visión del mundo.",
+    "fecha_publicacion": "1943",
+    "genero": "Fábula",
+    "imagen": "https://example.com/el_principito.jpg"
+  },
+  {
+    "id": 6,
+    "titulo": "Rayuela",
+    "autor": "Julio Cortázar",
+    "descripcion": "Una novela experimental que puede leerse de distintas maneras.",
+    "fecha_publicacion": "1963",
+    "genero": "Ficción surrealista",
+    "imagen": "https://example.com/rayuela.jpg"
+  },
+  {
+    "id": 7,
+    "titulo": "La casa de los espíritus",
+    "autor": "Isabel Allende",
+    "descripcion": "Sigue la vida de varias generaciones de la familia Trueba en un Chile mágico.",
+    "fecha_publicacion": "1982",
+    "genero": "Realismo mágico",
+    "imagen": "https://example.com/la_casa_de_los_espiritus.jpg"
+  },
+  {
+    "id": 8,
+    "titulo": "El nombre de la rosa",
+    "autor": "Umberto Eco",
+    "descripcion": "Un fraile franciscano investiga una serie de asesinatos en una abadía medieval.",
+    "fecha_publicacion": "1980",
+    "genero": "Misterio histórico",
+    "imagen": "https://example.com/el_nombre_de_la_rosa.jpg"
+  },
+  {
+    "id": 9,
+    "titulo": "Los miserables",
+    "autor": "Victor Hugo",
+    "descripcion": "La redención de un exconvicto en el contexto de la Revolución Francesa.",
+    "fecha_publicacion": "1862",
+    "genero": "Ficción histórica",
+    "imagen": "https://example.com/los_miserables.jpg"
+  },
+  {
+    "id": 10,
+    "titulo": "El retrato de Dorian Gray",
+    "autor": "Oscar Wilde",
+    "descripcion": "Un joven que permanece eternamente joven mientras su retrato envejece.",
+    "fecha_publicacion": "1890",
+    "genero": "Ficción gótica",
+    "imagen": "https://example.com/el_retrato_de_dorian_gray.jpg"
+  },
+  {
+    "id": 11,
+    "titulo": "Matar a un ruiseñor",
+    "autor": "Harper Lee",
+    "descripcion": "Una niña observa el racismo en su pequeño pueblo a través de los ojos de su padre abogado.",
+    "fecha_publicacion": "1960",
+    "genero": "Ficción",
+    "imagen": "https://example.com/matar_a_un_ruisenor.jpg"
+  },
+  {
+    "id": 12,
+    "titulo": "El señor de los anillos",
+    "autor": "J.R.R. Tolkien",
+    "descripcion": "Una épica fantasía sobre la lucha contra el mal en la Tierra Media.",
+    "fecha_publicacion": "1954",
+    "genero": "Fantasía",
+    "imagen": "https://example.com/el_senor_de_los_anillos.jpg"
+  },
+  {
+    "id": 13,
+    "titulo": "Ulises",
+    "autor": "James Joyce",
+    "descripcion": "Un día en la vida de Leopold Bloom en el Dublín de 1904.",
+    "fecha_publicacion": "1922",
+    "genero": "Ficción moderna",
+    "imagen": "https://example.com/ulises.jpg"
+  },
+  {
+    "id": 14,
+    "titulo": "Orgullo y prejuicio",
+    "autor": "Jane Austen",
+    "descripcion": "La relación entre la vivaz Elizabeth Bennet y el reservado señor Darcy.",
+    "fecha_publicacion": "1813",
+    "genero": "Romance",
+    "imagen": "https://example.com/orgullo_y_prejuicio.jpg"
+  },
+  {
+    "id": 15,
+    "titulo": "La metamorfosis",
+    "autor": "Franz Kafka",
+    "descripcion": "Un hombre se despierta una mañana convertido en un insecto gigante.",
+    "fecha_publicacion": "1915",
+    "genero": "Ficción surrealista",
+    "imagen": "https://example.com/la_metamorfosis.jpg"
+  },
+  {
+    "id": 16,
+    "titulo": "Fahrenheit 451",
+    "autor": "Ray Bradbury",
+    "descripcion": "Un futuro donde los bomberos queman libros en una sociedad sin pensamiento crítico.",
+    "fecha_publicacion": "1953",
+    "genero": "Ciencia ficción",
+    "imagen": "https://example.com/fahrenheit_451.jpg"
+  },
+  {
+    "id": 17,
+    "titulo": "Ana Karenina",
+    "autor": "León Tolstói",
+    "descripcion": "La trágica historia de amor de Ana Karenina en la Rusia imperial.",
+    "fecha_publicacion": "1877",
+    "genero": "Ficción romántica",
+    "imagen": "https://example.com/ana_karenina.jpg"
+  },
+  {
+    "id": 18,
+    "titulo": "Cumbres borrascosas",
+    "autor": "Emily Brontë",
+    "descripcion": "Una tormentosa historia de amor y venganza en los páramos ingleses.",
+    "fecha_publicacion": "1847",
+    "genero": "Romance gótico",
+    "imagen": "https://example.com/cumbres_borrascosas.jpg"
+  },
+  {
+    "id": 19,
+    "titulo": "El extranjero",
+    "autor": "Albert Camus",
+    "descripcion": "Un hombre vive su vida en indiferencia hasta que comete un asesinato.",
+    "fecha_publicacion": "1942",
+    "genero": "Filosofía existencial",
+    "imagen": "https://example.com/el_extranjero.jpg"
+  },
+  {
+    "id": 20,
+    "titulo": "Los detectives salvajes",
+    "autor": "Roberto Bolaño",
+    "descripcion": "Un grupo de poetas en busca de una poeta desaparecida en México.",
+    "fecha_publicacion": "1998",
+    "genero": "Ficción contemporánea",
+    "imagen_link": "https://example.com/los_detectives_salvajes.jpg"
+  },
+  {
+    "id": 21,
+    "titulo": "El viejo y el mar",
+    "autor": "Ernest Hemingway",
+    "descripcion": "La lucha de un viejo pescador contra un enorme pez en el mar Caribe.",
+    "fecha_publicacion": "1952",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/el_viejo_y_el_mar.jpg"
+  },
+  {
+    "id": 22,
+    "titulo": "Moby Dick",
+    "autor": "Herman Melville",
+    "descripcion": "La obsesiva caza del capitán Ahab por la ballena blanca Moby Dick.",
+    "fecha_publicacion": "1851",
+    "genero": "Aventura",
+    "imagen_link": "https://example.com/moby_dick.jpg"
+  },
+  {
+    "id": 23,
+    "titulo": "Pedro Páramo",
+    "autor": "Juan Rulfo",
+    "descripcion": "Un hombre llega a un pueblo mexicano en busca de su padre, pero encuentra fantasmas.",
+    "fecha_publicacion": "1955",
+    "genero": "Realismo mágico",
+    "imagen_link": "https://example.com/pedro_paramo.jpg"
+  },
+  {
+    "id": 24,
+    "titulo": "Don Quijote de la Mancha",
+    "autor": "Miguel de Cervantes",
+    "descripcion": "Un caballero loco y su fiel escudero recorren España en busca de aventuras.",
+    "fecha_publicacion": "1605",
+    "genero": "Aventura",
+    "imagen_link": "https://example.com/don_quijote.jpg"
+  },
+  {
+    "id": 25,
+    "titulo": "En busca del tiempo perdido",
+    "autor": "Marcel Proust",
+    "descripcion": "Una exploración del tiempo y la memoria a través de la vida de su protagonista.",
+    "fecha_publicacion": "1913",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/en_busca_del_tiempo_perdido.jpg"
+  },
+  {
+    "id": 26,
+    "titulo": "Cien años de soledad",
+    "autor": "Gabriel García Márquez",
+    "descripcion": "La historia de la familia Buendía en el pueblo ficticio de Macondo a lo largo de varias generaciones.",
+    "fecha_publicacion": "1967",
+    "genero": "Realismo mágico",
+    "imagen_link": "https://example.com/cien_anos_de_soledad.jpg"
+  },
+  {
+    "id": 27,
+    "titulo": "El Gran Gatsby",
+    "autor": "F. Scott Fitzgerald",
+    "descripcion": "La vida y los excesos de la alta sociedad en los años 20 en Estados Unidos.",
+    "fecha_publicacion": "1925",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/el_gran_gatsby.jpg"
+  },
+  {
+    "id": 28,
+    "titulo": "La divina comedia",
+    "autor": "Dante Alighieri",
+    "descripcion": "Un viaje épico a través del Infierno, el Purgatorio y el Paraíso.",
+    "fecha_publicacion": "1320",
+    "genero": "Poesía épica",
+    "imagen_link": "https://example.com/la_divina_comedia.jpg"
+  },
+  {
+    "id": 29,
+    "titulo": "Madame Bovary",
+    "autor": "Gustave Flaubert",
+    "descripcion": "La vida trágica de Emma Bovary, que busca escapar de su monótona vida rural.",
+    "fecha_publicacion": "1857",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/madame_bovary.jpg"
+  },
+  {
+    "id": 30,
+    "titulo": "El Conde de Montecristo",
+    "autor": "Alexandre Dumas",
+    "descripcion": "La historia de Edmond Dantès, un hombre que busca venganza después de haber sido injustamente encarcelado.",
+    "fecha_publicacion": "1844",
+    "genero": "Aventura",
+    "imagen_link": "https://example.com/el_conde_de_montecristo.jpg"
+  },
+  {
+    "id": 31,
+    "titulo": "A sangre fría",
+    "autor": "Truman Capote",
+    "descripcion": "Una investigación sobre el asesinato de una familia en Kansas en 1959.",
+    "fecha_publicacion": "1966",
+    "genero": "Crónica periodística",
+    "imagen_link": "https://example.com/a_sangre_fria.jpg"
+  },
+  {
+    "id": 32,
+    "titulo": "El proceso",
+    "autor": "Franz Kafka",
+    "descripcion": "La historia de un hombre arrestado y procesado por un crimen del que nunca se le informa.",
+    "fecha_publicacion": "1925",
+    "genero": "Ficción surrealista",
+    "imagen_link": "https://example.com/el_proceso.jpg"
+  },
+  {
+    "id": 33,
+    "titulo": "La Odisea",
+    "autor": "Homero",
+    "descripcion": "Las aventuras de Odiseo en su viaje de regreso a casa después de la Guerra de Troya.",
+    "fecha_publicacion": "Siglo VIII a.C.",
+    "genero": "Poesía épica",
+    "imagen_link": "https://example.com/la_odisea.jpg"
+  },
+  {
+    "id": 34,
+    "titulo": "Las aventuras de Huckleberry Finn",
+    "autor": "Mark Twain",
+    "descripcion": "El viaje de un niño y un esclavo fugitivo por el río Mississippi.",
+    "fecha_publicacion": "1884",
+    "genero": "Aventura",
+    "imagen_link": "https://example.com/huckleberry_finn.jpg"
+  },
+  {
+    "id": 35,
+    "titulo": "Drácula",
+    "autor": "Bram Stoker",
+    "descripcion": "La historia del vampiro Conde Drácula y su intento de trasladarse a Inglaterra.",
+    "fecha_publicacion": "1897",
+    "genero": "Terror gótico",
+    "imagen_link": "https://example.com/dracula.jpg"
+  },
+  {
+    "id": 36,
+    "titulo": "Hamlet",
+    "autor": "William Shakespeare",
+    "descripcion": "La tragedia del príncipe Hamlet y su búsqueda de venganza por la muerte de su padre.",
+    "fecha_publicacion": "1603",
+    "genero": "Tragedia",
+    "imagen_link": "https://example.com/hamlet.jpg"
+  },
+  {
+    "id": 37,
+    "titulo": "El guardián entre el centeno",
+    "autor": "J.D. Salinger",
+    "descripcion": "La historia de Holden Caulfield, un adolescente rebelde que narra sus experiencias.",
+    "fecha_publicacion": "1951",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/el_guardian_entre_el_centeno.jpg"
+  },
+  {
+    "id": 38,
+    "titulo": "Los hermanos Karamázov",
+    "autor": "Fiódor Dostoyevski",
+    "descripcion": "Un drama filosófico sobre la familia Karamázov y el conflicto entre fe, razón y moral.",
+    "fecha_publicacion": "1880",
+    "genero": "Ficción filosófica",
+    "imagen_link": "https://example.com/los_hermanos_karamazov.jpg"
+  },
+  {
+    "id": 39,
+    "titulo": "El corazón de las tinieblas",
+    "autor": "Joseph Conrad",
+    "descripcion": "Un viaje a través del río Congo que revela la oscuridad del imperialismo europeo.",
+    "fecha_publicacion": "1899",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/el_corazon_de_las_tinieblas.jpg"
+  },
+  {
+    "id": 40,
+    "titulo": "La peste",
+    "autor": "Albert Camus",
+    "descripcion": "Una alegoría de la resistencia humana frente a una epidemia en la ciudad de Orán.",
+    "fecha_publicacion": "1947",
+    "genero": "Filosofía existencial",
+    "imagen_link": "https://example.com/la_peste.jpg"
+  },
+  {
+    "id": 41,
+    "titulo": "El viejo y el mar",
+    "autor": "Ernest Hemingway",
+    "descripcion": "La historia de un viejo pescador que lucha por capturar un pez gigante en el mar.",
+    "fecha_publicacion": "1952",
+    "genero": "Aventura",
+    "imagen_link": "https://example.com/el_viejo_y_el_mar.jpg"
+  },
+  {
+    "id": 42,
+    "titulo": "Rebelión en la granja",
+    "autor": "George Orwell",
+    "descripcion": "Una sátira política en la que los animales de una granja se rebelan contra sus dueños humanos.",
+    "fecha_publicacion": "1945",
+    "genero": "Ficción política",
+    "imagen_link": "https://example.com/rebelion_en_la_granja.jpg"
+  },
+  {
+    "id": 43,
+    "titulo": "Matar a un ruiseñor",
+    "autor": "Harper Lee",
+    "descripcion": "Una novela sobre los prejuicios raciales y la justicia en el sur de los Estados Unidos.",
+    "fecha_publicacion": "1960",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/matar_a_un_ruisenor.jpg"
+  },
+  {
+    "id": 44,
+    "titulo": "Crimen y castigo",
+    "autor": "Fiódor Dostoyevski",
+    "descripcion": "La historia de un joven que lucha con la culpa y el arrepentimiento tras cometer un asesinato.",
+    "fecha_publicacion": "1866",
+    "genero": "Ficción filosófica",
+    "imagen_link": "https://example.com/crimen_y_castigo.jpg"
+  },
+  {
+    "id": 45,
+    "titulo": "Don Quijote de la Mancha",
+    "autor": "Miguel de Cervantes",
+    "descripcion": "Las aventuras del caballero Don Quijote y su escudero Sancho Panza en busca de justicia.",
+    "fecha_publicacion": "1605",
+    "genero": "Aventura",
+    "imagen_link": "https://example.com/don_quijote.jpg"
+  },
+  {
+    "id": 46,
+    "titulo": "El lobo estepario",
+    "autor": "Hermann Hesse",
+    "descripcion": "La crisis existencial de un hombre que lucha por encontrar su lugar en el mundo.",
+    "fecha_publicacion": "1927",
+    "genero": "Ficción filosófica",
+    "imagen_link": "https://example.com/el_lobo_estepario.jpg"
+  },
+  {
+    "id": 47,
+    "titulo": "Fahrenheit 451",
+    "autor": "Ray Bradbury",
+    "descripcion": "En un futuro distópico, los bomberos queman libros porque están prohibidos.",
+    "fecha_publicacion": "1953",
+    "genero": "Ciencia ficción",
+    "imagen_link": "https://example.com/fahrenheit_451.jpg"
+  },
+  {
+    "id": 48,
+    "titulo": "Orgullo y prejuicio",
+    "autor": "Jane Austen",
+    "descripcion": "Una comedia romántica sobre las complejidades del matrimonio y las diferencias sociales.",
+    "fecha_publicacion": "1813",
+    "genero": "Romance",
+    "imagen_link": "https://example.com/orgullo_y_prejuicio.jpg"
+  },
+  {
+    "id": 49,
+    "titulo": "El extranjero",
+    "autor": "Albert Camus",
+    "descripcion": "La historia de Meursault, un hombre indiferente que enfrenta las consecuencias de sus actos.",
+    "fecha_publicacion": "1942",
+    "genero": "Filosofía existencial",
+    "imagen_link": "https://example.com/el_extranjero.jpg"
+  },
+  {
+    "id": 50,
+    "titulo": "El príncipe",
+    "autor": "Nicolás Maquiavelo",
+    "descripcion": "Un tratado político que explora cómo los gobernantes deben mantener el poder y el control.",
+    "fecha_publicacion": "1532",
+    "genero": "Filosofía política",
+    "imagen_link": "https://example.com/el_principe.jpg"
+  },
+  {
+    "id": 51,
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "descripcion": "Un futuro distópico donde el Gran Hermano vigila y controla a la población.",
+    "fecha_publicacion": "1949",
+    "genero": "Ciencia ficción política",
+    "imagen_link": "https://example.com/1984.jpg"
+  },
+  {
+    "id": 52,
+    "titulo": "El idiota",
+    "autor": "Fiódor Dostoyevski",
+    "descripcion": "La historia del príncipe Myshkin, un hombre bondadoso que se enfrenta a un mundo corrupto.",
+    "fecha_publicacion": "1869",
+    "genero": "Ficción filosófica",
+    "imagen_link": "https://example.com/el_idiota.jpg"
+  },
+  {
+    "id": 53,
+    "titulo": "El hombre invisible",
+    "autor": "H.G. Wells",
+    "descripcion": "La historia de un científico que se vuelve invisible y pierde el control de su cordura.",
+    "fecha_publicacion": "1897",
+    "genero": "Ciencia ficción",
+    "imagen_link": "https://example.com/el_hombre_invisible.jpg"
+  },
+  {
+    "id": 54,
+    "titulo": "Cumbres borrascosas",
+    "autor": "Emily Brontë",
+    "descripcion": "La trágica historia de amor entre Heathcliff y Catherine en las tierras salvajes de Inglaterra.",
+    "fecha_publicacion": "1847",
+    "genero": "Romance gótico",
+    "imagen_link": "https://example.com/cumbres_borrascosas.jpg"
+  },
+  {
+    "id": 55,
+    "titulo": "Los miserables",
+    "autor": "Victor Hugo",
+    "descripcion": "Un retrato épico de la vida en la Francia post-revolucionaria, centrado en Jean Valjean.",
+    "fecha_publicacion": "1862",
+    "genero": "Ficción histórica",
+    "imagen_link": "https://example.com/los_miserables.jpg"
+  },
+  {
+    "id": 56,
+    "titulo": "Anna Karenina",
+    "autor": "León Tolstói",
+    "descripcion": "La trágica historia de amor entre Anna Karenina y el conde Vronsky en la alta sociedad rusa.",
+    "fecha_publicacion": "1877",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/anna_karenina.jpg"
+  },
+  {
+    "id": 57,
+    "titulo": "La metamorfosis",
+    "autor": "Franz Kafka",
+    "descripcion": "La transformación de Gregorio Samsa en un insecto gigante y su lucha con la alienación.",
+    "fecha_publicacion": "1915",
+    "genero": "Ficción surrealista",
+    "imagen_link": "https://example.com/la_metamorfosis.jpg"
+  },
+  {
+    "id": 58,
+    "titulo": "Las aventuras de Tom Sawyer",
+    "autor": "Mark Twain",
+    "descripcion": "Las peripecias de Tom Sawyer, un joven travieso que vive aventuras a orillas del río Mississippi.",
+    "fecha_publicacion": "1876",
+    "genero": "Aventura",
+    "imagen_link": "https://example.com/las_aventuras_de_tom_sawyer.jpg"
+  },
+  {
+    "id": 59,
+    "titulo": "El retrato de Dorian Gray",
+    "autor": "Oscar Wilde",
+    "descripcion": "Un joven que mantiene su belleza mientras su retrato envejece y revela su corrupción moral.",
+    "fecha_publicacion": "1890",
+    "genero": "Ficción gótica",
+    "imagen_link": "https://example.com/el_retrato_de_dorian_gray.jpg"
+  },
+  {
+    "id": 60,
+    "titulo": "En busca del tiempo perdido",
+    "autor": "Marcel Proust",
+    "descripcion": "Una exploración de los recuerdos y el tiempo a través de la vida del narrador.",
+    "fecha_publicacion": "1913",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/en_busca_del_tiempo_perdido.jpg"
+  },
+  {
+    "id": 61,
+    "titulo": "El señor de los anillos",
+    "autor": "J.R.R. Tolkien",
+    "descripcion": "Una épica aventura de fantasía sobre la lucha por destruir el Anillo Único.",
+    "fecha_publicacion": "1954",
+    "genero": "Fantasía",
+    "imagen_link": "https://example.com/el_senor_de_los_anillos.jpg"
+  },
+  {
+    "id": 62,
+    "titulo": "Las mil y una noches",
+    "autor": "Anónimo",
+    "descripcion": "Una colección de cuentos del Medio Oriente narrados por Scheherazade al rey Shahriyar.",
+    "fecha_publicacion": "Siglo IX",
+    "genero": "Fantasía",
+    "imagen_link": "https://example.com/las_mil_y_una_noches.jpg"
+  },
+  {
+    "id": 63,
+    "titulo": "Lolita",
+    "autor": "Vladimir Nabokov",
+    "descripcion": "La controvertida relación entre Humbert Humbert y la joven Dolores Haze.",
+    "fecha_publicacion": "1955",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/lolita.jpg"
+  },
+  {
+    "id": 64,
+    "titulo": "El tambor de hojalata",
+    "autor": "Günter Grass",
+    "descripcion": "La vida de Oskar Matzerath, un niño que decide dejar de crecer y narra los horrores del nazismo.",
+    "fecha_publicacion": "1959",
+    "genero": "Ficción histórica",
+    "imagen_link": "https://example.com/el_tambor_de_hojalata.jpg"
+  },
+  {
+    "id": 65,
+    "titulo": "Cien años de soledad",
+    "autor": "Gabriel García Márquez",
+    "descripcion": "La saga de la familia Buendía en el mítico pueblo de Macondo.",
+    "fecha_publicacion": "1967",
+    "genero": "Realismo mágico",
+    "imagen_link": "https://example.com/cien_anos_de_soledad.jpg"
+  },
+  {
+    "id": 66,
+    "titulo": "El maestro y Margarita",
+    "autor": "Mijaíl Bulgákov",
+    "descripcion": "Una novela que entrelaza la visita del diablo a Moscú con una historia de amor y redención.",
+    "fecha_publicacion": "1967",
+    "genero": "Fantasía",
+    "imagen_link": "https://example.com/el_maestro_y_margarita.jpg"
+  },
+  {
+    "id": 67,
+    "titulo": "Un mundo feliz",
+    "autor": "Aldous Huxley",
+    "descripcion": "Una visión distópica de una sociedad futura donde la felicidad es obligatoria y el libre albedrío, inexistente.",
+    "fecha_publicacion": "1932",
+    "genero": "Ciencia ficción",
+    "imagen_link": "https://example.com/un_mundo_feliz.jpg"
+  },
+  {
+    "id": 68,
+    "titulo": "El Conde de Montecristo",
+    "autor": "Alexandre Dumas",
+    "descripcion": "La historia de venganza y redención de Edmond Dantès, quien es injustamente encarcelado.",
+    "fecha_publicacion": "1844",
+    "genero": "Aventura",
+    "imagen_link": "https://example.com/el_conde_de_montecristo.jpg"
+  },
+  {
+    "id": 69,
+    "titulo": "El gran Gatsby",
+    "autor": "F. Scott Fitzgerald",
+    "descripcion": "La trágica historia de Jay Gatsby y su obsesión con la riqueza y el amor perdido.",
+    "fecha_publicacion": "1925",
+    "genero": "Ficción",
+    "imagen_link": "https://example.com/el_gran_gatsby.jpg"
+  },
+  {
+    "id": 70,
+    "titulo": "Los hermanos Karamazov",
+    "autor": "Fiódor Dostoyevski",
+    "descripcion": "Una profunda exploración filosófica de la fe, la duda y el destino en la vida de tres hermanos.",
+    "fecha_publicacion": "1880",
+    "genero": "Ficción filosófica",
+    "imagen_link": "https://example.com/los_hermanos_karamazov.jpg"
+  },
+  {
+    "id": 71,
+    "titulo": "La sombra del viento",
+    "autor": "Carlos Ruiz Zafón",
+    "descripcion": "Un joven descubre un misterioso libro que cambiará su vida en la Barcelona de posguerra.",
+    "fecha_publicacion": "2001",
+    "genero": "Ficción histórica",
+    "imagen": ""
+  }
+]

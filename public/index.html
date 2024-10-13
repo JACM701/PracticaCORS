@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a BookSwap</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>Bienvenido a la API de BookSwap</h1>
+    <p>Esta es una página estática servida por <code>express.static</code>.</p>
+    <img src="/public/images/logo.png" alt="Logo de BookSwap">
+    
+    <form action="/books" method="POST" enctype="multipart/form-data">
+        <input type="text" name="titulo" placeholder="Título" required>
+        <input type="text" name="autor" placeholder="Autor" required>
+        <textarea name="descripcion" placeholder="Descripción" required></textarea>
+        <input type="date" name="fecha_publicacion" required>
+        <input type="text" name="genero" placeholder="Género" required>
+        <input type="file" name="imagen" accept="image/*" required>
+        <button type="submit">Agregar Libro</button>
+    </form>
+
+    <!-- Buscador de libros -->
+    <h2>Buscar Libros</h2>
+    <form id="searchForm">
+        <input type="text" id="searchQuery" placeholder="Buscar por título, autor o género">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <!-- Resultados de la búsqueda -->
+    <h3>Resultados de la Búsqueda</h3>
+    <div id="searchResults"></div>
+
+
+<!-- El script de abajo es de ejemplo de como debe buscar esto se debe agregar a la pagina por mientras en thunder jala -->
+    <script>
+        // Ejemplo de manejo de la búsqueda
+        const searchForm = document.getElementById('searchForm');
+        const searchResults = document.getElementById('searchResults');
+
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const query = document.getElementById('searchQuery').value;
+            
+            // Lógica para hacer la búsqueda (ejemplo estático)
+            const exampleBooks = [
+                { titulo: "El Principito", autor: "Antoine de Saint-Exupéry", genero: "Ficción", fecha_publicacion: "1943" },
+                { titulo: "Cien Años de Soledad", autor: "Gabriel García Márquez", genero: "Realismo Mágico", fecha_publicacion: "1967" },
+            ];
+
+            const filteredBooks = exampleBooks.filter(book => 
+                book.titulo.toLowerCase().includes(query.toLowerCase()) ||
+                book.autor.toLowerCase().includes(query.toLowerCase()) ||
+                book.genero.toLowerCase().includes(query.toLowerCase())
+            );
+
+            searchResults.innerHTML = '';
+            if (filteredBooks.length > 0) {
+                filteredBooks.forEach(book => {
+                    searchResults.innerHTML += `
+                        <div class="book-result">
+                            <h4>${book.titulo}</h4>
+                            <p>Autor: ${book.autor}</p>
+                            <p>Género: ${book.genero}</p>
+                            <p>Fecha de Publicación: ${book.fecha_publicacion}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                searchResults.innerHTML = '<p>No se encontraron libros.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
