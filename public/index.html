@@ -3,72 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido a BookSwap</title>
-    <link rel="stylesheet" href="/styles.css">
+    <title>BookSwap API Preview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #book-list {
+            margin-top: 20px;
+        }
+        .book-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .book-item img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bienvenido a la API de BookSwap</h1>
-    <p>Esta es una página estática servida por <code>express.static</code>.</p>
-    <img src="/public/images/logo.png" alt="Logo de BookSwap">
-    
-    <form action="/books" method="POST" enctype="multipart/form-data">
-        <input type="text" name="titulo" placeholder="Título" required>
-        <input type="text" name="autor" placeholder="Autor" required>
-        <textarea name="descripcion" placeholder="Descripción" required></textarea>
-        <input type="date" name="fecha_publicacion" required>
-        <input type="text" name="genero" placeholder="Género" required>
-        <input type="file" name="imagen" accept="image/*" required>
-        <button type="submit">Agregar Libro</button>
+
+    <h1>Previsualización de BookSwap API</h1>
+
+    <!-- Formulario para añadir un nuevo libro -->
+    <h2>Añadir un nuevo libro</h2>
+    <form id="add-book-form" enctype="multipart/form-data">
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required><br><br>
+        
+        <label for="autor">Autor:</label>
+        <input type="text" id="autor" name="autor" required><br><br>
+        
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" name="descripcion" required></textarea><br><br>
+        
+        <label for="fecha_publicacion">Fecha de Publicación:</label>
+        <input type="text" id="fecha_publicacion" name="fecha_publicacion" required><br><br>
+        
+        <label for="genero">Género:</label>
+        <input type="text" id="genero" name="genero" required><br><br>
+        
+        <label for="imagen">Imagen:</label>
+        <input type="file" id="imagen" name="imagen" accept="image/*"><br><br>
+        
+        <button type="submit">Añadir Libro</button>
     </form>
 
-    <!-- Buscador de libros -->
-    <h2>Buscar Libros</h2>
-    <form id="searchForm">
-        <input type="text" id="searchQuery" placeholder="Buscar por título, autor o género">
-        <button type="submit">Buscar</button>
+    <hr>
+
+    <!-- Listar libros -->
+    <h2>Lista de libros</h2>
+    <button id="fetch-books">Obtener Libros</button>
+    <div id="book-list"></div>
+
+    <!-- Formulario para actualizar un libro -->
+    <h2>Actualizar un libro</h2>
+    <form id="update-book-form">
+        <label for="update-id">ID del libro:</label>
+        <input type="number" id="update-id" name="id" required><br><br>
+        
+        <label for="update-titulo">Nuevo Título:</label>
+        <input type="text" id="update-titulo" name="titulo"><br><br>
+
+        <label for="update-autor">Nuevo Autor:</label>
+        <input type="text" id="update-autor" name="autor"><br><br>
+
+        <button type="submit">Actualizar Libro</button>
     </form>
 
-    <!-- Resultados de la búsqueda -->
-    <h3>Resultados de la Búsqueda</h3>
-    <div id="searchResults"></div>
+    <!-- Formulario para eliminar un libro -->
+    <h2>Eliminar un libro</h2>
+    <form id="delete-book-form">
+        <label for="delete-id">ID del libro:</label>
+        <input type="number" id="delete-id" name="id" required><br><br>
+        
+        <button type="submit">Eliminar Libro</button>
+    </form>
 
-
-<!-- El script de abajo es de ejemplo de como debe buscar esto se debe agregar a la pagina por mientras en thunder jala -->
     <script>
-        // Ejemplo de manejo de la búsqueda
-        const searchForm = document.getElementById('searchForm');
-        const searchResults = document.getElementById('searchResults');
+        const API_URL = 'http://localhost:3000/books';
 
-        searchForm.addEventListener('submit', function(event) {
+        // Añadir un nuevo libro
+        document.getElementById('add-book-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const query = document.getElementById('searchQuery').value;
+            const formData = new FormData(this);
             
-            // Lógica para hacer la búsqueda (ejemplo estático)
-            const exampleBooks = [
-                { titulo: "El Principito", autor: "Antoine de Saint-Exupéry", genero: "Ficción", fecha_publicacion: "1943" },
-                { titulo: "Cien Años de Soledad", autor: "Gabriel García Márquez", genero: "Realismo Mágico", fecha_publicacion: "1967" },
-            ];
-
-            const filteredBooks = exampleBooks.filter(book => 
-                book.titulo.toLowerCase().includes(query.toLowerCase()) ||
-                book.autor.toLowerCase().includes(query.toLowerCase()) ||
-                book.genero.toLowerCase().includes(query.toLowerCase())
-            );
-
-            searchResults.innerHTML = '';
-            if (filteredBooks.length > 0) {
-                filteredBooks.forEach(book => {
-                    searchResults.innerHTML += `
-                        <div class="book-result">
-                            <h4>${book.titulo}</h4>
-                            <p>Autor: ${book.autor}</p>
-                            <p>Género: ${book.genero}</p>
-                            <p>Fecha de Publicación: ${book.fecha_publicacion}</p>
-                        </div>
-                    `;
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData
                 });
-            } else {
-                searchResults.innerHTML = '<p>No se encontraron libros.</p>';
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('Error al añadir libro:', error);
+            }
+        });
+
+        // Obtener la lista de libros
+        document.getElementById('fetch-books').addEventListener('click', async function() {
+            try {
+                const response = await fetch(API_URL);
+                const books = await response.json();
+                
+                const bookList = document.getElementById('book-list');
+                bookList.innerHTML = ''; // Limpiar lista
+                
+                books.forEach(book => {
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+                    
+                    bookItem.innerHTML = `
+                        <div>
+                            <h3>${book.titulo}</h3>
+                            <p><strong>Autor:</strong> ${book.autor}</p>
+                            <p><strong>Descripción:</strong> ${book.descripcion}</p>
+                            <p><strong>Género:</strong> ${book.genero}</p>
+                            <p><strong>Fecha de Publicación:</strong> ${book.fecha_publicacion}</p>
+                        </div>
+                        ${book.imagen ? `<img src="${book.imagen}" alt="${book.titulo}">` : ''}
+                    `;
+                    bookList.appendChild(bookItem);
+                });
+            } catch (error) {
+                console.error('Error al obtener libros:', error);
+            }
+        });
+
+        // Actualizar un libro
+        document.getElementById('update-book-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const id = document.getElementById('update-id').value;
+            const titulo = document.getElementById('update-titulo').value;
+            const autor = document.getElementById('update-autor').value;
+            
+            const updatedData = { titulo, autor };
+            
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedData)
+                });
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('Error al actualizar libro:', error);
+            }
+        });
+
+        // Eliminar un libro
+        document.getElementById('delete-book-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const id = document.getElementById('delete-id').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('Error al eliminar libro:', error);
             }
         });
     </script>
