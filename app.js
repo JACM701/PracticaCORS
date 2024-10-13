@@ -4,11 +4,29 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 const cors = require('cors');  // Importar cors
+const authenticateToken = require('./middlewares/authMiddleware'); // Importa el middleware
+
 const app = express();
 const bookController = require('./controllers/bookController');
+const authController = require('./controllers/authController');
 
-// Habilitar CORS para todas las rutas
-app.use(cors());
+// Configurar CORS para permitir solo el dominio especificado
+const corsOptions = {
+    origin: 'https://api-bookswap.onrender.com',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+// Habilitar CORS usando las opciones configuradas
+app.use(cors(corsOptions));
+
+// Middleware de body-parser para procesar JSON y datos de formularios
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Middleware de Morgan para logging
+app.use(morgan('dev'));
+
 
 // Configurar Multer para guardar imágenes en la carpeta 'public/uploads'
 const storage = multer.diskStorage({
@@ -28,12 +46,14 @@ const upload = multer({ storage: storage });
 // Servir archivos estáticos desde la carpeta 'public' para acceder a las imágenes
 app.use(express.static('public'));
 
-// Middleware de Morgan para logging
-app.use(morgan('dev'));
+// Rutas de autenticación
+app.post('/register', authController.register);
+app.post('/login', authController.login);
 
-// Middleware de body-parser para procesar JSON y datos de formularios
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Asegúrate de agregar el middleware de autenticación a las rutas que requieran autenticación
+app.get('/protected', authenticateToken, (req, res) => {
+    res.json({ message: 'Acceso permitido', user: req.user });
+});
 
 // Rutas CRUD
 app.get('/books', bookController.getAllBooks);

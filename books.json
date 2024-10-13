@@ -637,5 +637,14 @@
     "fecha_publicacion": "2001",
     "genero": "Ficción histórica",
     "imagen": ""
+  },
+  {
+    "id": 72,
+    "titulo": "harry potter",
+    "autor": "Pedro",
+    "descripcion": "Un wey que vive",
+    "fecha_publicacion": "23454",
+    "genero": "Sexual",
+    "imagen": "/uploads/1728862146574.png"
   }
 ]
