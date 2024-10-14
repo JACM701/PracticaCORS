@@ -55,12 +55,12 @@ app.get('/protected', authenticateToken, (req, res) => {
     res.json({ message: 'Acceso permitido', user: req.user });
 });
 
-// Rutas CRUD
-app.get('/books', bookController.getAllBooks);
-app.get('/books/:id', bookController.getBookById); // Buscar un libro por ID
-app.post('/books', upload.single('imagen'), bookController.addBook); // Añadir middleware para subir imágenes
-app.put('/books/:id', upload.single('imagen'), bookController.updateBook); // Actualizar libro con imagen
-app.delete('/books/:id', bookController.deleteBook);
+// Rutas CRUD - agregar autenticación
+app.get('/books', bookController.getAllBooks); // Se puede acceder sin autenticación
+app.get('/books/:id', bookController.getBookById); // Se puede acceder sin autenticación
+app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook); // Añadir libro
+app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook); // Actualizar libro
+app.delete('/books/:id', authenticateToken, bookController.deleteBook); // Eliminar libro
 
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
