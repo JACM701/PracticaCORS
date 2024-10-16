@@ -2,6 +2,23 @@ const multer = require('multer');
 const path = require('path');
 const bookService = require('../services/bookService');
 
+/**
+ * @swagger
+ * /books:
+ *   get:
+ *     summary: Obtiene una lista de libros
+ *     tags: [Libros]
+ *     responses:
+ *       200:
+ *         description: Lista de libros obtenida con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Libro'
+ */
+
 // Obtener todos los libros
 exports.getAllBooks = (req, res) => {
     const books = bookService.getAllBooks();

@@ -5,10 +5,15 @@ const multer = require('multer');
 const path = require('path');
 const cors = require('cors');  // Importar cors
 const authenticateToken = require('./middlewares/authMiddleware'); // Importa el middleware
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swaggerConfig'); // Importa la configuración de Swagger
 
 const app = express();
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
+
+// Middleware para Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Configurar CORS para permitir solo el dominio especificado
 const corsOptions = {
