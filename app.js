@@ -3,10 +3,11 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
-const cors = require('cors');  // Importar cors
-const authenticateToken = require('./middlewares/authMiddleware'); // Importa el middleware
+const cors = require('cors');
+const authenticateToken = require('./middlewares/authMiddleware');
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swaggerConfig'); // Importa la configuración de Swagger
+const swaggerSpec = require('./swaggerConfig');
+require('dotenv').config();  // Cargar variables de entorno
 
 const app = express();
 const bookController = require('./controllers/bookController');
@@ -15,9 +16,9 @@ const authController = require('./controllers/authController');
 // Middleware para Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Configurar CORS para permitir solo el dominio especificado
+// Configurar CORS para permitir solo el dominio especificado desde el archivo .env
 const corsOptions = {
-    origin: 'https://api-bookswap.onrender.com',
+    origin: process.env.CORS_ORIGIN, // Usar la variable de entorno CORS_ORIGIN
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
@@ -31,7 +32,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Middleware de Morgan para logging
 app.use(morgan('dev'));
-
 
 // Configurar Multer para guardar imágenes en la carpeta 'public/uploads'
 const storage = multer.diskStorage({
@@ -61,13 +61,13 @@ app.get('/protected', authenticateToken, (req, res) => {
 });
 
 // Rutas CRUD - agregar autenticación
-app.get('/books', bookController.getAllBooks); // Se puede acceder sin autenticación
-app.get('/books/:id', bookController.getBookById); // Se puede acceder sin autenticación
-app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook); // Añadir libro
-app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook); // Actualizar libro
-app.delete('/books/:id', authenticateToken, bookController.deleteBook); // Eliminar libro
+app.get('/books', bookController.getAllBooks);
+app.get('/books/:id', bookController.getBookById);
+app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook);
+app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook);
+app.delete('/books/:id', authenticateToken, bookController.deleteBook);
 
-// Puerto del servidor
+// Puerto del servidor usando variable de entorno
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
