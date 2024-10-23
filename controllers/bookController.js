@@ -1,6 +1,6 @@
 const multer = require('multer');
 const path = require('path');
-const bookService = require('../services/bookService');
+const Book = require('../models/bookModel'); // Importar el modelo de Mongoose
 
 /**
  * @swagger
@@ -20,93 +20,96 @@ const bookService = require('../services/bookService');
  */
 
 // Obtener todos los libros
-exports.getAllBooks = (req, res) => {
-    const books = bookService.getAllBooks();
-    res.json(books);
+exports.getAllBooks = async (req, res) => {
+    try {
+        const books = await Book.find(); // Usar Mongoose para obtener todos los libros
+        res.json(books);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener los libros' });
+    }
 };
 
 // Obtener un libro por ID
-exports.getBookById = (req, res) => {
-    const id = parseInt(req.params.id); // Obtener el ID desde los parámetros
-    const book = bookService.getBookById(id);
-
-    if (book) {
+exports.getBookById = async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id); // Usar Mongoose para obtener el libro por ID
+        if (!book) {
+            return res.status(404).json({ message: 'Libro no encontrado' });
+        }
         res.json(book);
-    } else {
-        res.status(404).json({ message: 'Libro no encontrado' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener el libro' });
     }
 };
 
 // Añadir libros ahora con imágenes
-exports.addBook = (req, res) => {
-    const { id, titulo, autor, descripcion, fecha_publicacion, genero } = req.body;
+exports.addBook = async (req, res) => {
+    try {
+        const { titulo, autor, descripcion, fecha_publicacion, genero } = req.body;
 
-    // Verifica si se subió una imagen
-    let imagen = '';
-    if (req.file) {
-        imagen = `/uploads/${req.file.filename}`; // Guarda la ruta de la imagen
+        let imagen = '';
+        if (req.file) {
+            imagen = `/uploads/${req.file.filename}`; // Guardar la ruta de la imagen
+        }
+
+        const newBook = new Book({
+            titulo,
+            autor,
+            descripcion,
+            fecha_publicacion,
+            genero,
+            imagen
+        });
+
+        const savedBook = await newBook.save(); // Guardar el libro en MongoDB
+        res.status(201).json({ message: 'Book added successfully!', libro: savedBook });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al agregar el libro' });
     }
-
-    // Crear un nuevo libro con la imagen
-    const newBook = {
-        id: parseInt(id),  // Asegurar que el ID sea numérico
-        titulo,
-        autor,
-        descripcion,
-        fecha_publicacion,
-        genero,
-        imagen // Añadir la ruta de la imagen al objeto libro
-    };
-
-    console.log("Libro recibido en el cuerpo de la solicitud:", newBook); // Para depurar
-
-    // Llamar al servicio para agregar el libro
-    bookService.addBook(newBook);
-
-    // Respuesta
-    res.status(201).json({ message: 'Book added successfully!', libro: newBook });
 };
 
 // Actualizar un libro por ID, incluyendo la imagen
-exports.updateBook = (req, res) => {
-    const id = parseInt(req.params.id); // Obtener el ID desde los parámetros
-    const { titulo, autor, descripcion, fecha_publicacion, genero } = req.body;
+exports.updateBook = async (req, res) => {
+    try {
+        const { titulo, autor, descripcion, fecha_publicacion, genero } = req.body;
+        let imagen = req.body.imagen; // Mantener la imagen existente por defecto
 
-    // Comprobar si se ha subido una imagen nueva
-    let imagen = '';
-    if (req.file) {
-        imagen = `/uploads/${req.file.filename}`; // Ruta de la nueva imagen
-    }
+        if (req.file) {
+            imagen = `/uploads/${req.file.filename}`; // Ruta de la nueva imagen si se sube
+        }
 
-    const updatedBook = {
-        id,
-        titulo,
-        autor,
-        descripcion,
-        fecha_publicacion,
-        genero,
-        ...(imagen && { imagen }) // Solo añadir la imagen si existe
-    };
+        const updatedBook = await Book.findByIdAndUpdate(
+            req.params.id,
+            {
+                titulo,
+                autor,
+                descripcion,
+                fecha_publicacion,
+                genero,
+                imagen
+            },
+            { new: true }
+        );
 
-    const result = bookService.updateBook(id, updatedBook);
+        if (!updatedBook) {
+            return res.status(404).json({ message: 'Libro no encontrado' });
+        }
 
-    if (result) {
         res.json({ message: 'Book updated successfully!', libro: updatedBook });
-    } else {
-        res.status(404).json({ message: 'Book not found!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al actualizar el libro' });
     }
 };
 
-// Eliminar libro por ID
-exports.deleteBook = (req, res) => {
-    const id = parseInt(req.params.id); // Obtener el ID desde los parámetros
-    
-    // Llama al servicio para eliminar el libro
-    const result = bookService.deleteBook(id);
-
-    if (result) {
+// Eliminar un libro por ID
+exports.deleteBook = async (req, res) => {
+    try {
+        const deletedBook = await Book.findByIdAndDelete(req.params.id); // Eliminar el libro usando Mongoose
+        if (!deletedBook) {
+            return res.status(404).json({ message: 'Libro no encontrado' });
+        }
         res.json({ message: 'Book deleted successfully!' });
-    } else {
-        res.status(404).json({ message: 'Book not found!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al eliminar el libro' });
     }
 };
