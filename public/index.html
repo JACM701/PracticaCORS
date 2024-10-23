@@ -172,7 +172,7 @@
         <input type="text" id="genero" name="genero" required>
         
         <label for="imagen">Imagen:</label>
-        <input type="file" id="imagen" name="imagen" accept="image/*" required>
+        <input type="file" id="imagen" name="imagen" accept="image/*">
         
         <button type="submit">Añadir Libro</button>
     </form>
@@ -185,40 +185,44 @@
     <div id="book-list"></div>
 
     <!-- Formulario para actualizar un libro -->
-    <h2>Actualizar un libro</h2>
-    <form id="update-book-form" enctype="multipart/form-data">
-        <label for="update-id">ID del libro:</label>
-        <input type="number" id="update-id" name="id" required>
-        
-        <label for="update-titulo">Nuevo Título:</label>
-        <input type="text" id="update-titulo" name="titulo">
-        
-        <label for="update-autor">Nuevo Autor:</label>
-        <input type="text" id="update-autor" name="autor">
-        
-        <label for="update-descripcion">Nueva Descripción:</label>
-        <textarea id="update-descripcion" name="descripcion"></textarea>
-        
-        <label for="update-fecha_publicacion">Nueva Fecha de Publicación:</label>
-        <input type="text" id="update-fecha_publicacion" name="fecha_publicacion">
-        
-        <label for="update-genero">Nuevo Género:</label>
-        <input type="text" id="update-genero" name="genero">
-        
-        <label for="update-imagen">Nueva Imagen:</label>
-        <input type="file" id="update-imagen" name="imagen" accept="image/*">
-        
-        <button type="submit">Actualizar Libro</button>
-    </form>
+    <div id="update-book-section" style="display: none;">
+        <h2>Actualizar un libro</h2>
+        <form id="update-book-form" enctype="multipart/form-data">
+            <label for="update-id">ID del libro:</label>
+            <input type="number" id="update-id" name="id" required>
+            
+            <label for="update-titulo">Nuevo Título:</label>
+            <input type="text" id="update-titulo" name="titulo">
+            
+            <label for="update-autor">Nuevo Autor:</label>
+            <input type="text" id="update-autor" name="autor">
+            
+            <label for="update-descripcion">Nueva Descripción:</label>
+            <textarea id="update-descripcion" name="descripcion"></textarea>
+            
+            <label for="update-fecha_publicacion">Nueva Fecha de Publicación:</label>
+            <input type="text" id="update-fecha_publicacion" name="fecha_publicacion">
+            
+            <label for="update-genero">Nuevo Género:</label>
+            <input type="text" id="update-genero" name="genero">
+            
+            <label for="update-imagen">Nueva Imagen:</label>
+            <input type="file" id="update-imagen" name="imagen" accept="image/*">
+            
+            <button type="submit">Actualizar Libro</button>
+        </form>
+    </div>
 
     <!-- Formulario para eliminar un libro -->
-    <h2>Eliminar un libro</h2>
-    <form id="delete-book-form">
-        <label for="delete-id">ID del libro:</label>
-        <input type="number" id="delete-id" name="id" required>
-        
-        <button type="submit">Eliminar Libro</button>
-    </form>
+    <div id="delete-book-section" style="display: none;">
+        <h2>Eliminar un libro</h2>
+        <form id="delete-book-form">
+            <label for="delete-id">ID del libro:</label>
+            <input type="number" id="delete-id" name="id" required>
+            
+            <button type="submit">Eliminar Libro</button>
+        </form>
+    </div>
 
     <script>
         const API_URL = 'https://api-bookswap.onrender.com/books'; // Cambia la URL a la de producción
@@ -267,8 +271,9 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    alert('Inicio de sesión exitoso. Token: ' + data.token);
-                    this.reset(); // Reiniciar el formulario de inicio de sesión
+                    localStorage.setItem('token', data.token); // Guarda el token en localStorage
+                    alert('Inicio de sesión exitoso');
+                    showAdminControls(true); // Muestra los formularios de actualización y eliminación
                 } else {
                     alert(data.message || 'Error al iniciar sesión');
                 }
@@ -277,54 +282,68 @@
             }
         });
 
+        // Mostrar/ocultar formularios de actualización y eliminación
+        function showAdminControls(isLoggedIn) {
+            document.getElementById('update-book-section').style.display = isLoggedIn ? 'block' : 'none';
+            document.getElementById('delete-book-section').style.display = isLoggedIn ? 'block' : 'none';
+        }
+
         // Añadir un nuevo libro
         document.getElementById('add-book-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const formData = new FormData(this);
+            const token = localStorage.getItem('token'); // Obtén el token
 
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    body: formData,
+                    headers: {
+                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
+                    },
+                    body: formData
                 });
-                const data = await response.json();
-
+                const result = await response.json();
+                alert(result.message);
                 if (response.ok) {
-                    alert('Libro añadido con éxito');
-                    this.reset(); // Reiniciar el formulario de añadir libro
-                } else {
-                    alert(data.message || 'Error al añadir libro');
+                    this.reset(); // Reiniciar el formulario después de añadir un libro
                 }
             } catch (error) {
                 console.error('Error al añadir libro:', error);
             }
         });
 
-        // Obtener libros y mostrarlos
+        // Obtener la lista de libros
         document.getElementById('fetch-books').addEventListener('click', async function() {
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
+            const token = localStorage.getItem('token'); // Obtén el token
 
-                if (response.ok) {
-                    const bookList = document.getElementById('book-list');
-                    bookList.innerHTML = ''; // Limpiar la lista antes de mostrar
-                    data.forEach(book => {
-                        const bookItem = document.createElement('div');
-                        bookItem.classList.add('book-item');
-                        bookItem.innerHTML = `
+            try {
+                const response = await fetch(API_URL, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
+                    }
+                });
+                const books = await response.json();
+                
+                const bookList = document.getElementById('book-list');
+                bookList.innerHTML = ''; // Limpiar lista
+                
+                books.forEach(book => {
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+                    
+                    bookItem.innerHTML = `
+                        <div>
                             <h3>${book.titulo}</h3>
                             <p><strong>Autor:</strong> ${book.autor}</p>
                             <p><strong>Descripción:</strong> ${book.descripcion}</p>
-                            <p><strong>Fecha de Publicación:</strong> ${book.fecha_publicacion}</p>
                             <p><strong>Género:</strong> ${book.genero}</p>
-                            <img src="${book.imagen}" alt="Portada de ${book.titulo}">
-                        `;
-                        bookList.appendChild(bookItem);
-                    });
-                } else {
-                    alert(data.message || 'Error al obtener libros');
-                }
+                            <p><strong>Fecha de Publicación:</strong> ${book.fecha_publicacion}</p>
+                        </div>
+                        ${book.imagen ? `<img src="${book.imagen}" alt="${book.titulo}" width="100" />` : ''}
+                    `;
+
+                    bookList.appendChild(bookItem);
+                });
             } catch (error) {
                 console.error('Error al obtener libros:', error);
             }
@@ -333,23 +352,19 @@
         // Actualizar un libro
         document.getElementById('update-book-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const id = document.getElementById('update-id').value;
             const formData = new FormData(this);
-            formData.append('id', id); // Añadir el ID al FormData
+            const token = localStorage.getItem('token'); // Obtén el token
 
             try {
-                const response = await fetch(`${API_URL}/${id}`, {
+                const response = await fetch(`${API_URL}/${formData.get('id')}`, {
                     method: 'PUT',
-                    body: formData,
+                    headers: {
+                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
+                    },
+                    body: formData
                 });
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert('Libro actualizado con éxito');
-                    this.reset(); // Reiniciar el formulario de actualización
-                } else {
-                    alert(data.message || 'Error al actualizar libro');
-                }
+                const result = await response.json();
+                alert(result.message);
             } catch (error) {
                 console.error('Error al actualizar libro:', error);
             }
@@ -359,24 +374,21 @@
         document.getElementById('delete-book-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const id = document.getElementById('delete-id').value;
+            const token = localStorage.getItem('token'); // Obtén el token
 
             try {
                 const response = await fetch(`${API_URL}/${id}`, {
                     method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
+                    }
                 });
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert('Libro eliminado con éxito');
-                    this.reset(); // Reiniciar el formulario de eliminación
-                } else {
-                    alert(data.message || 'Error al eliminar libro');
-                }
+                const result = await response.json();
+                alert(result.message);
             } catch (error) {
                 console.error('Error al eliminar libro:', error);
             }
         });
     </script>
-
 </body>
 </html>
