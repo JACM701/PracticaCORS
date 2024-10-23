@@ -15,15 +15,21 @@ const authController = require('./controllers/authController');
 
 const mongoose = require('mongoose');
 
-// Conectar a MongoDB Atlas usando mongoose
-const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://Jacm701:<db_password>@bookswap.cuqet.mongodb.net/?retryWrites=true&w=majority&appName=BookSwap';
+// Cargar variables de entorno
+require('dotenv').config();
 
-mongoose.connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+// Conexión a MongoDB Atlas
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 })
-.then(() => console.log('Conectado a MongoDB Atlas'))
-.catch((error) => console.error('Error al conectar a MongoDB:', error));
+.then(() => {
+    console.log('Conexión a MongoDB exitosa');
+})
+.catch((error) => {
+    console.error('Error al conectar a MongoDB:', error);
+});
+
 
 
 // Middleware para Swagger
