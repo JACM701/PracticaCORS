@@ -1,28 +1,11 @@
 const multer = require('multer');
 const path = require('path');
-const Book = require('../models/bookModel'); // Importar el modelo de Mongoose
-
-/**
- * @swagger
- * /books:
- *   get:
- *     summary: Obtiene una lista de libros
- *     tags: [Libros]
- *     responses:
- *       200:
- *         description: Lista de libros obtenida con éxito
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Libro'
- */
+const Book = require('../models/bookModel');
 
 // Obtener todos los libros
 exports.getAllBooks = async (req, res) => {
     try {
-        const books = await Book.find(); // Usar Mongoose para obtener todos los libros
+        const books = await Book.find();
         res.json(books);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener los libros' });
@@ -32,7 +15,7 @@ exports.getAllBooks = async (req, res) => {
 // Obtener un libro por ID
 exports.getBookById = async (req, res) => {
     try {
-        const book = await Book.findById(req.params.id); // Usar Mongoose para obtener el libro por ID
+        const book = await Book.findById(req.params.id);
         if (!book) {
             return res.status(404).json({ message: 'Libro no encontrado' });
         }
@@ -42,73 +25,56 @@ exports.getBookById = async (req, res) => {
     }
 };
 
-// Añadir libros ahora con imágenes
+// Agregar un nuevo libro
 exports.addBook = async (req, res) => {
     try {
-        const { titulo, autor, descripcion, fecha_publicacion, genero } = req.body;
-
-        let imagen = '';
-        if (req.file) {
-            imagen = `/uploads/${req.file.filename}`; // Guardar la ruta de la imagen
-        }
-
         const newBook = new Book({
-            titulo,
-            autor,
-            descripcion,
-            fecha_publicacion,
-            genero,
-            imagen
+            titulo: req.body.titulo,
+            autor: req.body.autor,
+            descripcion: req.body.descripcion,
+            fecha_publicacion: req.body.fecha_publicacion,
+            genero: req.body.genero,
+            imagen: req.file ? `/uploads/${req.file.filename}` : null
         });
-
-        const savedBook = await newBook.save(); // Guardar el libro en MongoDB
-        res.status(201).json({ message: 'Book added successfully!', libro: savedBook });
+        const savedBook = await newBook.save();
+        res.status(201).json(savedBook);
     } catch (error) {
         res.status(500).json({ message: 'Error al agregar el libro' });
     }
 };
 
-// Actualizar un libro por ID, incluyendo la imagen
+// Actualizar un libro
 exports.updateBook = async (req, res) => {
     try {
-        const { titulo, autor, descripcion, fecha_publicacion, genero } = req.body;
-        let imagen = req.body.imagen; // Mantener la imagen existente por defecto
-
-        if (req.file) {
-            imagen = `/uploads/${req.file.filename}`; // Ruta de la nueva imagen si se sube
-        }
-
         const updatedBook = await Book.findByIdAndUpdate(
             req.params.id,
             {
-                titulo,
-                autor,
-                descripcion,
-                fecha_publicacion,
-                genero,
-                imagen
+                titulo: req.body.titulo,
+                autor: req.body.autor,
+                descripcion: req.body.descripcion,
+                fecha_publicacion: req.body.fecha_publicacion,
+                genero: req.body.genero,
+                imagen: req.file ? `/uploads/${req.file.filename}` : req.body.imagen
             },
             { new: true }
         );
-
         if (!updatedBook) {
             return res.status(404).json({ message: 'Libro no encontrado' });
         }
-
-        res.json({ message: 'Book updated successfully!', libro: updatedBook });
+        res.json(updatedBook);
     } catch (error) {
         res.status(500).json({ message: 'Error al actualizar el libro' });
     }
 };
 
-// Eliminar un libro por ID
+// Eliminar un libro
 exports.deleteBook = async (req, res) => {
     try {
-        const deletedBook = await Book.findByIdAndDelete(req.params.id); // Eliminar el libro usando Mongoose
+        const deletedBook = await Book.findByIdAndDelete(req.params.id);
         if (!deletedBook) {
             return res.status(404).json({ message: 'Libro no encontrado' });
         }
-        res.json({ message: 'Book deleted successfully!' });
+        res.json({ message: 'Libro eliminado correctamente' });
     } catch (error) {
         res.status(500).json({ message: 'Error al eliminar el libro' });
     }

@@ -13,7 +13,18 @@ const app = express();
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
 
-const connectDB = require('./db'); //Se conecta con el db.js
+const mongoose = require('mongoose');
+
+// Conectar a MongoDB Atlas usando mongoose
+const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://Jacm701:SueñitosTieneHambreTodoElTiempo@bookswap.cuqet.mongodb.net/?retryWrites=true&w=majority&appName=BookSwap';
+
+mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('Conectado a MongoDB Atlas'))
+.catch((error) => console.error('Error al conectar a MongoDB:', error));
+
 
 // Middleware para Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
