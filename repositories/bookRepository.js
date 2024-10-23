@@ -1,59 +1,60 @@
 const fs = require('fs');
 const path = require('path');
-const filePath = path.join(__dirname, '../books.json');
-
-// Función para leer los libros desde el archivo JSON
-const getBooksFromFile = () => {
-    const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
-};
-
-// Función para guardar los libros en el archivo JSON
-const saveBooksToFile = (books) => {
-    fs.writeFileSync(filePath, JSON.stringify(books, null, 2), 'utf-8');
-};
+const BookModel = require('../models/bookModel'); // Importa el modelo de Mongoose
 
 // Obtener todos los libros
-exports.getAllBooks = () => {
-    return getBooksFromFile();
+exports.getAllBooks = async () => {
+    try {
+        const books = await BookModel.find(); // Obtener todos los libros de MongoDB
+        return books;
+    } catch (error) {
+        console.error('Error al obtener todos los libros:', error);
+        throw error;
+    }
+};
+
+// Obtener un libro por ID
+exports.getBookById = async (id) => {
+    try {
+        const book = await BookModel.findById(id); // Obtener libro por ID en MongoDB
+        return book;
+    } catch (error) {
+        console.error('Error al obtener libro por ID:', error);
+        throw error;
+    }
 };
 
 // Añadir un nuevo libro
-exports.addBook = (newBook) => {
-    const books = getBooksFromFile();
-    books.push(newBook); // Añade el nuevo libro al array
-    saveBooksToFile(books); // Guarda los cambios en el archivo JSON
-};
-
-// Buscar un libro por ID
-exports.getBookById = (id) => {
-    const books = getBooksFromFile();
-    return books.find(book => book.id === id);
+exports.addBook = async (newBook) => {
+    try {
+        const book = new BookModel(newBook); // Crear una instancia del modelo
+        await book.save(); // Guardar el nuevo libro en MongoDB
+        return book;
+    } catch (error) {
+        console.error('Error al añadir un nuevo libro:', error);
+        throw error;
+    }
 };
 
 // Actualizar un libro existente por ID
-exports.updateBook = (id, updatedBook) => {
-    const books = getBooksFromFile();
-    const bookIndex = books.findIndex(book => book.id === id); // Buscar por ID
-
-    if (bookIndex !== -1) {
-        // Actualiza el libro existente con los nuevos datos
-        books[bookIndex] = { ...books[bookIndex], ...updatedBook };
-        saveBooksToFile(books); // Guarda los cambios en el archivo JSON
-        return true;
+exports.updateBook = async (id, updatedBook) => {
+    try {
+        const book = await BookModel.findByIdAndUpdate(id, updatedBook, { new: true }); // Actualizar libro por ID
+        return book;
+    } catch (error) {
+        console.error('Error al actualizar libro por ID:', error);
+        throw error;
     }
-    return false;
 };
 
 // Eliminar un libro por ID
-exports.deleteBook = (id) => {
-    const books = getBooksFromFile();
-    const newBooks = books.filter(book => book.id !== id); // Filtrar libros sin el ID dado
-
-    if (newBooks.length !== books.length) {
-        saveBooksToFile(newBooks); // Guarda los cambios en el archivo JSON
-        return true;
-    } else {
-        return false; // No se encontró el libro para eliminar
+exports.deleteBook = async (id) => {
+    try {
+        await BookModel.findByIdAndDelete(id); // Eliminar libro por ID en MongoDB
+        return { message: 'Libro eliminado correctamente' };
+    } catch (error) {
+        console.error('Error al eliminar libro por ID:', error);
+        throw error;
     }
 };
+

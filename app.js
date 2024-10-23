@@ -13,24 +13,7 @@ const app = express();
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
 
-const mongoose = require('mongoose');
-
-// Cargar variables de entorno
-require('dotenv').config();
-
-// Conexión a MongoDB Atlas
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-    console.log('Conexión a MongoDB exitosa');
-})
-.catch((error) => {
-    console.error('Error al conectar a MongoDB:', error);
-});
-
-
+const connectDB = require('./db'); //Se conecta con el db.js
 
 // Middleware para Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
