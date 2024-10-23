@@ -133,6 +133,28 @@
         .button-container {
             margin-top: 10px;
         }
+
+        #book-list {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .book-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .book-item button {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -225,13 +247,13 @@
 
     <script>
         const API_URL = 'https://api-bookswap.onrender.com/books'; // Cambia la URL a la de producción
-
+    
         // Registrar un nuevo usuario
         document.getElementById('register-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const username = document.getElementById('register-username').value;
             const password = document.getElementById('register-password').value;
-
+    
             try {
                 const response = await fetch('https://api-bookswap.onrender.com/register', {
                     method: 'POST',
@@ -241,7 +263,7 @@
                     body: JSON.stringify({ username, password }),
                 });
                 const data = await response.json();
-
+    
                 if (response.ok) {
                     alert('Registro exitoso. Ahora puedes iniciar sesión.');
                     this.reset(); // Reiniciar el formulario de registro
@@ -252,13 +274,13 @@
                 console.error('Error al registrar:', error);
             }
         });
-
+    
         // Iniciar sesión y obtener el token
         document.getElementById('login-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-
+    
             try {
                 const response = await fetch('https://api-bookswap.onrender.com/login', {
                     method: 'POST',
@@ -268,11 +290,12 @@
                     body: JSON.stringify({ username, password }),
                 });
                 const data = await response.json();
-
+    
                 if (response.ok) {
                     localStorage.setItem('token', data.token); // Guarda el token en localStorage
                     alert('Inicio de sesión exitoso');
                     showAdminControls(true); // Muestra los formularios de actualización y eliminación
+                    displayBooks(); // Cargar libros al iniciar sesión
                 } else {
                     alert(data.message || 'Error al iniciar sesión');
                 }
@@ -280,18 +303,18 @@
                 console.error('Error al iniciar sesión:', error);
             }
         });
-
+    
         // Mostrar/ocultar formularios de actualización y eliminación
         function showAdminControls(isLoggedIn) {
             document.getElementById('update-book-section').style.display = isLoggedIn ? 'block' : 'none';
         }
-
+    
         // Añadir un nuevo libro
         document.getElementById('add-book-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const formData = new FormData(this);
             const token = localStorage.getItem('token'); // Obtén el token
-
+    
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -304,16 +327,17 @@
                 alert(result.message);
                 if (response.ok) {
                     this.reset(); // Reiniciar el formulario después de añadir un libro
+                    displayBooks(); // Actualizar la lista de libros después de añadir uno
                 }
             } catch (error) {
                 console.error('Error al añadir libro:', error);
             }
         });
-
+    
         // Obtener la lista de libros
-        document.getElementById('fetch-books').addEventListener('click', async function() {
+        async function displayBooks() {
             const token = localStorage.getItem('token'); // Obtén el token
-
+    
             try {
                 const response = await fetch(API_URL, {
                     headers: {
@@ -339,11 +363,13 @@
                         </div>
                         ${book.imagen ? `<img src="${book.imagen}" alt="${book.titulo}" width="100" />` : ''}
                         <div class="button-container">
-                            <button class="edit-button" data-id="${book._id}">Editar</button>
-                            <button class="delete-button" data-id="${book._id}">Eliminar</button>
+                            ${token ? `
+                                <button class="edit-button" data-id="${book._id}">Editar</button>
+                                <button class="delete-button" data-id="${book._id}">Eliminar</button>
+                            ` : ''}
                         </div>
                     `;
-
+    
                     bookList.appendChild(bookItem);
                 });
                 
@@ -355,12 +381,12 @@
                         showAdminControls(true); // Asegurarse de que los controles de admin estén visibles
                     });
                 });
-
+    
                 document.querySelectorAll('.delete-button').forEach(button => {
                     button.addEventListener('click', async function() {
                         const id = this.getAttribute('data-id');
                         const token = localStorage.getItem('token'); // Obtén el token
-
+    
                         if (confirm('¿Estás seguro de que deseas eliminar este libro?')) {
                             try {
                                 const response = await fetch(`${API_URL}/${id}`, {
@@ -371,7 +397,7 @@
                                 });
                                 const result = await response.json();
                                 alert(result.message);
-                                this.closest('.book-item').remove(); // Eliminar el libro de la vista
+                                displayBooks(); // Actualiza la lista después de eliminar
                             } catch (error) {
                                 console.error('Error al eliminar libro:', error);
                             }
@@ -381,14 +407,14 @@
             } catch (error) {
                 console.error('Error al obtener libros:', error);
             }
-        });
-
+        }
+    
         // Actualizar un libro
         document.getElementById('update-book-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const formData = new FormData(this);
             const token = localStorage.getItem('token'); // Obtén el token
-
+    
             try {
                 const response = await fetch(`${API_URL}/${formData.get('id')}`, {
                     method: 'PUT',
@@ -401,11 +427,13 @@
                 alert(result.message);
                 if (response.ok) {
                     this.reset(); // Reiniciar el formulario de actualización
+                    displayBooks(); // Actualizar la lista de libros después de editar
                 }
             } catch (error) {
                 console.error('Error al actualizar libro:', error);
             }
         });
-    </script>
+    </script>    
+
 </body>
 </html>
