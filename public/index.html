@@ -123,6 +123,16 @@
         #fetch-books:hover {
             background-color: #2ecc71;
         }
+
+        .book-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .button-container {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -213,17 +223,6 @@
         </form>
     </div>
 
-    <!-- Formulario para eliminar un libro -->
-    <div id="delete-book-section" style="display: none;">
-        <h2>Eliminar un libro</h2>
-        <form id="delete-book-form">
-            <label for="delete-id">ID del libro:</label>
-            <input type="number" id="delete-id" name="id" required>
-            
-            <button type="submit">Eliminar Libro</button>
-        </form>
-    </div>
-
     <script>
         const API_URL = 'https://api-bookswap.onrender.com/books'; // Cambia la URL a la de producción
 
@@ -285,7 +284,6 @@
         // Mostrar/ocultar formularios de actualización y eliminación
         function showAdminControls(isLoggedIn) {
             document.getElementById('update-book-section').style.display = isLoggedIn ? 'block' : 'none';
-            document.getElementById('delete-book-section').style.display = isLoggedIn ? 'block' : 'none';
         }
 
         // Añadir un nuevo libro
@@ -340,9 +338,45 @@
                             <p><strong>Fecha de Publicación:</strong> ${book.fecha_publicacion}</p>
                         </div>
                         ${book.imagen ? `<img src="${book.imagen}" alt="${book.titulo}" width="100" />` : ''}
+                        <div class="button-container">
+                            <button class="edit-button" data-id="${book._id}">Editar</button>
+                            <button class="delete-button" data-id="${book._id}">Eliminar</button>
+                        </div>
                     `;
 
                     bookList.appendChild(bookItem);
+                });
+                
+                // Añadir eventos a los botones de editar y eliminar
+                document.querySelectorAll('.edit-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        document.getElementById('update-id').value = id; // Establecer ID en el formulario de actualización
+                        showAdminControls(true); // Asegurarse de que los controles de admin estén visibles
+                    });
+                });
+
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', async function() {
+                        const id = this.getAttribute('data-id');
+                        const token = localStorage.getItem('token'); // Obtén el token
+
+                        if (confirm('¿Estás seguro de que deseas eliminar este libro?')) {
+                            try {
+                                const response = await fetch(`${API_URL}/${id}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
+                                    }
+                                });
+                                const result = await response.json();
+                                alert(result.message);
+                                this.closest('.book-item').remove(); // Eliminar el libro de la vista
+                            } catch (error) {
+                                console.error('Error al eliminar libro:', error);
+                            }
+                        }
+                    });
                 });
             } catch (error) {
                 console.error('Error al obtener libros:', error);
@@ -365,28 +399,11 @@
                 });
                 const result = await response.json();
                 alert(result.message);
+                if (response.ok) {
+                    this.reset(); // Reiniciar el formulario de actualización
+                }
             } catch (error) {
                 console.error('Error al actualizar libro:', error);
-            }
-        });
-
-        // Eliminar un libro
-        document.getElementById('delete-book-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const id = document.getElementById('delete-id').value;
-            const token = localStorage.getItem('token'); // Obtén el token
-
-            try {
-                const response = await fetch(`${API_URL}/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
-                    }
-                });
-                const result = await response.json();
-                alert(result.message);
-            } catch (error) {
-                console.error('Error al eliminar libro:', error);
             }
         });
     </script>
