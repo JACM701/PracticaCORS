@@ -1,5 +1,5 @@
 const swaggerOptions = {
-    openapi: "3.0.0", // Define la versión de OpenAPI
+    openapi: "3.0.0",
     info: {
         title: "BookSwap API",
         version: "1.0.0",
@@ -50,6 +50,31 @@ const swaggerOptions = {
                         description: "URL de la imagen del libro",
                         example: "/uploads/el-principito.jpg",
                     },
+                    edicion: {
+                        type: "string",
+                        description: "Edición del libro",
+                        example: "Primera edición",
+                    },
+                    ano_publicacion: {
+                        type: "integer",
+                        description: "Año de publicación del libro",
+                        example: 1943,
+                    },
+                    tipo_tapa: {
+                        type: "string",
+                        description: "Tipo de tapa del libro",
+                        example: "Dura",
+                    },
+                    editorial: {
+                        type: "string",
+                        description: "Editorial del libro",
+                        example: "Gallimard",
+                    },
+                    accesorios_incluidos: {
+                        type: "boolean",
+                        description: "Indica si el libro incluye accesorios",
+                        example: true,
+                    },
                 },
                 required: ["titulo", "autor", "descripcion", "fecha_publicacion", "genero"],
             },
@@ -66,8 +91,23 @@ const swaggerOptions = {
                         description: "Contraseña",
                         example: "password123",
                     },
+                    nombre: {
+                        type: "string",
+                        description: "Nombre completo del usuario",
+                        example: "Juan Pérez",
+                    },
+                    telefono: {
+                        type: "string",
+                        description: "Número de teléfono del usuario",
+                        example: "+34 600 123 456",
+                    },
+                    email: {
+                        type: "string",
+                        description: "Correo electrónico del usuario",
+                        example: "juan.perez@example.com",
+                    },
                 },
-                required: ["username", "password"],
+                required: ["username", "password", "nombre", "telefono", "email"],
             },
         },
     },
