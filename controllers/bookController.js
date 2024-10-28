@@ -34,7 +34,12 @@ exports.addBook = async (req, res) => {
             descripcion: req.body.descripcion,
             fecha_publicacion: req.body.fecha_publicacion,
             genero: req.body.genero,
-            imagen: req.file ? `/uploads/${req.file.filename}` : null
+            imagen: req.file ? `/uploads/${req.file.filename}` : null,
+            edicion: req.body.edicion, // Nuevo campo
+            ano_publicado: req.body.ano_publicado, // Nuevo campo
+            tipo_pasta: req.body.tipo_pasta, // Nuevo campo
+            editorial: req.body.editorial, // Nuevo campo
+            incluye_accesorios: req.body.incluye_accesorios // Nuevo campo
         });
         const savedBook = await newBook.save();
         res.status(201).json(savedBook);
@@ -54,7 +59,12 @@ exports.updateBook = async (req, res) => {
                 descripcion: req.body.descripcion,
                 fecha_publicacion: req.body.fecha_publicacion,
                 genero: req.body.genero,
-                imagen: req.file ? `/uploads/${req.file.filename}` : req.body.imagen
+                imagen: req.file ? `/uploads/${req.file.filename}` : req.body.imagen,
+                edicion: req.body.edicion, // Nuevo campo
+                ano_publicado: req.body.ano_publicado, // Nuevo campo
+                tipo_pasta: req.body.tipo_pasta, // Nuevo campo
+                editorial: req.body.editorial, // Nuevo campo
+                incluye_accesorios: req.body.incluye_accesorios // Nuevo campo
             },
             { new: true }
         );
