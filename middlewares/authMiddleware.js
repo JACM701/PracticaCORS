@@ -1,16 +1,16 @@
 // middlewares/authMiddleware.js
 const jwt = require('jsonwebtoken');
-const secretKey = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto por una clave más segura y mantenla en un lugar seguro
+const secretKey = process.env.JWT_SECRET || 'clave_segura';
 
 const authenticateToken = (req, res, next) => {
-    const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1]; // Obtener el token
+    const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
 
-    if (!token) return res.sendStatus(401); // Si no hay token, devuelve 401
+    if (!token) return res.status(401).json({ message: 'Token no proporcionado' });
 
     jwt.verify(token, secretKey, (err, user) => {
-        if (err) return res.sendStatus(403); // Si el token es inválido, devuelve 403
-        req.user = user; // Guarda la información del usuario en la solicitud
-        next(); // Continua a la siguiente función
+        if (err) return res.status(403).json({ message: 'Token inválido' });
+        req.user = user;
+        next();
     });
 };
 

@@ -9,6 +9,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swaggerConfig');
 require('dotenv').config();  // Cargar variables de entorno
 
+const userController = require('./controllers/userController');
 const app = express();
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
@@ -79,6 +80,12 @@ app.get('/books/:id', bookController.getBookById);
 app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook);
 app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook);
 app.delete('/books/:id', authenticateToken, bookController.deleteBook);
+
+// Rutas para gestión de usuarios
+app.get('/users', authenticateToken, userController.getAllUsers);          // Obtener todos los usuarios
+app.get('/users/:id', authenticateToken, userController.getUserById);      // Obtener usuario por ID
+app.put('/users/:id', authenticateToken, userController.updateUser);       // Actualizar usuario por ID
+app.delete('/users/:id', authenticateToken, userController.deleteUser);    // Eliminar usuario por ID
 
 // Puerto del servidor usando variable de entorno
 const PORT = process.env.PORT || 3000;
