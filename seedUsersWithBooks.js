@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/userModel'); // Ajusta la ruta según tu proyecto
 const Book = require('./models/bookModel'); // Ajusta la ruta según tu proyecto
 
-const mongoURI = 'your-mongodb-uri-here'; // Reemplaza con tu URI de MongoDB
+const mongoURI = 'mongodb+srv://Jacm701:SueñitosTieneHambreTodoElTiempo@bookswap.cuqet.mongodb.net/?retryWrites=true&w=majority&appName=BookSwap'; // Reemplaza con tu URI de MongoDB
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
