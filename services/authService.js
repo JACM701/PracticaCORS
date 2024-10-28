@@ -1,3 +1,5 @@
+// services/authService.js
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel'); // Importa el modelo de usuario
@@ -9,7 +11,7 @@ const generateToken = (user) => {
 };
 
 // Función para crear un nuevo usuario
-const createUser = async (username, password) => {
+const createUser = async (username, email, password) => { // Añadimos 'email' como parámetro
     // Verificar si el usuario ya existe en la base de datos
     const existingUser = await User.findOne({ username });
     if (existingUser) {
@@ -18,7 +20,7 @@ const createUser = async (username, password) => {
 
     // Hashea la contraseña y crea el nuevo usuario
     const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = new User({ username, password: hashedPassword });
+    const newUser = new User({ username, email, password: hashedPassword }); // Incluye 'email'
 
     // Guarda el usuario en la base de datos
     await newUser.save();

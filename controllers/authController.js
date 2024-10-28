@@ -4,10 +4,10 @@ const authService = require('../services/authService');
 
 // Registro de usuario
 exports.register = (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body; // Asegúrate de recibir el campo 'email'
 
     try {
-        const newUser = authService.createUser(username, password);
+        const newUser = authService.createUser(username, email, password); // Pasa 'email' a createUser
         res.status(201).json({ message: 'Usuario creado', user: newUser });
     } catch (error) {
         res.status(400).json({ message: error.message }); // Manejo de errores
