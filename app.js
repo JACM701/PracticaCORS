@@ -74,9 +74,6 @@ app.get('/protected', authenticateToken, (req, res) => {
     res.json({ message: 'Acceso permitido', user: req.user });
 });
 
-// Nueva ruta para obtener los libros de un usuario autenticado
-router.get('/mybooks', authenticateToken, bookController.getBooksByOwner);
-
 // Rutas CRUD - agregar autenticación
 app.get('/books', bookController.getAllBooks);
 app.get('/books/:id', bookController.getBookById);

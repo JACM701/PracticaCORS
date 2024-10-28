@@ -24,14 +24,3 @@ exports.updateBook = (id, updatedBook) => {
 exports.deleteBook = (id) => {
     return bookRepository.deleteBook(id);
 };
-
-
-// Obtener libros por propietario
-exports.getBooksByOwner = async (req, res) => {
-    try {
-        const books = await Book.find({ propietario: req.user.id });
-        res.json(books);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener los libros del propietario' });
-    }
-};
