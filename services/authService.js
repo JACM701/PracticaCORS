@@ -11,7 +11,7 @@ const generateToken = (user) => {
 };
 
 // Función para crear un nuevo usuario
-const createUser = async (username, email, password) => { // Añadimos 'email' como parámetro
+const createUser = async (username, email, password) => {
     // Verificar si el usuario ya existe en la base de datos
     const existingUser = await User.findOne({ username });
     if (existingUser) {
@@ -20,7 +20,7 @@ const createUser = async (username, email, password) => { // Añadimos 'email' c
 
     // Hashea la contraseña y crea el nuevo usuario
     const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = new User({ username, email, password: hashedPassword }); // Incluye 'email'
+    const newUser = new User({ username, email, password: hashedPassword });
 
     // Guarda el usuario en la base de datos
     await newUser.save();
@@ -29,16 +29,27 @@ const createUser = async (username, email, password) => { // Añadimos 'email' c
 
 // Función para autenticar al usuario
 const authenticateUser = async (username, password) => {
-    // Busca el usuario en la base de datos
-    const user = await User.findOne({ username });
-    if (!user) return null; // Si el usuario no existe, retorna null
+    try {
+        // Busca el usuario en la base de datos
+        const user = await User.findOne({ username });
+        if (!user) {
+            console.log("Usuario no encontrado");
+            return null; // Si el usuario no existe, retorna null
+        }
 
-    // Verifica la contraseña
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
-    if (!passwordIsValid) return null;
+        // Verifica la contraseña
+        const passwordIsValid = bcrypt.compareSync(password, user.password);
+        if (!passwordIsValid) {
+            console.log("Contraseña incorrecta");
+            return null;
+        }
 
-    // Genera y retorna el token
-    return generateToken(user);
+        // Genera y retorna el token
+        return generateToken(user);
+    } catch (error) {
+        console.error("Error en la autenticación del usuario:", error);
+        return null;
+    }
 };
 
 module.exports = { generateToken, createUser, authenticateUser };

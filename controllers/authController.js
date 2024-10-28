@@ -22,11 +22,17 @@ exports.register = async (req, res) => {
 // Iniciar sesión
 exports.login = async (req, res) => {
     const { username, password } = req.body;
-    const token = await authService.authenticateUser(username, password);
 
-    if (!token) {
-        return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
+    try {
+        const token = await authService.authenticateUser(username, password);
+
+        if (!token) {
+            return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
+        }
+
+        res.json({ auth: true, token });
+    } catch (error) {
+        console.error("Error en el proceso de inicio de sesión:", error);
+        res.status(500).json({ message: 'Error al iniciar sesión' });
     }
-
-    res.json({ auth: true, token });
 };
