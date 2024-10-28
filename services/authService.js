@@ -1,39 +1,42 @@
-// services/authService.js
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const User = require('../models/userModel'); // Importa el modelo de usuario
 const secretKey = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto por una clave más segura
-
-let users = []; // Arreglo para almacenar usuarios
 
 // Función para generar un token
 const generateToken = (user) => {
-    return jwt.sign(user, secretKey, { expiresIn: '1h' }); // El token expira en 1 hora
+    return jwt.sign({ id: user._id, username: user.username }, secretKey, { expiresIn: '1h' }); // Token expira en 1 hora
 };
 
 // Función para crear un nuevo usuario
-const createUser = (username, password) => {
-    // Verificar si el usuario ya existe
-    const existingUser = users.find(user => user.username === username);
+const createUser = async (username, password) => {
+    // Verificar si el usuario ya existe en la base de datos
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
         throw new Error('Usuario ya existe'); // Lanza un error si el usuario ya existe
     }
 
-    const hashedPassword = bcrypt.hashSync(password, 8); // Hashea la contraseña
-    const newUser = { username, password: hashedPassword }; // Crear un nuevo objeto de usuario
-    users.push(newUser); // Guardar el usuario en el arreglo
+    // Hashea la contraseña y crea el nuevo usuario
+    const hashedPassword = bcrypt.hashSync(password, 8);
+    const newUser = new User({ username, password: hashedPassword });
+
+    // Guarda el usuario en la base de datos
+    await newUser.save();
     return newUser;
 };
 
 // Función para autenticar al usuario
-const authenticateUser = (username, password) => {
-    const user = users.find(user => user.username === username); // Busca el usuario
+const authenticateUser = async (username, password) => {
+    // Busca el usuario en la base de datos
+    const user = await User.findOne({ username });
     if (!user) return null; // Si el usuario no existe, retorna null
 
-    const passwordIsValid = bcrypt.compareSync(password, user.password); // Compara la contraseña
-    if (!passwordIsValid) return null; // Si la contraseña es inválida, retorna null
+    // Verifica la contraseña
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    if (!passwordIsValid) return null;
 
-    return generateToken({ username: user.username }); // Genera el token
+    // Genera y retorna el token
+    return generateToken(user);
 };
 
 module.exports = { generateToken, createUser, authenticateUser };
