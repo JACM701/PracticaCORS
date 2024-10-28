@@ -35,11 +35,12 @@ exports.addBook = async (req, res) => {
             fecha_publicacion: req.body.fecha_publicacion,
             genero: req.body.genero,
             imagen: req.file ? `/uploads/${req.file.filename}` : null,
-            edicion: req.body.edicion, // Nuevo campo
-            ano_publicado: req.body.ano_publicado, // Nuevo campo
-            tipo_pasta: req.body.tipo_pasta, // Nuevo campo
-            editorial: req.body.editorial, // Nuevo campo
-            incluye_accesorios: req.body.incluye_accesorios // Nuevo campo
+            edicion: req.body.edicion,
+            ano_publicado: req.body.ano_publicado,
+            tipo_pasta: req.body.tipo_pasta,
+            editorial: req.body.editorial,
+            incluye_accesorios: req.body.incluye_accesorios,
+            propietario: req.user.id // Asignamos el ID del usuario autenticado
         });
         const savedBook = await newBook.save();
         res.status(201).json(savedBook);
@@ -47,6 +48,7 @@ exports.addBook = async (req, res) => {
         res.status(500).json({ message: 'Error al agregar el libro' });
     }
 };
+
 
 // Actualizar un libro
 exports.updateBook = async (req, res) => {
