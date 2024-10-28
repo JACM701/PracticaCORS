@@ -3,25 +3,29 @@
 const authService = require('../services/authService');
 
 // Registro de usuario
-exports.register = (req, res) => {
+exports.register = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const newUser = authService.createUser(username, password);
+        const newUser = await authService.createUser(username, password);
         res.status(201).json({ message: 'Usuario creado', user: newUser });
     } catch (error) {
-        res.status(400).json({ message: error.message }); // Manejo de errores
+        res.status(400).json({ message: error.message });
     }
 };
 
 // Iniciar sesión
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     const { username, password } = req.body;
-    const token = authService.authenticateUser(username, password);
+    try {
+        const token = await authService.authenticateUser(username, password);
 
-    if (!token) {
-        return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
+        if (!token) {
+            return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
+        }
+
+        res.json({ auth: true, token });
+    } catch (error) {
+        res.status(500).json({ message: 'Error en la autenticación' });
     }
-
-    res.json({ auth: true, token });
 };

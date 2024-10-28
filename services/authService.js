@@ -2,38 +2,34 @@
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const secretKey = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto por una clave más segura
+const secretKey = process.env.JWT_SECRET || 'SueñitosTieneHambreTodoElTiempo';
 
-let users = []; // Arreglo para almacenar usuarios
+let users = []; // Nota: Cambia esto a una base de datos en producción
 
-// Función para generar un token
 const generateToken = (user) => {
-    return jwt.sign(user, secretKey, { expiresIn: '1h' }); // El token expira en 1 hora
+    return jwt.sign(user, secretKey, { expiresIn: '1h' });
 };
 
-// Función para crear un nuevo usuario
-const createUser = (username, password) => {
-    // Verificar si el usuario ya existe
+const createUser = async (username, password) => {
     const existingUser = users.find(user => user.username === username);
     if (existingUser) {
-        throw new Error('Usuario ya existe'); // Lanza un error si el usuario ya existe
+        throw new Error('Usuario ya existe');
     }
 
-    const hashedPassword = bcrypt.hashSync(password, 8); // Hashea la contraseña
-    const newUser = { username, password: hashedPassword }; // Crear un nuevo objeto de usuario
-    users.push(newUser); // Guardar el usuario en el arreglo
+    const hashedPassword = await bcrypt.hash(password, 8);
+    const newUser = { username, password: hashedPassword };
+    users.push(newUser);
     return newUser;
 };
 
-// Función para autenticar al usuario
-const authenticateUser = (username, password) => {
-    const user = users.find(user => user.username === username); // Busca el usuario
-    if (!user) return null; // Si el usuario no existe, retorna null
+const authenticateUser = async (username, password) => {
+    const user = users.find(user => user.username === username);
+    if (!user) return null;
 
-    const passwordIsValid = bcrypt.compareSync(password, user.password); // Compara la contraseña
-    if (!passwordIsValid) return null; // Si la contraseña es inválida, retorna null
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) return null;
 
-    return generateToken({ username: user.username }); // Genera el token
+    return generateToken({ username: user.username });
 };
 
 module.exports = { generateToken, createUser, authenticateUser };
