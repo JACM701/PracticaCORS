@@ -1,6 +1,6 @@
 // controllers/userController.js
 const User = require('../models/userModel');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // Obtener todos los usuarios
 exports.getAllUsers = async (req, res) => {
