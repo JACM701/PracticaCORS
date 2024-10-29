@@ -1,55 +1,43 @@
-// services/authService.js
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/userModel'); // Importa el modelo de usuario
-const secretKey = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto por una clave más segura
+const User = require('../models/userModel');
+const secretKey = 'SueñitosTieneHambreTodoElTiempo';
+const refreshSecretKey = 'CachorroLeGustaLasGomitasMagicas'; // Nueva clave para el refresh token
 
-// Función para generar un token
-const generateToken = (user) => {
-    return jwt.sign({ id: user._id, username: user.username }, secretKey, { expiresIn: '1h' }); // Token expira en 1 hora
+// Función para generar el token de acceso
+const generateAccessToken = (user) => {
+    return jwt.sign({ id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
 };
 
-// Función para crear un nuevo usuario
-const createUser = async (username, email, password) => {
-    // Verificar si el usuario ya existe en la base de datos
+// Función para generar el refresh token
+const generateRefreshToken = (user) => {
+    return jwt.sign({ id: user._id, username: user.username }, refreshSecretKey, { expiresIn: '7d' });
+};
+
+// Crear un nuevo usuario
+const createUser = async (username, password) => {
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-        throw new Error('Usuario ya existe'); // Lanza un error si el usuario ya existe
+        throw new Error('Usuario ya existe');
     }
 
-    // Hashea la contraseña y crea el nuevo usuario
     const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = new User({ username, email, password: hashedPassword });
-
-    // Guarda el usuario en la base de datos
+    const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
     return newUser;
 };
 
-// Función para autenticar al usuario
+// Autenticar al usuario
 const authenticateUser = async (username, password) => {
-    try {
-        // Busca el usuario en la base de datos
-        const user = await User.findOne({ username });
-        if (!user) {
-            console.log("Usuario no encontrado");
-            return null; // Si el usuario no existe, retorna null
-        }
+    const user = await User.findOne({ username });
+    if (!user) return null;
 
-        // Verifica la contraseña
-        const passwordIsValid = bcrypt.compareSync(password, user.password);
-        if (!passwordIsValid) {
-            console.log("Contraseña incorrecta");
-            return null;
-        }
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    if (!passwordIsValid) return null;
 
-        // Genera y retorna el token
-        return generateToken(user);
-    } catch (error) {
-        console.error("Error en la autenticación del usuario:", error);
-        return null;
-    }
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+    return { accessToken, refreshToken };
 };
 
-module.exports = { generateToken, createUser, authenticateUser };
+module.exports = { generateAccessToken, generateRefreshToken, createUser, authenticateUser };

@@ -4,35 +4,41 @@ const authService = require('../services/authService');
 
 // Registro de usuario
 exports.register = async (req, res) => {
-    const { username, email, password } = req.body;
-
-    try {
-        const newUser = await authService.createUser(username, email, password); // Incluye 'email'
-
-        // Genera un token para el nuevo usuario
-        const token = authService.generateToken(newUser);
-
-        // Envía el usuario y el token en la respuesta
-        res.status(201).json({ message: 'Usuario creado', user: newUser, token });
-    } catch (error) {
-        res.status(400).json({ message: error.message }); // Manejo de errores
-    }
-};
-
-// Iniciar sesión
-exports.login = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const token = await authService.authenticateUser(username, password);
+        const newUser = await authService.createUser(username, password);
+        res.status(201).json({ message: 'Usuario creado', user: newUser });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
-        if (!token) {
+// Inicio de sesión y generación de tokens
+exports.login = async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const tokens = await authService.authenticateUser(username, password);
+        
+        if (!tokens) {
             return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
         }
 
-        res.json({ auth: true, token });
+        res.json({ auth: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken });
     } catch (error) {
-        console.error("Error en el proceso de inicio de sesión:", error);
-        res.status(500).json({ message: 'Error al iniciar sesión' });
+        res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
+    }
+};
+
+
+// Refrescar el token de acceso
+exports.refreshToken = (req, res) => {
+    const { refreshToken } = req.body;
+
+    try {
+        const newAccessToken = authService.refreshToken(refreshToken);
+        res.json({ accessToken: newAccessToken });
+    } catch (error) {
+        res.status(403).json({ message: 'Token de refresco no válido' });
     }
 };

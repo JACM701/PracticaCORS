@@ -14,6 +14,30 @@ const app = express();
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
 
+const { generateAccessToken } = require('./services/authService');
+const jwt = require('jsonwebtoken');
+
+// Ruta para refrescar el token de acceso
+app.post('/refresh-token', (req, res) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token requerido' });
+    }
+
+    try {
+        // Verificar el refresh token
+        const decoded = jwt.verify(refreshToken, refreshSecretKey);
+        
+        // Generar un nuevo access token
+        const accessToken = generateAccessToken(decoded);
+        
+        res.json({ accessToken });
+    } catch (error) {
+        res.status(403).json({ message: 'Refresh token inválido o expirado' });
+    }
+});
+
+
 const mongoose = require('mongoose');
 
 // Conectar a MongoDB Atlas usando mongoose
