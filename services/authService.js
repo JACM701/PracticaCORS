@@ -31,21 +31,16 @@ const createUser = async (username, email, password) => {
 };
 
 // En services/authService.js
-// services/authService.js
 const authenticateUser = async (username, password) => {
     const user = await User.findOne({ username });
-    if (!user) {
-        console.log("Usuario no encontrado");
-        return null;
-    }
+    console.log("Usuario encontrado:", user ? user.username : "No encontrado");
 
-    const passwordIsValid = await user.comparePassword(password);
-    if (!passwordIsValid) {
-        console.log("Contraseña incorrecta");
-        return null;
-    }
+    if (!user) return null;
 
-    console.log("Autenticación exitosa para el usuario:", username);
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    console.log("Contraseña válida:", passwordIsValid);
+
+    if (!passwordIsValid) return null;
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
@@ -55,6 +50,7 @@ const authenticateUser = async (username, password) => {
 
     return { accessToken, refreshToken };
 };
+
 
 
 
