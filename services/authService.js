@@ -2,28 +2,29 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
-const secretKey = 'SueñitosTieneHambreTodoElTiempo';
-const refreshSecretKey = 'CachorroLeGustaLasGomitasMagicas'; // Nueva clave para el refresh token
 
-// Función para generar el token de acceso
+const secretKey = 'SueñitosTieneHambreTodoElTiempo';
+const refreshSecretKey = 'CachorroLeGustaLasGomitasMagicas';
+
+// Generar el token de acceso
 const generateAccessToken = (user) => {
     return jwt.sign({ id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
 };
 
-// Función para generar el refresh token
+// Generar el refresh token
 const generateRefreshToken = (user) => {
     return jwt.sign({ id: user._id, username: user.username }, refreshSecretKey, { expiresIn: '7d' });
 };
 
 // Crear un nuevo usuario
-const createUser = async (username, password) => {
+const createUser = async (username, email, password) => {
     const existingUser = await User.findOne({ username });
     if (existingUser) {
         throw new Error('Usuario ya existe');
     }
 
     const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = new User({ username, password: hashedPassword });
+    const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
     return newUser;
 };
@@ -43,7 +44,6 @@ const authenticateUser = async (username, password) => {
 
 // Refrescar token
 const refreshToken = async (token) => {
-    // Validar el refresh token y generar un nuevo access token
     try {
         const decoded = jwt.verify(token, refreshSecretKey);
         const user = await User.findById(decoded.id);
@@ -56,4 +56,4 @@ const refreshToken = async (token) => {
     }
 };
 
-module.exports = { generateAccessToken, generateRefreshToken, createUser, authenticateUser, refreshToken };
+module.exports = { createUser, authenticateUser, refreshToken };

@@ -1,20 +1,13 @@
 // controllers/authController.js
-
 const authService = require('../services/authService');
 
 // Registro de usuario
 exports.register = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
 
     try {
-        const newUser = await authService.createUser(username, password);
-        const tokens = await authService.authenticateUser(username, password); // Generar tokens después del registro
-        res.status(201).json({ 
-            message: 'Usuario creado', 
-            user: newUser, 
-            accessToken: tokens.accessToken, 
-            refreshToken: tokens.refreshToken 
-        });
+        const newUser = await authService.createUser(username, email, password);
+        res.status(201).json({ message: 'Usuario creado', user: newUser });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -30,32 +23,19 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
         }
 
-        // Asegúrate de que se devuelven los tokens
-        res.json({
-            auth: true,
-            accessToken: tokens.accessToken, // Aquí debería estar tu access token
-            refreshToken: tokens.refreshToken  // Aquí debería estar tu refresh token
-        });
+        res.json({ auth: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken });
     } catch (error) {
         res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
     }
 };
 
-const authenticateUser = async (username, password) => {
-    const user = await User.findOne({ username });
-    if (!user) return null;
-
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
-    if (!passwordIsValid) return null;
-
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
-    return { accessToken, refreshToken };
-};
-
 // Refrescar el token de acceso
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+        return res.status(403).json({ message: 'Token de refresco requerido' });
+    }
 
     try {
         const newAccessToken = await authService.refreshToken(refreshToken);
