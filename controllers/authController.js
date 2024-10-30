@@ -30,10 +30,27 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
         }
 
-        res.json({ auth: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken });
+        // Asegúrate de que se devuelven los tokens
+        res.json({
+            auth: true,
+            accessToken: tokens.accessToken, // Aquí debería estar tu access token
+            refreshToken: tokens.refreshToken  // Aquí debería estar tu refresh token
+        });
     } catch (error) {
         res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
     }
+};
+
+const authenticateUser = async (username, password) => {
+    const user = await User.findOne({ username });
+    if (!user) return null;
+
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    if (!passwordIsValid) return null;
+
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+    return { accessToken, refreshToken };
 };
 
 // Refrescar el token de acceso
