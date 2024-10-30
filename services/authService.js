@@ -31,23 +31,31 @@ const createUser = async (username, email, password) => {
 };
 
 // En services/authService.js
+// services/authService.js
 const authenticateUser = async (username, password) => {
     const user = await User.findOne({ username });
-    if (!user) return null; // Usuario no encontrado
+    if (!user) {
+        console.log("Usuario no encontrado");
+        return null;
+    }
 
     const passwordIsValid = await user.comparePassword(password);
-    if (!passwordIsValid) return null; // Contraseña incorrecta
+    if (!passwordIsValid) {
+        console.log("Contraseña incorrecta");
+        return null;
+    }
 
-    // Generar tokens
+    console.log("Autenticación exitosa para el usuario:", username);
+
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    // Almacenar el refresh token en la base de datos del usuario
     user.refreshToken = refreshToken;
     await user.save();
 
     return { accessToken, refreshToken };
 };
+
 
 
 // Refrescar token
