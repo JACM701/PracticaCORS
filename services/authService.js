@@ -1,74 +1,52 @@
 // services/authService.js
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+const User = require('../models/userModel'); // Modelo de usuario
+const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto a una variable de entorno en producción
+const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refresh token
 
-// Obtén las claves secretas desde el entorno o utiliza valores por defecto.
-const secretKey = process.env.JWT_SECRET || 'SueñitosTieneHambreTodoElTiempo';
-const refreshSecretKey = process.env.JWT_REFRESH_SECRET || 'CachorroLeGustaLasGomitasMagicas';
+// Crear nuevo usuario
+exports.createUser = async (username, email, password) => {
+    const hashedPassword = bcrypt.hashSync(password, 8);
 
-// Generar el token de acceso
-const generateAccessToken = (user) => {
-    return jwt.sign({ id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
+    const newUser = new User({
+        username,
+        email,
+        password: hashedPassword,
+        role: 'user',
+    });
+
+    await newUser.save();
+    return { username: newUser.username, email: newUser.email };
 };
 
-// Generar el token de refresco
-const generateRefreshToken = (user) => {
-    return jwt.sign({ id: user._id, username: user.username }, refreshSecretKey, { expiresIn: '7d' });
-};
-
-// Crear un nuevo usuario
-const createUser = async (username, email, password) => {
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-        throw new Error('Usuario ya existe');
+// Autenticar usuario y generar tokens
+exports.authenticateUser = async (username, password) => {
+    const user = await User.findOne({ username });
+    
+    if (!user) {
+        return null;
     }
 
-    const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
-    return newUser;
-};
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    
+    if (!isPasswordValid) {
+        return null;
+    }
 
-// En services/authService.js
-const authenticateUser = async (username, password) => {
-    const user = await User.findOne({ username });
-    console.log("Usuario encontrado:", user ? user.username : "No encontrado");
-
-    if (!user) return null;
-
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
-    console.log("Contraseña válida:", passwordIsValid);
-
-    if (!passwordIsValid) return null;
-
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
-
-    user.refreshToken = refreshToken;
-    await user.save();
+    const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
 
     return { accessToken, refreshToken };
 };
 
-
-
-
-// Refrescar token
-const refreshToken = async (token) => {
+// Refrescar el token de acceso
+exports.refreshToken = async (refreshToken) => {
     try {
-        const decoded = jwt.verify(token, refreshSecretKey);
-        const user = await User.findById(decoded.id);
-
-        // Verificar si el refreshToken coincide con el almacenado
-        if (!user || user.refreshToken !== token) throw new Error('Token de refresco no válido');
-
-        // Generar un nuevo token de acceso
-        const newAccessToken = generateAccessToken(user);
+        const decoded = jwt.verify(refreshToken, REFRESH_SECRET_KEY);
+        const newAccessToken = jwt.sign({ id: decoded.id, role: decoded.role }, SECRET_KEY, { expiresIn: '1h' });
         return newAccessToken;
     } catch (error) {
         throw new Error('Token de refresco no válido');
     }
 };
-
-module.exports = { createUser, authenticateUser, refreshToken };
