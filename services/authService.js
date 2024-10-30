@@ -1,3 +1,4 @@
+//services/authService
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
@@ -40,4 +41,19 @@ const authenticateUser = async (username, password) => {
     return { accessToken, refreshToken };
 };
 
-module.exports = { generateAccessToken, generateRefreshToken, createUser, authenticateUser };
+// Refrescar token
+const refreshToken = async (token) => {
+    // Validar el refresh token y generar un nuevo access token
+    try {
+        const decoded = jwt.verify(token, refreshSecretKey);
+        const user = await User.findById(decoded.id);
+        if (!user) throw new Error('Usuario no encontrado');
+
+        const newAccessToken = generateAccessToken(user);
+        return newAccessToken;
+    } catch (error) {
+        throw new Error('Token de refresco no válido');
+    }
+};
+
+module.exports = { generateAccessToken, generateRefreshToken, createUser, authenticateUser, refreshToken };

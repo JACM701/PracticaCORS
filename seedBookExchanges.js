@@ -1,4 +1,3 @@
-// seedBookExchanges.js
 const mongoose = require('mongoose');
 const User = require('./models/userModel');
 const Book = require('./models/bookModel');
@@ -6,7 +5,7 @@ const BookExchange = require('./models/bookExchangeModel');
 
 async function seedBookExchanges() {
   try {
-    await mongoose.connect('mongodb://tu_uri_aqui');
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://tu_uri_aqui');
     console.log('Conectado a MongoDB');
 
     const users = await User.find().limit(10); // Usa algunos usuarios para los intercambios

@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
 
 // Inicio de sesión y generación de tokens
 exports.login = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body; 
     try {
         const tokens = await authService.authenticateUser(username, password);
         
@@ -32,11 +32,11 @@ exports.login = async (req, res) => {
 
 
 // Refrescar el token de acceso
-exports.refreshToken = (req, res) => {
+exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body;
 
     try {
-        const newAccessToken = authService.refreshToken(refreshToken);
+        const newAccessToken = await authService.refreshToken(refreshToken);
         res.json({ accessToken: newAccessToken });
     } catch (error) {
         res.status(403).json({ message: 'Token de refresco no válido' });

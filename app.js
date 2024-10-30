@@ -25,18 +25,13 @@ app.post('/refresh-token', (req, res) => {
     }
 
     try {
-        // Verificar el refresh token
-        const decoded = jwt.verify(refreshToken, refreshSecretKey);
-        
-        // Generar un nuevo access token
+        const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
         const accessToken = generateAccessToken(decoded);
-        
         res.json({ accessToken });
     } catch (error) {
         res.status(403).json({ message: 'Refresh token inválido o expirado' });
     }
 });
-
 
 const mongoose = require('mongoose');
 
@@ -45,18 +40,16 @@ const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://Jacm701:SueñitosTien
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
 })
 .then(() => console.log('Conectado a MongoDB Atlas'))
 .catch((error) => console.error('Error al conectar a MongoDB:', error));
-
 
 // Middleware para Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Configurar CORS para permitir solo el dominio especificado desde el archivo .env
 const corsOptions = {
-    origin: process.env.CORS_ORIGIN, // Usar la variable de entorno CORS_ORIGIN
+    origin: process.env.CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
@@ -75,11 +68,11 @@ app.use(morgan('dev'));
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path.join(__dirname, 'public/uploads');
-        cb(null, uploadPath); // Ruta para guardar las imágenes
+        cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
         const uniqueName = Date.now() + path.extname(file.originalname);
-        cb(null, uniqueName); // Genera un nombre único para la imagen
+        cb(null, uniqueName);
     }
 });
 
@@ -106,10 +99,10 @@ app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController
 app.delete('/books/:id', authenticateToken, bookController.deleteBook);
 
 // Rutas para gestión de usuarios
-app.get('/users', authenticateToken, userController.getAllUsers);          // Obtener todos los usuarios
-app.get('/users/:id', authenticateToken, userController.getUserById);      // Obtener usuario por ID
-app.put('/users/:id', authenticateToken, userController.updateUser);       // Actualizar usuario por ID
-app.delete('/users/:id', authenticateToken, userController.deleteUser);    // Eliminar usuario por ID
+app.get('/users', authenticateToken, userController.getAllUsers);
+app.get('/users/:id', authenticateToken, userController.getUserById);
+app.put('/users/:id', authenticateToken, userController.updateUser);
+app.delete('/users/:id', authenticateToken, userController.deleteUser);
 
 // Puerto del servidor usando variable de entorno
 const PORT = process.env.PORT || 3000;
