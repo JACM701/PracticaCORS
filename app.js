@@ -8,7 +8,7 @@ const cors = require('cors');
 const authenticateToken = require('./middlewares/authMiddleware');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swaggerConfig');
-require('dotenv').config();  // Cargar variables de entorno
+require('dotenv').config();
 
 const userController = require('./controllers/userController');
 const bookController = require('./controllers/bookController');
@@ -16,7 +16,6 @@ const authController = require('./controllers/authController');
 
 const app = express();
 
-// Conectar a MongoDB Atlas usando mongoose
 const mongoose = require('mongoose');
 const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://Jacm701:SueñitosTieneHambreTodoElTiempo@bookswap.cuqet.mongodb.net/?retryWrites=true&w=majority&appName=BookSwap';
 
@@ -32,7 +31,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Configurar CORS
 const corsOptions = {
-    origin: process.env.CORS_ORIGIN,
+    origin: '*', // Cambiar esto a process.env.CORS_ORIGIN en producción
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
@@ -59,7 +58,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-app.use(express.static('public')); // Servir archivos estáticos
+app.use(express.static('public'));
 
 // Rutas de autenticación
 app.post('/register', authController.register);

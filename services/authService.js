@@ -1,3 +1,4 @@
+// services/authService.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel'); // Modelo de usuario
 const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto a una variable de entorno en producción
@@ -19,14 +20,17 @@ exports.createUser = async (username, email, password) => {
 // Autenticar usuario sin encriptación
 exports.authenticateUser = async (username, password) => {
     const user = await User.findOne({ username });
+    console.log('Usuario encontrado:', user);
 
     if (!user || user.password !== password) {
-        return null;  // Verifica directamente con la contraseña en texto plano
+        console.log('Error de autenticación: usuario o contraseña incorrectos');
+        return null;
     }
 
     const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
     const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
 
+    console.log('Tokens generados:', { accessToken, refreshToken });
     return { accessToken, refreshToken };
 };
 
