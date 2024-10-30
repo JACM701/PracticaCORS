@@ -1,9 +1,9 @@
 // services/authService.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModel'); // Modelo de usuario
-const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto a una variable de entorno en producción
-const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refresh token
+const User = require('../models/userModel');
+const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo';
+const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas';
 
 // Crear nuevo usuario
 exports.createUser = async (username, email, password) => {
@@ -25,11 +25,13 @@ exports.authenticateUser = async (username, password) => {
     const user = await User.findOne({ username });
     
     if (!user) {
+        console.log("Usuario no encontrado");
         return null;
     }
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
-    
+    console.log("Contraseña válida:", isPasswordValid);
+
     if (!isPasswordValid) {
         return null;
     }
