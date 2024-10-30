@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET || 'SueñitosTieneHambreTodoElTiempo';
 
 const authenticateToken = (req, res, next) => {
-    const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1]; // Obtener el token
+    const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
 
     if (!token) return res.sendStatus(401); // Si no hay token, devuelve 401
 

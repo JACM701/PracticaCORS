@@ -1,3 +1,4 @@
+// app.js
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -10,9 +11,10 @@ const swaggerSpec = require('./swaggerConfig');
 require('dotenv').config();  // Cargar variables de entorno
 
 const userController = require('./controllers/userController');
-const app = express();
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
+
+const app = express();
 
 // Conectar a MongoDB Atlas usando mongoose
 const mongoose = require('mongoose');
@@ -70,8 +72,8 @@ app.get('/protected', authenticateToken, (req, res) => {
 });
 
 // Rutas CRUD para libros
-app.get('/books', bookController.getAllBooks);
-app.get('/books/:id', bookController.getBookById);
+app.get('/books', authenticateToken, bookController.getAllBooks);
+app.get('/books/:id', authenticateToken, bookController.getBookById);
 app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook);
 app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook);
 app.delete('/books/:id', authenticateToken, bookController.deleteBook);

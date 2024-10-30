@@ -29,33 +29,22 @@ const createUser = async (username, email, password) => {
 };
 
 // Autenticar al usuario
-// services/authService.js
-
 const authenticateUser = async (username, password) => {
-    console.log("Buscando usuario en la base de datos...");
     const user = await User.findOne({ username });
-    if (!user) {
-        console.log("Usuario no encontrado");
-        return null;
-    }
+    if (!user) return null;
 
-    console.log("Verificando contraseña...");
     const passwordIsValid = bcrypt.compareSync(password, user.password);
-    if (!passwordIsValid) {
-        console.log("Contraseña incorrecta");
-        return null;
-    }
+    if (!passwordIsValid) return null;
 
-    console.log("Generando tokens...");
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
-
+    
+    // Almacena el refresh token en el usuario
     user.refreshToken = refreshToken;
     await user.save();
 
     return { accessToken, refreshToken };
 };
-
 
 // Refrescar token
 const refreshToken = async (token) => {

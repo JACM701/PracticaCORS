@@ -1,6 +1,4 @@
-//bookController.js
-const multer = require('multer');
-const path = require('path');
+// controllers/bookController.js
 const Book = require('../models/bookModel');
 
 // Obtener todos los libros
@@ -50,7 +48,6 @@ exports.addBook = async (req, res) => {
     }
 };
 
-
 // Actualizar un libro
 exports.updateBook = async (req, res) => {
     try {
@@ -63,11 +60,11 @@ exports.updateBook = async (req, res) => {
                 fecha_publicacion: req.body.fecha_publicacion,
                 genero: req.body.genero,
                 imagen: req.file ? `/uploads/${req.file.filename}` : req.body.imagen,
-                edicion: req.body.edicion, // Nuevo campo
-                ano_publicado: req.body.ano_publicado, // Nuevo campo
-                tipo_pasta: req.body.tipo_pasta, // Nuevo campo
-                editorial: req.body.editorial, // Nuevo campo
-                incluye_accesorios: req.body.incluye_accesorios // Nuevo campo
+                edicion: req.body.edicion,
+                ano_publicado: req.body.ano_publicado,
+                tipo_pasta: req.body.tipo_pasta,
+                editorial: req.body.editorial,
+                incluye_accesorios: req.body.incluye_accesorios
             },
             { new: true }
         );
