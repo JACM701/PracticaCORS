@@ -1,42 +1,52 @@
-// controllers/authController.js
-const authService = require('../services/authService');
+// services/authService.js
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/userModel'); // Modelo de usuario
+const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto a una variable de entorno en producción
+const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refresh token
 
-// Registro de usuario
-exports.register = async (req, res) => {
-    const { username, email, password } = req.body;
+// Crear nuevo usuario
+exports.createUser = async (username, email, password) => {
+    const hashedPassword = bcrypt.hashSync(password, 8);
 
-    try {
-        const newUser = await authService.createUser(username, email, password);
-        res.status(201).json({ message: 'Usuario creado', user: newUser });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    const newUser = new User({
+        username,
+        email,
+        password: hashedPassword,
+        role: 'user',
+    });
+
+    await newUser.save();
+    return { username: newUser.username, email: newUser.email };
 };
 
-// Inicio de sesión y generación de tokens
-exports.login = async (req, res) => {
-    const { username, password } = req.body;
-
-    try {
-        const tokens = await authService.authenticateUser(username, password);
-        
-        if (!tokens) {
-            return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
-        }
-
-        res.json({ auth: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
+// Autenticar usuario y generar tokens
+exports.authenticateUser = async (username, password) => {
+    const user = await User.findOne({ username });
+    
+    if (!user) {
+        return null;
     }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    
+    if (!isPasswordValid) {
+        return null;
+    }
+
+    const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
+
+    return { accessToken, refreshToken };
 };
 
 // Refrescar el token de acceso
-exports.refreshToken = async (req, res) => {
-    const { refreshToken } = req.body;
+exports.refreshToken = async (refreshToken) => {
     try {
-        const newAccessToken = await authService.refreshToken(refreshToken);
-        res.json({ accessToken: newAccessToken });
+        const decoded = jwt.verify(refreshToken, REFRESH_SECRET_KEY);
+        const newAccessToken = jwt.sign({ id: decoded.id, role: decoded.role }, SECRET_KEY, { expiresIn: '1h' });
+        return newAccessToken;
     } catch (error) {
-        res.status(403).json({ message: 'Token de refresco no válido' });
+        throw new Error('Token de refresco no válido');
     }
 };
