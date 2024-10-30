@@ -1,4 +1,4 @@
-//services/authService
+// services/authService.js
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
@@ -40,7 +40,7 @@ const authenticateUser = async (username, password) => {
     const refreshToken = generateRefreshToken(user);
     
     // Almacena el refresh token en el usuario
-    user.refreshToken = refreshToken;
+    user.refreshToken = refreshToken; // Asegúrate de que este campo existe en tu modelo
     await user.save();
 
     return { accessToken, refreshToken };
