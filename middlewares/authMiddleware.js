@@ -1,6 +1,6 @@
 // middlewares/authMiddleware.js
 const jwt = require('jsonwebtoken');
-const secretKey = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto por una clave más segura y mantenla en un lugar seguro
+const secretKey = process.env.JWT_SECRET || 'SueñitosTieneHambreTodoElTiempo';
 
 const authenticateToken = (req, res, next) => {
     const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1]; // Obtener el token

@@ -40,7 +40,7 @@ const authenticateUser = async (username, password) => {
     const refreshToken = generateRefreshToken(user);
     
     // Almacena el refresh token en el usuario
-    user.refreshToken = refreshToken; // Asegúrate de que este campo existe en tu modelo
+    user.refreshToken = refreshToken;
     await user.save();
 
     return { accessToken, refreshToken };

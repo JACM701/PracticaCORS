@@ -1,6 +1,6 @@
 // db.js
 const mongoose = require('mongoose');
-require('dotenv').config(); // Asegúrate de que el archivo .env esté configurado
+require('dotenv').config();
 
 const connectDB = async () => {
     try {
