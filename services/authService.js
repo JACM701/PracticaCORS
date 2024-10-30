@@ -2,16 +2,15 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
+const secretKey = process.env.JWT_SECRET || 'SueñitosTieneHambreTodoElTiempo';
+const refreshSecretKey = process.env.JWT_REFRESH_SECRET || 'CachorroLeGustaLasGomitasMagicas';
 
-const secretKey = 'SueñitosTieneHambreTodoElTiempo';
-const refreshSecretKey = 'CachorroLeGustaLasGomitasMagicas';
-
-// Generar el token de acceso
+// Función para generar el token de acceso
 const generateAccessToken = (user) => {
     return jwt.sign({ id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
 };
 
-// Generar el refresh token
+// Función para generar el refresh token
 const generateRefreshToken = (user) => {
     return jwt.sign({ id: user._id, username: user.username }, refreshSecretKey, { expiresIn: '7d' });
 };
@@ -39,6 +38,11 @@ const authenticateUser = async (username, password) => {
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
+    
+    // Almacena el refresh token en el usuario
+    user.refreshToken = refreshToken;
+    await user.save();
+
     return { accessToken, refreshToken };
 };
 
@@ -47,7 +51,7 @@ const refreshToken = async (token) => {
     try {
         const decoded = jwt.verify(token, refreshSecretKey);
         const user = await User.findById(decoded.id);
-        if (!user) throw new Error('Usuario no encontrado');
+        if (!user || user.refreshToken !== token) throw new Error('Token de refresco no válido');
 
         const newAccessToken = generateAccessToken(user);
         return newAccessToken;

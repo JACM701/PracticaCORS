@@ -15,7 +15,8 @@ exports.register = async (req, res) => {
 
 // Inicio de sesión y generación de tokens
 exports.login = async (req, res) => {
-    const { username, password } = req.body; 
+    const { username, password } = req.body;
+
     try {
         const tokens = await authService.authenticateUser(username, password);
         
@@ -32,11 +33,6 @@ exports.login = async (req, res) => {
 // Refrescar el token de acceso
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body;
-
-    if (!refreshToken) {
-        return res.status(403).json({ message: 'Token de refresco requerido' });
-    }
-
     try {
         const newAccessToken = await authService.refreshToken(refreshToken);
         res.json({ accessToken: newAccessToken });

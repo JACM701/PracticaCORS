@@ -14,32 +14,13 @@ const app = express();
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
 
-const { generateAccessToken } = require('./services/authService');
-const jwt = require('jsonwebtoken');
-
-// Ruta para refrescar el token de acceso
-app.post('/refresh-token', (req, res) => {
-    const { refreshToken } = req.body;
-    if (!refreshToken) {
-        return res.status(401).json({ message: 'Refresh token requerido' });
-    }
-
-    try {
-        const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
-        const accessToken = generateAccessToken(decoded);
-        res.json({ accessToken });
-    } catch (error) {
-        res.status(403).json({ message: 'Refresh token inválido o expirado' });
-    }
-});
-
-const mongoose = require('mongoose');
-
 // Conectar a MongoDB Atlas usando mongoose
+const mongoose = require('mongoose');
 const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://Jacm701:SueñitosTieneHambreTodoElTiempo@bookswap.cuqet.mongodb.net/?retryWrites=true&w=majority&appName=BookSwap';
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
+    useUnifiedTopology: true
 })
 .then(() => console.log('Conectado a MongoDB Atlas'))
 .catch((error) => console.error('Error al conectar a MongoDB:', error));
@@ -47,24 +28,23 @@ mongoose.connect(mongoURI, {
 // Middleware para Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Configurar CORS para permitir solo el dominio especificado desde el archivo .env
+// Configurar CORS
 const corsOptions = {
     origin: process.env.CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-// Habilitar CORS usando las opciones configuradas
 app.use(cors(corsOptions));
 
-// Middleware de body-parser para procesar JSON y datos de formularios
+// Middleware de body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Middleware de Morgan para logging
 app.use(morgan('dev'));
 
-// Configurar Multer para guardar imágenes en la carpeta 'public/uploads'
+// Configurar Multer para manejar la subida de archivos
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path.join(__dirname, 'public/uploads');
@@ -76,22 +56,20 @@ const storage = multer.diskStorage({
     }
 });
 
-// Definir el middleware para manejar la subida de archivos
 const upload = multer({ storage: storage });
-
-// Servir archivos estáticos desde la carpeta 'public' para acceder a las imágenes
-app.use(express.static('public'));
+app.use(express.static('public')); // Servir archivos estáticos
 
 // Rutas de autenticación
 app.post('/register', authController.register);
 app.post('/login', authController.login);
+app.post('/refresh-token', authController.refreshToken);
 
-// Asegúrate de agregar el middleware de autenticación a las rutas que requieran autenticación
+// Ruta protegida de ejemplo
 app.get('/protected', authenticateToken, (req, res) => {
     res.json({ message: 'Acceso permitido', user: req.user });
 });
 
-// Rutas CRUD - agregar autenticación
+// Rutas CRUD para libros
 app.get('/books', bookController.getAllBooks);
 app.get('/books/:id', bookController.getBookById);
 app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook);
@@ -104,7 +82,7 @@ app.get('/users/:id', authenticateToken, userController.getUserById);
 app.put('/users/:id', authenticateToken, userController.updateUser);
 app.delete('/users/:id', authenticateToken, userController.deleteUser);
 
-// Puerto del servidor usando variable de entorno
+// Puerto del servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
