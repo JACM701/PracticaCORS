@@ -4,16 +4,17 @@ const authService = require('../services/authService');
 
 // Registro de usuario
 exports.register = async (req, res) => {
-    const { username, email, password } = req.body; // Incluyendo email
-
-    // Validar que todos los campos requeridos estén presentes
-    if (!username || !email || !password) {
-        return res.status(400).json({ message: 'Todos los campos son requeridos.' });
-    }
+    const { username, password } = req.body;
 
     try {
-        const newUser = await authService.createUser(username, email, password);
-        res.status(201).json({ message: 'Usuario creado', user: newUser });
+        const newUser = await authService.createUser(username, password);
+        const tokens = await authService.authenticateUser(username, password); // Generar tokens después del registro
+        res.status(201).json({ 
+            message: 'Usuario creado', 
+            user: newUser, 
+            accessToken: tokens.accessToken, 
+            refreshToken: tokens.refreshToken 
+        });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -21,7 +22,7 @@ exports.register = async (req, res) => {
 
 // Inicio de sesión y generación de tokens
 exports.login = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body; 
     try {
         const tokens = await authService.authenticateUser(username, password);
         

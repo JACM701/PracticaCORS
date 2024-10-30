@@ -2,9 +2,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
-
 const secretKey = 'SueñitosTieneHambreTodoElTiempo';
-const refreshSecretKey = 'CachorroLeGustaLasGomitasMagicas';
+const refreshSecretKey = 'CachorroLeGustaLasGomitasMagicas'; // Nueva clave para el refresh token
 
 // Función para generar el token de acceso
 const generateAccessToken = (user) => {
@@ -17,14 +16,14 @@ const generateRefreshToken = (user) => {
 };
 
 // Crear un nuevo usuario
-const createUser = async (username, email, password) => {
+const createUser = async (username, password) => {
     const existingUser = await User.findOne({ username });
     if (existingUser) {
         throw new Error('Usuario ya existe');
     }
 
     const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
     return newUser;
 };
@@ -57,4 +56,4 @@ const refreshToken = async (token) => {
     }
 };
 
-module.exports = { createUser, authenticateUser, refreshToken };
+module.exports = { generateAccessToken, generateRefreshToken, createUser, authenticateUser, refreshToken };
