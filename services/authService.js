@@ -1,15 +1,16 @@
-// services/authService.js
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs'); // Usar bcryptjs en lugar de bcrypt
 const User = require('../models/userModel'); // Modelo de usuario
-const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto a una variable de entorno en producción
-const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refresh token
+const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo';
+const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas';
 
-// Crear nuevo usuario sin encriptar contraseña
+// Crear nuevo usuario con encriptación
 exports.createUser = async (username, email, password) => {
+    const hashedPassword = await bcrypt.hash(password, 10); // Encripta la contraseña
     const newUser = new User({
         username,
         email,
-        password,  // Guarda la contraseña en texto plano
+        password: hashedPassword,
         role: 'user',
     });
 
@@ -17,20 +18,25 @@ exports.createUser = async (username, email, password) => {
     return { username: newUser.username, email: newUser.email };
 };
 
-// Autenticar usuario sin encriptación
+// Autenticar usuario con comparación encriptada
 exports.authenticateUser = async (username, password) => {
     const user = await User.findOne({ username });
-    console.log('Usuario encontrado:', user);
+    
+    if (!user) {
+        console.log('Usuario no encontrado');
+        return null;
+    }
 
-    if (!user || user.password !== password) {
-        console.log('Error de autenticación: usuario o contraseña incorrectos');
+    // Verificar la contraseña encriptada
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        console.log('La contraseña no coincide');
         return null;
     }
 
     const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
     const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
 
-    console.log('Tokens generados:', { accessToken, refreshToken });
     return { accessToken, refreshToken };
 };
 
