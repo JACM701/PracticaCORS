@@ -7,7 +7,7 @@ const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refres
 // Crear nuevo usuario con contraseña encriptada
 exports.createUser = async (username, email, password) => {
     try {
-        const hashedPassword = bcrypt.hashSync(password, 8);  // Encripta la contraseña
+        const hashedPassword = await bcrypt.hash(password, 8);  // Usa bcrypt.hash de forma asíncrona
         const newUser = new User({
             username,
             email,
