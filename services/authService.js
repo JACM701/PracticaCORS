@@ -4,10 +4,10 @@ const User = require('../models/userModel'); // Modelo de usuario
 const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto a una variable de entorno en producción
 const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refresh token
 
-// Crear nuevo usuario con contraseña encriptada
+// Crear nuevo usuario con contraseña encriptada con cost factor consistente
 exports.createUser = async (username, email, password) => {
     try {
-        const hashedPassword = await bcrypt.hash(password, 8);  // Encripta la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);  // Encripta con cost factor 10
         console.log("Contraseña hasheada para el usuario:", hashedPassword);
         
         const newUser = new User({
