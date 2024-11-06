@@ -4,10 +4,10 @@ const User = require('../models/userModel'); // Modelo de usuario
 const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto a una variable de entorno en producción
 const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refresh token
 
-// Crear nuevo usuario con contraseña encriptada con cost factor consistente
+// Crear usuario con hasheo y verificar cost factor
 exports.createUser = async (username, email, password) => {
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);  // Encripta con cost factor 10
+        const hashedPassword = await bcrypt.hash(password, 10);
         console.log("Contraseña hasheada para el usuario:", hashedPassword);
         
         const newUser = new User({
@@ -26,20 +26,20 @@ exports.createUser = async (username, email, password) => {
     }
 };
 
-// Autenticar usuario comparando contraseñas encriptadas
+// Autenticar usuario con logs detallados para verificación
 exports.authenticateUser = async (username, password) => {
     try {
         const user = await User.findOne({ username });
         if (!user) {
             console.log("Usuario no encontrado");
-            return null; 
+            return null;
         }
 
         console.log("Contraseña en la base de datos:", user.password);
         console.log("Contraseña ingresada:", password);
 
-        // Compara la contraseña ingresada con la almacenada encriptada
-        const passwordIsValid = await bcrypt.compare(password, user.password);
+        // Comparar directamente
+        const passwordIsValid = bcrypt.compareSync(password, user.password); // Usa .compareSync() para ver si sincronizado da un resultado válido
         console.log("¿Contraseña válida?", passwordIsValid);
         
         if (!passwordIsValid) {
