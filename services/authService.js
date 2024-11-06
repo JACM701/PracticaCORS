@@ -27,35 +27,30 @@ exports.createUser = async (username, email, password) => {
 // Autenticar usuario comparando contraseñas encriptadas
 exports.authenticateUser = async (username, password) => {
     try {
-        console.log('Datos de inicio de sesión recibidos:', { username, password });
-
         const user = await User.findOne({ username });
         if (!user) {
-            console.log('Usuario no encontrado');
-            return null;
+            console.log("Usuario no encontrado");
+            return null; 
         }
 
         // Compara la contraseña ingresada con la almacenada encriptada
         const passwordIsValid = await bcrypt.compare(password, user.password);
-        console.log('¿Contraseña válida?', passwordIsValid); // Verificar resultado de comparación
-
+        console.log("¿Contraseña válida?", passwordIsValid);
         if (!passwordIsValid) {
-            console.log('La contraseña no coincide');
-            return null;  // Contraseña incorrecta
+            console.log("La contraseña no coincide");
+            return null;  
         }
 
-        // Generar tokens si la autenticación es exitosa
         const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
         const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
-        
-        console.log('Tokens retornados al cliente:', { accessToken, refreshToken });
+
+        console.log("Tokens retornados al cliente:", { accessToken, refreshToken });
         return { accessToken, refreshToken };
     } catch (error) {
-        console.error('Error al autenticar usuario:', error.message);
+        console.error("Error en autenticación:", error.message);
         throw error;
     }
 };
-
 // Refrescar el token de acceso
 exports.refreshToken = async (refreshToken) => {
     try {
