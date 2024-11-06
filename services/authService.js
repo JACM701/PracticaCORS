@@ -7,7 +7,9 @@ const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refres
 // Crear nuevo usuario con contraseña encriptada
 exports.createUser = async (username, email, password) => {
     try {
-        const hashedPassword = await bcrypt.hash(password, 8);  // Usa bcrypt.hash de forma asíncrona
+        const hashedPassword = await bcrypt.hash(password, 8);  // Encripta la contraseña
+        console.log("Contraseña hasheada para el usuario:", hashedPassword);
+        
         const newUser = new User({
             username,
             email,
@@ -33,9 +35,13 @@ exports.authenticateUser = async (username, password) => {
             return null; 
         }
 
+        console.log("Contraseña en la base de datos:", user.password);
+        console.log("Contraseña ingresada:", password);
+
         // Compara la contraseña ingresada con la almacenada encriptada
         const passwordIsValid = await bcrypt.compare(password, user.password);
         console.log("¿Contraseña válida?", passwordIsValid);
+        
         if (!passwordIsValid) {
             console.log("La contraseña no coincide");
             return null;  
@@ -51,6 +57,7 @@ exports.authenticateUser = async (username, password) => {
         throw error;
     }
 };
+
 // Refrescar el token de acceso
 exports.refreshToken = async (refreshToken) => {
     try {
