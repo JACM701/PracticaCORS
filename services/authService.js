@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs'); // Usar bcryptjs en lugar de bcrypt
+const bcrypt = require('bcryptjs');
 const User = require('../models/userModel'); // Modelo de usuario
-const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo';
-const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas';
+const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Cambia esto a una variable de entorno en producción
+const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Para el refresh token
 
-// Crear nuevo usuario con encriptación
+// Crear nuevo usuario con contraseña encriptada
 exports.createUser = async (username, email, password) => {
-    const hashedPassword = await bcrypt.hash(password, 10); // Encripta la contraseña
+    const hashedPassword = bcrypt.hashSync(password, 8);  // Encripta la contraseña
     const newUser = new User({
         username,
         email,
@@ -18,20 +18,18 @@ exports.createUser = async (username, email, password) => {
     return { username: newUser.username, email: newUser.email };
 };
 
-// Autenticar usuario con comparación encriptada
+// Autenticar usuario comparando contraseñas encriptadas
 exports.authenticateUser = async (username, password) => {
     const user = await User.findOne({ username });
-    
+
     if (!user) {
-        console.log('Usuario no encontrado');
-        return null;
+        return null;  // Usuario no encontrado
     }
 
-    // Verificar la contraseña encriptada
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-        console.log('La contraseña no coincide');
-        return null;
+    // Compara la contraseña ingresada con la almacenada encriptada
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) {
+        return null;  // Contraseña incorrecta
     }
 
     const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });

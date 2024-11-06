@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { faker } = require('@faker-js/faker');
+const { faker } = require('@faker-js/faker'); // Actualizar a faker.internet.username()
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const User = require('./models/userModel');
@@ -10,6 +10,7 @@ const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://Jacm701:SueñitosTien
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
+    useUnifiedTopology: true, // Asegúrate de usar esta opción también
 })
 .then(() => console.log('Conectado a MongoDB'))
 .catch((error) => console.error('Error al conectar a MongoDB:', error));
@@ -24,48 +25,39 @@ async function insertInBatches(documents, batchSize, model) {
 }
 
 // Función para autenticar el usuario en la API
-async function authenticateUser() {
+async function authenticateUser(username, password) {
     try {
         const response = await axios.post('https://api-bookswap.onrender.com/login', {
-            email: 'admin@example.com', // Cambia esto a un usuario que sí exista
-            password: 'password123',
+            username,
+            password,
         });
-        return response.data.accessToken;
+        return response.data.accessToken; // Devuelve el token de acceso
     } catch (error) {
-        console.error('Error al autenticar:', error.response?.data || error.message);
-        return null;
+        console.error(`Error al autenticar usuario ${username}:`, error.response?.data || error.message);
+        return null; // Devuelve null si hay un error
     }
 }
 
-// Función para registrar el usuario en la API
-async function registerUserInAPI(user, token) {
-    try {
-        const response = await axios.post('https://api-bookswap.onrender.com/register', {
-            username: user.username,
-            email: user.email,
-            password: 'password123',
-        }, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        return response.data;
-    } catch (error) {
-        if (error.response?.data?.message === 'Usuario ya existe') {
-            console.log(`El usuario ${user.username} ya existe. Ignorando...`);
-            return null;  // Ignorar si el usuario ya existe
-        }
-        console.error(`Error al registrar usuario ${user.username}:`, error.response?.data || error.message);
-        return null;
-    }
+// Función para registrar el usuario en la base de datos
+async function registerUserInDB(username, email, hashedPassword, role) {
+    const user = new User({
+        username,
+        email,
+        password: hashedPassword,
+        role,
+    });
+    await user.save(); // Guarda el usuario en la base de datos
+    return user; // Devuelve el usuario creado
 }
 
-// Función para añadir 1000 usuarios con sus 1000 libros
+// Función para añadir usuarios con libros
 async function seedUsersWithBooks() {
     try {
-        await User.deleteMany({});
-        await Book.deleteMany({});
+        await User.deleteMany({}); // Elimina todos los usuarios existentes
+        await Book.deleteMany({}); // Elimina todos los libros existentes
 
-        const usersSet = new Set();
-        const users = [];
+        const usersSet = new Set(); // Para asegurar unicidad de correos y nombres de usuario
+        
         for (let i = 0; i < 1000; i++) {
             let email, username;
 
@@ -77,36 +69,25 @@ async function seedUsersWithBooks() {
 
             // Generar un nombre de usuario único
             do {
-                username = faker.internet.userName();
+                username = faker.internet.username(); // Método actualizado
             } while (usersSet.has(username));
             usersSet.add(username);
 
-            const hashedPassword = bcrypt.hashSync('password123', 8);
+            const hashedPassword = bcrypt.hashSync('password123', 8); // Hashea la contraseña
 
-            const user = new User({
-                username: username,
-                email: email,
-                password: hashedPassword,
-                role: faker.helpers.arrayElement(['user', 'admin']),
-            });
+            // Registrar usuario en la base de datos
+            const user = await registerUserInDB(username, email, hashedPassword, 'user');
+            console.log(`Usuario registrado: ${username}`);
 
-            users.push(user);
-        }
+            // Autenticar el usuario para obtener su token
+            const token = await authenticateUser(username, 'password123');
+            if (!token) {
+                console.error(`No se pudo autenticar al usuario ${username}, saltando...`);
+                continue; // Si falla la autenticación, salta al siguiente usuario
+            }
 
-        // Insertar usuarios en lotes de 100
-        const savedUsers = await User.insertMany(users);
-        console.log('1000 usuarios agregados exitosamente');
-
-        const token = await authenticateUser(); // Autenticarse antes de registrar usuarios
-        if (!token) return; // Si no se puede autenticar, salir
-
-        for (const user of savedUsers) {
-            const registration = await registerUserInAPI(user, token);
-            if (!registration) continue; // Ignorar si el registro falla
-
-            const books = [];
-            for (let j = 0; j < 1000; j++) {
-                const book = new Book({
+            for (let j = 0; j < 10; j++) { // Genera 10 libros por usuario
+                const book = {
                     titulo: faker.lorem.words(3),
                     autor: faker.name.findName(),
                     descripcion: faker.lorem.sentence(),
@@ -118,18 +99,25 @@ async function seedUsersWithBooks() {
                     tipo_pasta: faker.helpers.arrayElement(['Dura', 'Suave']),
                     editorial: faker.company.companyName(),
                     incluye_accesorios: faker.datatype.boolean(),
-                    propietario: user._id,
-                });
-                books.push(book);
-            }
+                    propietario: user._id, // Asocia el libro al usuario creado
+                };
 
-            await insertInBatches(books, 100, Book);
-            console.log(`1000 libros agregados para el usuario ${user.username}`);
+                // Crear el libro en la API utilizando el token del usuario
+                try {
+                    await axios.post('https://api-bookswap.onrender.com/books', book, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    console.log(`Libro creado para el usuario ${username}: ${book.titulo}`);
+                } catch (error) {
+                    console.error(`Error al crear libro para el usuario ${username}:`, error.response?.data || error.message);
+                }
+            }
+            console.log(`Libros creados para el usuario ${username}`);
         }
     } catch (error) {
         console.error('Error al agregar usuarios y libros:', error);
     } finally {
-        mongoose.connection.close();
+        mongoose.connection.close(); // Cierra la conexión a la base de datos al final
     }
 }
 
