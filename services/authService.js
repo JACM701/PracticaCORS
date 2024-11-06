@@ -37,6 +37,8 @@ exports.authenticateUser = async (username, password) => {
 
         // Compara la contraseña ingresada con la almacenada encriptada
         const passwordIsValid = await bcrypt.compare(password, user.password);
+        console.log('¿Contraseña válida?', passwordIsValid); // Verificar resultado de comparación
+
         if (!passwordIsValid) {
             console.log('La contraseña no coincide');
             return null;  // Contraseña incorrecta
