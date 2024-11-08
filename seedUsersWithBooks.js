@@ -1,3 +1,4 @@
+//seedUsersWithBooks.js
 const mongoose = require('mongoose');
 const { faker } = require('@faker-js/faker'); // Actualizar a faker.internet.username()
 const bcrypt = require('bcryptjs');

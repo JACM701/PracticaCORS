@@ -12,7 +12,7 @@ const swaggerOptions = {
     ],
     components: {
         schemas: {
-            Libro: {
+            Book: { // Cambié de "Libro" a "Book" para mantener la consistencia en inglés
                 type: "object",
                 properties: {
                     id: {
@@ -20,63 +20,63 @@ const swaggerOptions = {
                         description: "ID del libro",
                         example: 1,
                     },
-                    titulo: {
+                    title: { // Cambié "titulo" a "title" para consistencia
                         type: "string",
                         description: "Título del libro",
                         example: "El principito",
                     },
-                    autor: {
+                    author: {
                         type: "string",
                         description: "Autor del libro",
                         example: "Antoine de Saint-Exupéry",
                     },
-                    descripcion: {
+                    description: {
                         type: "string",
                         description: "Descripción del libro",
                         example: "Una historia corta pero conmovedora.",
                     },
-                    fecha_publicacion: {
+                    publish_date: {
                         type: "string",
                         description: "Fecha de publicación del libro",
                         example: "1943-04-06",
                     },
-                    genero: {
+                    genre: {
                         type: "string",
                         description: "Género literario",
                         example: "Fantasía",
                     },
-                    imagen: {
+                    image: {
                         type: "string",
                         description: "URL de la imagen del libro",
                         example: "/uploads/el-principito.jpg",
                     },
-                    edicion: {
+                    edition: {
                         type: "string",
                         description: "Edición del libro",
                         example: "Primera edición",
                     },
-                    ano_publicacion: {
+                    year_published: {
                         type: "integer",
                         description: "Año de publicación del libro",
                         example: 1943,
                     },
-                    tipo_tapa: {
+                    cover_type: {
                         type: "string",
                         description: "Tipo de tapa del libro",
                         example: "Dura",
                     },
-                    editorial: {
+                    publisher: {
                         type: "string",
                         description: "Editorial del libro",
                         example: "Gallimard",
                     },
-                    accesorios_incluidos: {
+                    accessories_included: {
                         type: "boolean",
                         description: "Indica si el libro incluye accesorios",
                         example: true,
                     },
                 },
-                required: ["titulo", "autor", "descripcion", "fecha_publicacion", "genero"],
+                required: ["title", "author", "description", "publish_date", "genre"],
             },
             User: {
                 type: "object",
@@ -91,12 +91,12 @@ const swaggerOptions = {
                         description: "Contraseña",
                         example: "password123",
                     },
-                    nombre: {
+                    name: {
                         type: "string",
                         description: "Nombre completo del usuario",
                         example: "Juan Pérez",
                     },
-                    telefono: {
+                    phone: {
                         type: "string",
                         description: "Número de teléfono del usuario",
                         example: "+34 600 123 456",
@@ -107,7 +107,7 @@ const swaggerOptions = {
                         example: "juan.perez@example.com",
                     },
                 },
-                required: ["username", "password", "nombre", "telefono", "email"],
+                required: ["username", "password", "name", "phone", "email"],
             },
         },
     },
@@ -116,6 +116,7 @@ const swaggerOptions = {
             post: {
                 summary: "Registrar un nuevo usuario",
                 requestBody: {
+                    required: true,
                     content: {
                         "application/json": {
                             schema: {
@@ -128,6 +129,9 @@ const swaggerOptions = {
                     201: {
                         description: "Usuario registrado con éxito",
                     },
+                    400: {
+                        description: "Solicitud inválida",
+                    },
                 },
             },
         },
@@ -135,6 +139,7 @@ const swaggerOptions = {
             post: {
                 summary: "Iniciar sesión",
                 requestBody: {
+                    required: true,
                     content: {
                         "application/json": {
                             schema: {
@@ -146,6 +151,9 @@ const swaggerOptions = {
                 responses: {
                     200: {
                         description: "Inicio de sesión exitoso",
+                    },
+                    401: {
+                        description: "Credenciales incorrectas",
                     },
                 },
             },
@@ -161,7 +169,7 @@ const swaggerOptions = {
                                 schema: {
                                     type: "array",
                                     items: {
-                                        $ref: "#/components/schemas/Libro",
+                                        $ref: "#/components/schemas/Book",
                                     },
                                 },
                             },
@@ -172,10 +180,11 @@ const swaggerOptions = {
             post: {
                 summary: "Añadir un nuevo libro",
                 requestBody: {
+                    required: true,
                     content: {
                         "multipart/form-data": {
                             schema: {
-                                $ref: "#/components/schemas/Libro",
+                                $ref: "#/components/schemas/Book",
                             },
                         },
                     },
@@ -183,6 +192,9 @@ const swaggerOptions = {
                 responses: {
                     201: {
                         description: "Libro añadido con éxito",
+                    },
+                    400: {
+                        description: "Solicitud inválida",
                     },
                 },
             },
@@ -207,10 +219,13 @@ const swaggerOptions = {
                         content: {
                             "application/json": {
                                 schema: {
-                                    $ref: "#/components/schemas/Libro",
+                                    $ref: "#/components/schemas/Book",
                                 },
                             },
                         },
+                    },
+                    404: {
+                        description: "Libro no encontrado",
                     },
                 },
             },
@@ -228,10 +243,11 @@ const swaggerOptions = {
                     },
                 ],
                 requestBody: {
+                    required: true,
                     content: {
                         "multipart/form-data": {
                             schema: {
-                                $ref: "#/components/schemas/Libro",
+                                $ref: "#/components/schemas/Book",
                             },
                         },
                     },
@@ -239,6 +255,12 @@ const swaggerOptions = {
                 responses: {
                     200: {
                         description: "Libro actualizado con éxito",
+                    },
+                    400: {
+                        description: "Solicitud inválida",
+                    },
+                    404: {
+                        description: "Libro no encontrado",
                     },
                 },
             },
@@ -258,6 +280,9 @@ const swaggerOptions = {
                 responses: {
                     200: {
                         description: "Libro eliminado con éxito",
+                    },
+                    404: {
+                        description: "Libro no encontrado",
                     },
                 },
             },
