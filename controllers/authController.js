@@ -7,7 +7,7 @@ exports.register = async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
-        const newUser = await authService.createUser(username, email, password);
+        const newUser = await authService.registerUser(username, email, password);
         console.log('Usuario creado:', newUser);
         res.status(201).json({ message: 'Usuario creado', user: newUser });
     } catch (error) {
