@@ -3,437 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookSwap API Preview</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h1, h2 {
-            color: #2c3e50;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 40px;
-        }
-
-        form label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        form input[type="text"],
-        form input[type="password"],
-        form input[type="number"],
-        form input[type="file"],
-        form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        form textarea {
-            height: 100px;
-        }
-
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        hr {
-            margin: 40px 0;
-        }
-
-        #book-list {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .book-item {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .book-item h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .book-item img {
-            max-width: 150px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-
-        #fetch-books {
-            background-color: #27ae60;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-
-        #fetch-books:hover {
-            background-color: #2ecc71;
-        }
-
-        .book-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-        .button-container {
-            margin-top: 10px;
-        }
-
-        #book-list {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .book-item {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .book-item button {
-            margin-top: 10px;
-        }
-    </style>
+    <title>BookSwap</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <h1>BookSwap</h1>
+        <nav>
+            <button onclick="showSection('register')">Registrar</button>
+            <button onclick="showSection('login')">Iniciar sesión</button>
+            <button onclick="showSection('books')">Ver libros</button>
+            <button onclick="showSection('exchanges')">Intercambios</button>
+        </nav>
+    </header>
 
-    <h1>Previsualización de BookSwap API</h1>
+    <main>
+        <!-- Sección de registro -->
+        <section id="register" class="section hidden">
+            <h2>Registro de Usuario</h2>
+            <form id="registerForm">
+                <input type="text" id="username" placeholder="Nombre de usuario" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <input type="text" id="name" placeholder="Nombre completo" required>
+                <input type="tel" id="phone" placeholder="Teléfono" required>
+                <input type="email" id="email" placeholder="Correo electrónico" required>
+                <button type="submit">Registrar</button>
+            </form>
+        </section>
 
-    <!-- Formulario de registro -->
-    <h2>Registro</h2>
-    <form id="register-form">
-        <label for="register-username">Usuario:</label>
-        <input type="text" id="register-username" name="username" required>
-        
-        <label for="register-password">Contraseña:</label>
-        <input type="password" id="register-password" name="password" required>
-        
-        <button type="submit">Registrar</button>
-    </form>
+        <!-- Sección de inicio de sesión -->
+        <section id="login" class="section hidden">
+            <h2>Iniciar sesión</h2>
+            <form id="loginForm">
+                <input type="text" id="loginUsername" placeholder="Nombre de usuario" required>
+                <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit">Iniciar sesión</button>
+            </form>
+        </section>
 
-    <!-- Formulario de inicio de sesión -->
-    <h2>Iniciar sesión</h2>
-    <form id="login-form">
-        <label for="username">Usuario:</label>
-        <input type="text" id="username" name="username" required>
-        
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required>
-        
-        <button type="submit">Iniciar sesión</button>
-    </form>
+        <!-- Sección de libros -->
+        <section id="books" class="section hidden">
+            <h2>Libros disponibles</h2>
+            <button onclick="getBooks()">Actualizar lista de libros</button>
+            <div id="bookList"></div>
+        </section>
 
-    <!-- Formulario para añadir un nuevo libro -->
-    <h2>Añadir un nuevo libro</h2>
-    <form id="add-book-form" enctype="multipart/form-data">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" required>
-        
-        <label for="autor">Autor:</label>
-        <input type="text" id="autor" name="autor" required>
-        
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" name="descripcion" required></textarea>
-        
-        <label for="fecha_publicacion">Fecha de Publicación:</label>
-        <input type="text" id="fecha_publicacion" name="fecha_publicacion" required>
-        
-        <label for="genero">Género:</label>
-        <input type="text" id="genero" name="genero" required>
-        
-        <label for="imagen">Imagen:</label>
-        <input type="file" id="imagen" name="imagen" accept="image/*">
-        
-        <button type="submit">Añadir Libro</button>
-    </form>
+        <!-- Sección de intercambios -->
+        <section id="exchanges" class="section hidden">
+            <h2>Intercambios de libros</h2>
+            <form id="exchangeForm">
+                <input type="text" id="offeredBook" placeholder="ID del libro ofrecido" required>
+                <input type="text" id="desiredBook" placeholder="ID del libro deseado" required>
+                <button type="submit">Solicitar intercambio</button>
+            </form>
+            <div id="exchangeList"></div>
+        </section>
+    </main>
 
-    <hr>
-
-    <!-- Listar libros -->
-    <h2>Lista de libros</h2>
-    <button id="fetch-books">Obtener Libros</button>
-    <div id="book-list"></div>
-
-    <!-- Formulario para actualizar un libro -->
-    <div id="update-book-section" style="display: none;">
-        <h2>Actualizar un libro</h2>
-        <form id="update-book-form" enctype="multipart/form-data">
-            <label for="update-id">ID del libro:</label>
-            <input type="number" id="update-id" name="id" required>
-            
-            <label for="update-titulo">Nuevo Título:</label>
-            <input type="text" id="update-titulo" name="titulo">
-            
-            <label for="update-autor">Nuevo Autor:</label>
-            <input type="text" id="update-autor" name="autor">
-            
-            <label for="update-descripcion">Nueva Descripción:</label>
-            <textarea id="update-descripcion" name="descripcion"></textarea>
-            
-            <label for="update-fecha_publicacion">Nueva Fecha de Publicación:</label>
-            <input type="text" id="update-fecha_publicacion" name="fecha_publicacion">
-            
-            <label for="update-genero">Nuevo Género:</label>
-            <input type="text" id="update-genero" name="genero">
-            
-            <label for="update-imagen">Nueva Imagen:</label>
-            <input type="file" id="update-imagen" name="imagen" accept="image/*">
-            
-            <button type="submit">Actualizar Libro</button>
-        </form>
-    </div>
-
-    <script>
-        const API_URL = 'https://api-bookswap.onrender.com/books'; // Cambia la URL a la de producción
-    
-        // Registrar un nuevo usuario
-        document.getElementById('register-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const username = document.getElementById('register-username').value;
-            const password = document.getElementById('register-password').value;
-    
-            try {
-                const response = await fetch('https://api-bookswap.onrender.com/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password }),
-                });
-                const data = await response.json();
-    
-                if (response.ok) {
-                    alert('Registro exitoso. Ahora puedes iniciar sesión.');
-                    this.reset(); // Reiniciar el formulario de registro
-                } else {
-                    alert(data.message || 'Error al registrar');
-                }
-            } catch (error) {
-                console.error('Error al registrar:', error);
-            }
-        });
-    
-        // Iniciar sesión y obtener el token
-        document.getElementById('login-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-    
-            try {
-                const response = await fetch('https://api-bookswap.onrender.com/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password }),
-                });
-                const data = await response.json();
-    
-                if (response.ok) {
-                    localStorage.setItem('token', data.token); // Guarda el token en localStorage
-                    alert('Inicio de sesión exitoso');
-                    showAdminControls(true); // Muestra los formularios de actualización y eliminación
-                    displayBooks(); // Cargar libros al iniciar sesión
-                } else {
-                    alert(data.message || 'Error al iniciar sesión');
-                }
-            } catch (error) {
-                console.error('Error al iniciar sesión:', error);
-            }
-        });
-    
-        // Mostrar/ocultar formularios de actualización y eliminación
-        function showAdminControls(isLoggedIn) {
-            document.getElementById('update-book-section').style.display = isLoggedIn ? 'block' : 'none';
-        }
-    
-        // Añadir un nuevo libro
-        document.getElementById('add-book-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            const token = localStorage.getItem('token'); // Obtén el token
-    
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
-                    },
-                    body: formData
-                });
-                const result = await response.json();
-                alert(result.message);
-                if (response.ok) {
-                    this.reset(); // Reiniciar el formulario después de añadir un libro
-                    displayBooks(); // Actualizar la lista de libros después de añadir uno
-                }
-            } catch (error) {
-                console.error('Error al añadir libro:', error);
-            }
-        });
-    
-        // Obtener la lista de libros
-        async function displayBooks() {
-            const token = localStorage.getItem('token'); // Obtén el token
-    
-            try {
-                const response = await fetch(API_URL, {
-                    headers: {
-                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
-                    }
-                });
-                const books = await response.json();
-                
-                const bookList = document.getElementById('book-list');
-                bookList.innerHTML = ''; // Limpiar lista
-                
-                books.forEach(book => {
-                    const bookItem = document.createElement('div');
-                    bookItem.classList.add('book-item');
-                    
-                    bookItem.innerHTML = `
-                        <div>
-                            <h3>${book.titulo}</h3>
-                            <p><strong>Autor:</strong> ${book.autor}</p>
-                            <p><strong>Descripción:</strong> ${book.descripcion}</p>
-                            <p><strong>Género:</strong> ${book.genero}</p>
-                            <p><strong>Fecha de Publicación:</strong> ${book.fecha_publicacion}</p>
-                        </div>
-                        ${book.imagen ? `<img src="${book.imagen}" alt="${book.titulo}" width="100" />` : ''}
-                        <div class="button-container">
-                            ${token ? `
-                                <button class="edit-button" data-id="${book._id}">Editar</button>
-                                <button class="delete-button" data-id="${book._id}">Eliminar</button>
-                            ` : ''}
-                        </div>
-                    `;
-    
-                    bookList.appendChild(bookItem);
-                });
-                
-                // Añadir eventos a los botones de editar y eliminar
-                document.querySelectorAll('.edit-button').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const id = this.getAttribute('data-id');
-                        document.getElementById('update-id').value = id; // Establecer ID en el formulario de actualización
-                        showAdminControls(true); // Asegurarse de que los controles de admin estén visibles
-                    });
-                });
-    
-                document.querySelectorAll('.delete-button').forEach(button => {
-                    button.addEventListener('click', async function() {
-                        const id = this.getAttribute('data-id');
-                        const token = localStorage.getItem('token'); // Obtén el token
-    
-                        if (confirm('¿Estás seguro de que deseas eliminar este libro?')) {
-                            try {
-                                const response = await fetch(`${API_URL}/${id}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
-                                    }
-                                });
-                                const result = await response.json();
-                                alert(result.message);
-                                displayBooks(); // Actualiza la lista después de eliminar
-                            } catch (error) {
-                                console.error('Error al eliminar libro:', error);
-                            }
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error('Error al obtener libros:', error);
-            }
-        }
-    
-        // Actualizar un libro
-        document.getElementById('update-book-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            const token = localStorage.getItem('token'); // Obtén el token
-    
-            try {
-                const response = await fetch(`${API_URL}/${formData.get('id')}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': 'Bearer ' + token, // Agrega el token en los headers
-                    },
-                    body: formData
-                });
-                const result = await response.json();
-                alert(result.message);
-                if (response.ok) {
-                    this.reset(); // Reiniciar el formulario de actualización
-                    displayBooks(); // Actualizar la lista de libros después de editar
-                }
-            } catch (error) {
-                console.error('Error al actualizar libro:', error);
-            }
-        });
-    </script>    
-
+    <script src="scripts/main.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/books.js"></script>
+    <script src="scripts/exchanges.js"></script>
 </body>
 </html>
