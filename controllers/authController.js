@@ -3,18 +3,22 @@ const authService = require('../services/authService');
 
 // Registro de usuario
 exports.register = async (req, res) => {
-    console.log('Datos de registro recibidos:', req.body);
-    const { username, email, password } = req.body;
+    const { username, email, password } = req.body; // Extraemos los datos del cuerpo de la solicitud
 
     try {
+        // Llamamos al servicio para registrar al usuario
         const newUser = await authService.registerUser(username, email, password);
         console.log('Usuario creado:', newUser);
+
+        // Enviamos la respuesta exitosa al cliente
         res.status(201).json({ message: 'Usuario creado', user: newUser });
     } catch (error) {
         console.error('Error al registrar usuario:', error);
+        // Enviamos la respuesta de error al cliente
         res.status(400).json({ message: error.message });
     }
 };
+
 
 // Inicio de sesión y generación de tokens
 exports.login = async (req, res) => {

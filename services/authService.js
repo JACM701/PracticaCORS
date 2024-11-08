@@ -8,14 +8,12 @@ const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Clave secreta para tok
 const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Clave secreta para tokens de refresco
 
 // Crear un nuevo usuario
-exports.registerUser = async (req, res) => {
+exports.registerUser = async (username, email, password) => {
     try {
-        const { username, email, password } = req.body;
-
         // Verifica si el usuario ya existe
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: 'Usuario ya existe' });
+            throw new Error('Usuario ya existe'); // Lanza un error si el usuario ya existe
         }
 
         // Crea el usuario sin hashear la contraseña aquí
@@ -27,10 +25,10 @@ exports.registerUser = async (req, res) => {
         });
 
         await newUser.save();
-        res.status(201).json({ message: 'Usuario creado', user: { username, email } });
+        return { username, email }; // Devuelve los datos del nuevo usuario sin la contraseña
     } catch (error) {
         console.error('Error al registrar usuario:', error);
-        res.status(500).json({ message: 'Error al registrar usuario' });
+        throw new Error(error.message); // Lanza el error para que lo maneje el controlador
     }
 };
 
@@ -60,7 +58,7 @@ exports.authenticateUser = async (username, password) => {
         return { accessToken, refreshToken };
     } catch (error) {
         console.error("Error en autenticación:", error.message);
-        throw error;
+        throw new Error("Error al autenticar el usuario");
     }
 };
 
