@@ -13,6 +13,7 @@ require('dotenv').config();
 const userController = require('./controllers/userController');
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
+const exchangeRoutes = require('./routes/exchange'); // Importa las rutas de intercambio de libros
 
 const app = express();
 
@@ -82,6 +83,9 @@ app.get('/users', authenticateToken, userController.getAllUsers);
 app.get('/users/:id', authenticateToken, userController.getUserById);
 app.put('/users/:id', authenticateToken, userController.updateUser);
 app.delete('/users/:id', authenticateToken, userController.deleteUser);
+
+// Rutas para intercambio de libros
+app.use('/api/exchange', authenticateToken, exchangeRoutes); // Rutas de intercambio de libros protegidas
 
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
