@@ -47,7 +47,7 @@ exports.authenticateUser = async (username, password) => {
         console.log("Contraseña ingresada:", password);
 
         // Compara la contraseña ingresada con la hasheada en la base de datos
-        const passwordIsValid = bcrypt.compareSync(password, user.password);
+        const passwordIsValid = await bcrypt.compare(password, user.password);
         console.log("¿Contraseña válida?", passwordIsValid);
 
         if (!passwordIsValid) {
