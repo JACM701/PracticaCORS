@@ -1,3 +1,4 @@
+//-Services/authService.js
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel'); // Importa el modelo de usuario
@@ -6,64 +7,60 @@ const User = require('../models/userModel'); // Importa el modelo de usuario
 const SECRET_KEY = 'SueñitosTieneHambreTodoElTiempo'; // Clave secreta para tokens de acceso
 const REFRESH_SECRET_KEY = 'CachorroLeGustaLasGomitasMagicas'; // Clave secreta para tokens de refresco
 
-// Crear un nuevo usuario y hashear la contraseña
-exports.createUser = async (username, email, password) => {
+// Crear un nuevo usuario
+exports.registerUser = async (req, res) => {
     try {
-        // Genera un hash de la contraseña antes de guardarla
-        const hashedPassword = await bcrypt.hash(password, 10); // Factor de costo 10 (valor seguro por defecto)
-        console.log("Contraseña hasheada para el usuario:", hashedPassword);
+        const { username, email, password } = req.body;
 
-        // Crea una nueva instancia de usuario con la contraseña hasheada
+        // Verifica si el usuario ya existe
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Usuario ya existe' });
+        }
+
+        // Crea el usuario sin hashear la contraseña aquí
         const newUser = new User({
             username,
             email,
-            password: hashedPassword,
-            role: 'user', // Asigna el rol de usuario por defecto
+            password, // La contraseña se hasheará automáticamente con el middleware pre('save')
+            role: 'user',
         });
 
-        // Guarda el usuario en la base de datos
         await newUser.save();
-        console.log('Usuario creado exitosamente:', { username: newUser.username, email: newUser.email });
-        
-        // Devuelve solo la información necesaria (excluyendo la contraseña)
-        return { username: newUser.username, email: newUser.email };
+        res.status(201).json({ message: 'Usuario creado', user: { username, email } });
     } catch (error) {
-        console.error('Error al crear usuario:', error.message);
-        throw error; // Lanza el error para manejarlo en el controlador
+        console.error('Error al registrar usuario:', error);
+        res.status(500).json({ message: 'Error al registrar usuario' });
     }
 };
 
-// Autenticar al usuario y generar tokens
+// Autenticación de usuario
 exports.authenticateUser = async (username, password) => {
     try {
-        // Busca el usuario en la base de datos por nombre de usuario
         const user = await User.findOne({ username });
         if (!user) {
             console.log("Usuario no encontrado");
-            return null; // Si el usuario no existe, devuelve null
+            return null;
         }
 
-        console.log("Contraseña en la base de datos:", user.password);
-        console.log("Contraseña ingresada:", password);
-
-        // Compara la contraseña ingresada con la hasheada en la base de datos
-        const passwordIsValid = await bcrypt.compare(password, user.password);
+        // Usa el método comparePassword del modelo para verificar la contraseña
+        const passwordIsValid = await user.comparePassword(password);
         console.log("¿Contraseña válida?", passwordIsValid);
 
         if (!passwordIsValid) {
             console.log("La contraseña no coincide");
-            return null; // Si la contraseña no coincide, devuelve null
+            return null;
         }
 
-        // Genera el token de acceso y el token de refresco
+        // Genera tokens
         const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
         const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
 
         console.log("Tokens retornados al cliente:", { accessToken, refreshToken });
-        return { accessToken, refreshToken }; // Devuelve ambos tokens al cliente
+        return { accessToken, refreshToken };
     } catch (error) {
         console.error("Error en autenticación:", error.message);
-        throw error; // Lanza el error para manejarlo en el controlador
+        throw error;
     }
 };
 
