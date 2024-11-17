@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+// repositories/bookRepository.js
 const BookModel = require('../models/bookModel'); // Importa el modelo de Mongoose
 
 // Obtener todos los libros
@@ -58,3 +57,14 @@ exports.deleteBook = async (id) => {
     }
 };
 
+// Obtener libros paginados
+exports.getPaginatedBooks = async (skip, limit) => {
+    try {
+        const books = await BookModel.find().skip(skip).limit(limit); // Consulta paginada
+        const totalRecords = await BookModel.countDocuments(); // Contar total de registros
+        return { books, totalRecords };
+    } catch (error) {
+        console.error('Error al obtener libros paginados:', error);
+        throw error;
+    }
+};

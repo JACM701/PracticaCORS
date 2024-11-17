@@ -1,5 +1,6 @@
 // controllers/bookController.js
 const Book = require('../models/bookModel');
+const bookService = require('../services/bookServices');
 
 // Obtener todos los libros
 exports.getAllBooks = async (req, res) => {
@@ -87,5 +88,20 @@ exports.deleteBook = async (req, res) => {
         res.json({ message: 'Libro eliminado correctamente' });
     } catch (error) {
         res.status(500).json({ message: 'Error al eliminar el libro' });
+    }
+};
+
+// Obtener libros paginados
+exports.getPaginatedBooks = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1; // Página actual (default: 1)
+        const limit = parseInt(req.query.limit) || 10; // Límite por página (default: 10)
+
+        const paginatedData = await bookService.getPaginatedBooks(page, limit);
+
+        res.status(200).json(paginatedData); // Enviar datos paginados al cliente
+    } catch (error) {
+        console.error('Error al obtener libros paginados:', error);
+        res.status(500).json({ message: 'Error al obtener libros paginados' });
     }
 };
