@@ -6,8 +6,11 @@ const multer = require('multer');
 const path = require('path');
 const cors = require('cors');
 const authenticateToken = require('./middlewares/authMiddleware');
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swaggerConfig');
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+const swaggerAuthConfig = require("./config/swaggerAuthConfig");
+const swaggerApiConfig = require("./config/swaggerApiConfig");
+
 require('dotenv').config();
 
 const userController = require('./controllers/userController');
@@ -27,8 +30,20 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('Conectado a MongoDB Atlas'))
 .catch((error) => console.error('Error al conectar a MongoDB:', error));
 
-// Middleware para Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Combina la configuración de autenticación con la configuración de la API
+const swaggerOptions = {
+    ...swaggerApiConfig,  // Configuración de la API
+    components: {
+        ...swaggerApiConfig.components,  // Asegúrate de incluir todos los componentes previos
+        securitySchemes: swaggerAuthConfig.securityDefinitions,  // Agrega las definiciones de seguridad de autenticación
+    },
+    security: swaggerAuthConfig.security,  // Aplica la seguridad a las rutas que lo necesiten
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+// Usar swagger-ui para servir la documentación en /api-docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Configurar CORS
 const corsOptions = {
