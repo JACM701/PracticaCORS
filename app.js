@@ -8,8 +8,8 @@ const cors = require('cors');
 const authenticateToken = require('./middlewares/authMiddleware');
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const swaggerAuthConfig = require("./config/swaggerAuthConfig");
-const swaggerApiConfig = require("./config/swaggerApiConfig");
+const swaggerAuthConfig = require("./swaggerAuthConfig");
+const swaggerApiConfig = require("./swaggerApiConfig");
 
 require('dotenv').config();
 
