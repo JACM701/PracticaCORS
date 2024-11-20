@@ -11,6 +11,13 @@ const swaggerOptions = {
         },
     ],
     components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "JWT",
+            },
+        },
         schemas: {
             Book: {
                 type: "object",
@@ -55,6 +62,11 @@ const swaggerOptions = {
             },
         },
     },
+    security: [
+        {
+            bearerAuth: [],
+        },
+    ],
     paths: {
         "/register": {
             post: {
@@ -89,6 +101,11 @@ const swaggerOptions = {
         "/books": {
             get: {
                 summary: "Obtener todos los libros",
+                security: [
+                    {
+                        bearerAuth: [],
+                    },
+                ],
                 responses: {
                     200: {
                         description: "Lista de libros",
@@ -105,6 +122,11 @@ const swaggerOptions = {
             },
             post: {
                 summary: "Añadir un nuevo libro",
+                security: [
+                    {
+                        bearerAuth: [],
+                    },
+                ],
                 requestBody: {
                     required: true,
                     content: {
@@ -120,6 +142,11 @@ const swaggerOptions = {
         "/exchanges": {
             post: {
                 summary: "Crear un nuevo intercambio de libros",
+                security: [
+                    {
+                        bearerAuth: [],
+                    },
+                ],
                 requestBody: {
                     required: true,
                     content: {
@@ -133,6 +160,11 @@ const swaggerOptions = {
             },
             get: {
                 summary: "Obtener intercambios del usuario",
+                security: [
+                    {
+                        bearerAuth: [],
+                    },
+                ],
                 responses: {
                     200: {
                         description: "Lista de intercambios del usuario",
@@ -158,6 +190,11 @@ const swaggerOptions = {
                         required: true,
                         description: "ID del intercambio",
                         schema: { type: "string" },
+                    },
+                ],
+                security: [
+                    {
+                        bearerAuth: [],
                     },
                 ],
                 requestBody: {
