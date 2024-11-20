@@ -1,9 +1,12 @@
 const swaggerAuthConfig = {
-    securityDefinitions: {
-      bearerAuth: {
-        type: 'apiKey',
-        name: 'Authorization',
-        in: 'header',
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'Authorization',
+          description: 'JWT Bearer token',
+        },
       },
     },
     security: [
