@@ -4,30 +4,8 @@ const Book = require('../models/bookModel');
 // Obtener todos los libros
 exports.getAllBooks = async (req, res) => {
     try {
-        // Obtener los parámetros de consulta para paginado
-        const { page = 1, limit = 10 } = req.query;
-
-        // Calcular el número de documentos a omitir
-        const skip = (page - 1) * limit;
-
-        // Consultar la base de datos con paginación
-        const books = await Book.find()
-            .skip(skip)
-            .limit(parseInt(limit));
-
-        // Obtener el total de libros
-        const totalBooks = await Book.countDocuments();
-
-        // Calcular el número total de páginas
-        const totalPages = Math.ceil(totalBooks / limit);
-
-        // Enviar la respuesta con los datos y metadatos
-        res.status(200).json({
-            books,
-            totalBooks,
-            totalPages,
-            currentPage: parseInt(page),
-        });
+        const books = await Book.find();
+        res.json(books);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener los libros' });
     }
