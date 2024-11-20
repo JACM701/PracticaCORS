@@ -30,3 +30,7 @@ exports.findExchangesByUser = async (userId, page, limit) => {
         .skip((page - 1) * limit)    // Aplica la paginación
         .limit(parseInt(limit));     // Limita los resultados
 };
+
+exports.countExchangesByUser = async (userId) => {
+    return bookExchangeRepository.countExchangesByUser(userId);
+};

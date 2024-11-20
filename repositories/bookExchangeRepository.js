@@ -16,3 +16,7 @@ exports.findExchangesByUser = (userId) => {
     // Devuelve una consulta de MongoDB que luego puede ser encadenada con .skip() y .limit()
     return BookExchange.find({ usuarioSolicitante: userId });
 };
+
+exports.countExchangesByUser = (userId) => {
+    return BookExchange.countDocuments({ usuarioSolicitante: userId });
+};
