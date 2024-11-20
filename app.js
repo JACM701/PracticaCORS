@@ -38,7 +38,7 @@ const swaggerOptions = {
         securitySchemes: swaggerAuthConfig.securityDefinitions,
     },
     security: swaggerAuthConfig.security,
-    apis: ['./routes/*.js', './models/*.js'],  // Asegúrate de que esta ruta apunte correctamente a tus archivos
+    apis: ['./controllers/*.js', './models/*.js', './swaggerBookController.js'],  // Incluir swaggerBookController.js
 };
 
 
