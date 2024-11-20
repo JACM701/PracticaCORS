@@ -40,11 +40,12 @@ exports.getUserExchanges = async (req, res) => {
     const { page = 1, limit = 10 } = req.query;
 
     try {
+        // Busca los intercambios del usuario
         const exchanges = await bookExchangeService.findExchangesByUser(req.user.id)
             .skip((page - 1) * limit)
             .limit(parseInt(limit));
 
-        const total = await bookExchangeService.countExchangesByUser(req.user.id); // Suponiendo un método en el servicio
+        const total = await bookExchangeService.countExchangesByUser(req.user.id);
 
         res.json({
             data: exchanges,
@@ -53,7 +54,9 @@ exports.getUserExchanges = async (req, res) => {
             totalExchanges: total
         });
     } catch (error) {
+        console.error('Error al obtener los intercambios del usuario:', error);
         res.status(500).json({ message: 'Error al obtener los intercambios del usuario' });
     }
 };
+
 
