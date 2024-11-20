@@ -86,7 +86,7 @@ const swaggerOptions = {
                 },
             },
         },
-
+//Aqui esta la actualización
         "/books": {
         get: {
         summary: "Obtener todos los libros",
