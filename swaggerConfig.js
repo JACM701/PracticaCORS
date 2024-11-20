@@ -86,37 +86,82 @@ const swaggerOptions = {
                 },
             },
         },
+
         "/books": {
-            get: {
-                summary: "Obtener todos los libros",
-                responses: {
-                    200: {
-                        description: "Lista de libros",
-                        content: {
-                            "application/json": {
-                                schema: {
+        get: {
+        summary: "Obtener todos los libros",
+        parameters: [
+            {
+                name: "page",
+                in: "query",
+                description: "Número de la página a obtener",
+                required: false,
+                schema: {
+                    type: "integer",
+                    default: 1,
+                    example: 1,
+                },
+            },
+            {
+                name: "limit",
+                in: "query",
+                description: "Cantidad de libros por página",
+                required: false,
+                schema: {
+                    type: "integer",
+                    default: 10,
+                    example: 10,
+                },
+            },
+        ],
+        responses: {
+            200: {
+                description: "Lista de libros con paginación",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "object",
+                            properties: {
+                                books: {
                                     type: "array",
                                     items: { $ref: "#/components/schemas/Book" },
+                                },
+                                totalBooks: {
+                                    type: "integer",
+                                    description: "Cantidad total de libros",
+                                    example: 100,
+                                },
+                                totalPages: {
+                                    type: "integer",
+                                    description: "Número total de páginas",
+                                    example: 10,
+                                },
+                                currentPage: {
+                                    type: "integer",
+                                    description: "Página actual",
+                                    example: 1,
                                 },
                             },
                         },
                     },
                 },
             },
-            post: {
-                summary: "Añadir un nuevo libro",
-                requestBody: {
-                    required: true,
-                    content: {
-                        "multipart/form-data": { schema: { $ref: "#/components/schemas/Book" } },
-                    },
-                },
-                responses: {
-                    201: { description: "Libro añadido con éxito" },
-                    400: { description: "Solicitud inválida" },
-                },
+        },
+    },
+    post: {
+        summary: "Añadir un nuevo libro",
+        requestBody: {
+            required: true,
+            content: {
+                "multipart/form-data": { schema: { $ref: "#/components/schemas/Book" } },
             },
         },
+        responses: {
+            201: { description: "Libro añadido con éxito" },
+            400: { description: "Solicitud inválida" },
+        },
+    },
+},
         "/exchanges": {
             post: {
                 summary: "Crear un nuevo intercambio de libros",
