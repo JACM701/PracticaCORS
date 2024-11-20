@@ -1,34 +1,29 @@
 // controllers/bookController.js
 const Book = require('../models/bookModel');
 
-// Obtener todos los libros con paginado
-exports.getAllBooks = async (req, res) => {
+// Ruta para obtener los libros con paginado
+const getBooks = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;  // Página predeterminada es la 1
+    const limit = parseInt(req.query.limit) || 10; // Limite predeterminado es 10
+    const skip = (page - 1) * limit;  // Cálculo del número de documentos a omitir
+
     try {
-        // Extraer los parámetros de paginado de la query
-        const { page = 1, limit = 10 } = req.query;
-
-        // Convertir los valores a números enteros
-        const skip = (page - 1) * limit;
-
-        // Obtener los libros con paginado
         const books = await Book.find()
-            .skip(skip)  // Omitir los libros anteriores a la página solicitada
-            .limit(Number(limit));  // Limitar el número de libros por página
+            .skip(skip)
+            .limit(limit);
 
-        // Contar el total de libros para calcular el número de páginas
-        const totalBooks = await Book.countDocuments();
+        const totalBooks = await Book.countDocuments(); // Total de libros en la base de datos
 
-        res.json({
+        return res.json({
             totalBooks,
             totalPages: Math.ceil(totalBooks / limit),
-            currentPage: Number(page),
-            books
+            currentPage: page,
+            books,
         });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener los libros' });
+    } catch (err) {
+        return res.status(500).json({ message: 'Error al obtener los libros', error: err });
     }
 };
-
 
 // Agregar un nuevo libro
 exports.addBook = async (req, res) => {
