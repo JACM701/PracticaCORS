@@ -25,23 +25,3 @@ exports.updateBook = (id, updatedBook) => {
 exports.deleteBook = (id) => {
     return bookRepository.deleteBook(id);
 };
-
-// Obtener libros paginados
-exports.getPaginatedBooks = async (page, limit) => {
-    try {
-        const skip = (page - 1) * limit; // Cálculo del desplazamiento
-        const { books, totalRecords } = await bookRepository.getPaginatedBooks(skip, limit);
-        const totalPages = Math.ceil(totalRecords / limit); // Total de páginas
-
-        return {
-            books,
-            totalRecords,
-            totalPages,
-            currentPage: page,
-            limit,
-        };
-    } catch (error) {
-        console.error('Error al obtener libros paginados:', error);
-        throw error;
-    }
-};
