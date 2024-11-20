@@ -32,13 +32,15 @@ mongoose.connect(mongoURI, {
 
 // Combina la configuración de autenticación con la configuración de la API
 const swaggerOptions = {
-    ...swaggerApiConfig,  // Configuración de la API
+    ...swaggerApiConfig,
     components: {
-        ...swaggerApiConfig.components,  // Asegúrate de incluir todos los componentes previos
-        securitySchemes: swaggerAuthConfig.securityDefinitions,  // Agrega las definiciones de seguridad de autenticación
+        ...swaggerApiConfig.components,
+        securitySchemes: swaggerAuthConfig.securityDefinitions,
     },
-    security: swaggerAuthConfig.security,  // Aplica la seguridad a las rutas que lo necesiten
+    security: swaggerAuthConfig.security,
+    apis: ['./routes/*.js', './models/*.js'],  // Asegúrate de que esta ruta apunte correctamente a tus archivos
 };
+
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
