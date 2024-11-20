@@ -12,8 +12,7 @@ exports.updateExchangeStatus = async (id, estado) => {
     return await BookExchange.findByIdAndUpdate(id, { estado }, { new: true });
 };
 
-// Obtener intercambios por usuario
-exports.findExchangesByUser = async (userId) => {
-    return await BookExchange.find({ $or: [{ usuarioSolicitante: userId }, { usuarioReceptor: userId }] })
-        .populate('libroOfrecido libroDeseado usuarioSolicitante usuarioReceptor');
+exports.findExchangesByUser = (userId) => {
+    // Devuelve una consulta de MongoDB que luego puede ser encadenada con .skip() y .limit()
+    return BookExchange.find({ usuarioSolicitante: userId });
 };

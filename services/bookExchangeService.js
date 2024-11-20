@@ -24,6 +24,9 @@ exports.updateExchangeStatus = async (id, estado) => {
 };
 
 // Obtener intercambios de un usuario
-exports.findExchangesByUser = async (userId) => {
-    return await bookExchangeRepository.findExchangesByUser(userId);
+
+exports.findExchangesByUser = async (userId, page, limit) => {
+    return bookExchangeRepository.findExchangesByUser(userId) // Devuelve la consulta de MongoDB
+        .skip((page - 1) * limit)    // Aplica la paginación
+        .limit(parseInt(limit));     // Limita los resultados
 };
