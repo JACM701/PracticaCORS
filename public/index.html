@@ -1,68 +1,108 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookSwap</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Swap - Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .hidden {
+      display: none;
+    }
+    .container {
+      margin-top: 20px;
+    }
+    .book-card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .message {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .token-display {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>BookSwap</h1>
-        <nav>
-            <button onclick="showSection('register')">Registrar</button>
-            <button onclick="showSection('login')">Iniciar sesión</button>
-            <button onclick="showSection('books')">Ver libros</button>
-            <button onclick="showSection('exchanges')">Intercambios</button>
-        </nav>
-    </header>
+  <h1>Book Swap - Modo Administrador</h1>
 
-    <main>
-        <!-- Sección de registro -->
-        <section id="register" class="section hidden">
-            <h2>Registro de Usuario</h2>
-            <form id="registerForm">
-                <input type="text" id="username" placeholder="Nombre de usuario" required>
-                <input type="password" id="password" placeholder="Contraseña" required>
-                <input type="text" id="name" placeholder="Nombre completo" required>
-                <input type="tel" id="phone" placeholder="Teléfono" required>
-                <input type="email" id="email" placeholder="Correo electrónico" required>
-                <button type="submit">Registrar</button>
-            </form>
-        </section>
+  <!-- Registro -->
+  <h2>Registro de Usuario</h2>
+  <form id="registerForm">
+    <input type="text" id="registerUsername" placeholder="Nombre de usuario" required />
+    <input type="email" id="registerEmail" placeholder="Correo electrónico" required />
+    <input type="password" id="registerPassword" placeholder="Contraseña" required />
+    <button type="submit">Registrarse</button>
+  </form>
+  <div class="message" id="registerMessage"></div>
 
-        <!-- Sección de inicio de sesión -->
-        <section id="login" class="section hidden">
-            <h2>Iniciar sesión</h2>
-            <form id="loginForm">
-                <input type="text" id="loginUsername" placeholder="Nombre de usuario" required>
-                <input type="password" id="loginPassword" placeholder="Contraseña" required>
-                <button type="submit">Iniciar sesión</button>
-            </form>
-        </section>
+  <!-- Inicio de Sesión -->
+  <h2>Inicio de Sesión</h2>
+  <form id="loginForm">
+    <input type="text" id="loginUsername" placeholder="Nombre de usuario" required />
+    <input type="password" id="loginPassword" placeholder="Contraseña" required />
+    <button type="submit">Iniciar Sesión</button>
+  </form>
+  <div class="message" id="loginMessage"></div>
 
-        <!-- Sección de libros -->
-        <section id="books" class="section hidden">
-            <h2>Libros disponibles</h2>
-            <button onclick="getBooks()">Actualizar lista de libros</button>
-            <div id="bookList"></div>
-        </section>
+  <!-- Token Display -->
+  <div class="token-display hidden" id="tokenDisplay"></div>
 
-        <!-- Sección de intercambios -->
-        <section id="exchanges" class="section hidden">
-            <h2>Intercambios de libros</h2>
-            <form id="exchangeForm">
-                <input type="text" id="offeredBook" placeholder="ID del libro ofrecido" required>
-                <input type="text" id="desiredBook" placeholder="ID del libro deseado" required>
-                <button type="submit">Solicitar intercambio</button>
-            </form>
-            <div id="exchangeList"></div>
-        </section>
-    </main>
+  <!-- Administración de Libros -->
+  <div class="container hidden" id="adminContainer">
+    <h2>Administración de Libros</h2>
+    <button onclick="fetchBooks()">Cargar Libros</button>
+    <div id="bookContainer"></div>
+  </div>
 
-    <script src="/public/scripts/auth.js"></script>
-    <script src="/public/scripts/book.js"></script>
-    <script src="/public/scripts/exchanges.js"></script>
-    <script src="/public/scripts/main.js"></script>
+  <!-- Administración de Libros Intercambiados -->
+  <div class="container hidden" id="exchangedBooksContainer">
+    <h2>Libros Intercambiados</h2>
+    <button onclick="fetchExchangedBooks()">Cargar Libros Intercambiados</button>
+    <div id="exchangedBooksContainer"></div>
+  </div>
+
+  <!-- Administración de Usuarios -->
+  <div class="container hidden" id="usersContainer">
+    <h2>Administración de Usuarios</h2>
+    <button onclick="fetchUsers()">Cargar Usuarios</button>
+    <div id="usersContainer"></div>
+  </div>
+
+  <script src="/public/scripts/app.js"></script>
 </body>
 </html>

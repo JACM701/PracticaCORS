@@ -35,18 +35,25 @@ exports.updateExchangeStatus = async (req, res) => {
     }
 };
 
-// Obtener intercambios del usuario
+// Obtener intercambios del usuario con paginación
 exports.getUserExchanges = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+
     try {
-        console.log('Iniciando obtención de intercambios del usuario');
-        console.log('ID del usuario:', req.user.id);
+        const exchanges = await bookExchangeService.findExchangesByUser(req.user.id)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit));
 
-        const exchanges = await bookExchangeService.findExchangesByUser(req.user.id);
-        console.log('Intercambios encontrados para el usuario:', exchanges);
+        const total = await bookExchangeService.countExchangesByUser(req.user.id); // Suponiendo un método en el servicio
 
-        res.json(exchanges);
+        res.json({
+            data: exchanges,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(total / limit),
+            totalExchanges: total
+        });
     } catch (error) {
-        console.error('Error al obtener intercambios del usuario:', error.message);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error al obtener los intercambios del usuario' });
     }
 };
+
