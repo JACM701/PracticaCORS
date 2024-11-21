@@ -3,88 +3,161 @@ const swaggerOptions = {
     info: {
         title: "BookSwap API",
         version: "1.0.0",
-        description: "API para el intercambio de libros",
+        description: "API para gestionar usuarios, libros e intercambios de libros",
     },
     servers: [
         {
-            url: "https://api-bookswap.onrender.com", // URL de tu API en Render
+            url: "https://api-bookswap.onrender.com",
+            description: "Servidor de producción"
         },
+        {
+            url: "http://localhost:3000",
+            description: "Servidor local para desarrollo"
+        }
     ],
     components: {
         schemas: {
+            User: {
+                type: "object",
+                properties: {
+                    id: { type: "string", description: "ID único del usuario", example: "60c72b2f9b1d4c3e88b44757" },
+                    username: { type: "string", description: "Nombre de usuario", example: "usuario123" },
+                    email: { type: "string", description: "Correo electrónico", example: "usuario@example.com" },
+                    password: { type: "string", description: "Contraseña", example: "password123" },
+                    role: { type: "string", description: "Rol del usuario", enum: ["user", "admin"], example: "user" }
+                },
+                required: ["username", "email", "password"]
+            },
             Book: {
                 type: "object",
                 properties: {
-                    id: { type: "integer", description: "ID del libro", example: 1 },
+                    id: { type: "string", description: "ID único del libro", example: "60c72b2f9b1d4c3e88b44755" },
                     title: { type: "string", description: "Título del libro", example: "El principito" },
                     author: { type: "string", description: "Autor del libro", example: "Antoine de Saint-Exupéry" },
-                    description: { type: "string", description: "Descripción del libro", example: "Una historia corta pero conmovedora." },
-                    publish_date: { type: "string", description: "Fecha de publicación", example: "1943-04-06" },
+                    description: { type: "string", description: "Descripción del libro", example: "Historia conmovedora" },
+                    publish_date: { type: "string", format: "date", description: "Fecha de publicación", example: "1943-04-06" },
                     genre: { type: "string", description: "Género literario", example: "Fantasía" },
                     image: { type: "string", description: "URL de la imagen", example: "/uploads/el-principito.jpg" },
                     edition: { type: "string", description: "Edición", example: "Primera edición" },
                     year_published: { type: "integer", description: "Año de publicación", example: 1943 },
                     cover_type: { type: "string", description: "Tipo de tapa", example: "Dura" },
-                    publisher: { type: "string", description: "Editorial", example: "Gallimard" },
-                    accessories_included: { type: "boolean", description: "Incluye accesorios", example: true },
+                    publisher: { type: "string", description: "Editorial", example: "Gallimard" }
                 },
-                required: ["title", "author", "description", "publish_date", "genre"],
-            },
-            User: {
-                type: "object",
-                properties: {
-                    username: { type: "string", description: "Nombre de usuario", example: "usuario123" },
-                    password: { type: "string", description: "Contraseña", example: "password123" },
-                    name: { type: "string", description: "Nombre completo", example: "Juan Pérez" },
-                    phone: { type: "string", description: "Número de teléfono", example: "+34 600 123 456" },
-                    email: { type: "string", description: "Correo electrónico", example: "juan.perez@example.com" },
-                },
-                required: ["username", "password", "name", "phone", "email"],
+                required: ["title", "author", "description", "publish_date", "genre"]
             },
             BookExchange: {
                 type: "object",
                 properties: {
-                    libroOfrecido: { type: "string", description: "ID del libro ofrecido", example: "60c72b2f9b1d4c3e88b44755" },
-                    libroDeseado: { type: "string", description: "ID del libro deseado", example: "60c72b2f9b1d4c3e88b44756" },
-                    usuarioSolicitante: { type: "string", description: "ID del usuario solicitante", example: "60c72b2f9b1d4c3e88b44757" },
-                    usuarioReceptor: { type: "string", description: "ID del usuario receptor", example: "60c72b2f9b1d4c3e88b44758" },
-                    fechaIntercambio: { type: "string", format: "date", description: "Fecha del intercambio", example: "2023-11-08" },
-                    estado: { type: "string", description: "Estado del intercambio", enum: ["pending", "completed", "canceled"], example: "pending" },
+                    id: { type: "string", description: "ID único del intercambio", example: "60d72c2e9b1d4c3e88b44765" },
+                    offeredBookId: { type: "string", description: "ID del libro ofrecido", example: "60c72b2f9b1d4c3e88b44755" },
+                    desiredBookId: { type: "string", description: "ID del libro deseado", example: "60c72b2f9b1d4c3e88b44756" },
+                    requesterId: { type: "string", description: "ID del usuario que solicita el intercambio", example: "60c72b2f9b1d4c3e88b44757" },
+                    receiverId: { type: "string", description: "ID del usuario que recibe el intercambio", example: "60c72b2f9b1d4c3e88b44758" },
+                    status: {
+                        type: "string",
+                        description: "Estado del intercambio",
+                        enum: ["pending", "completed", "canceled"],
+                        example: "pending"
+                    },
+                    exchangeDate: { type: "string", format: "date", description: "Fecha del intercambio", example: "2024-01-15" }
                 },
-                required: ["libroOfrecido", "libroDeseado", "usuarioSolicitante", "usuarioReceptor"],
-            },
-        },
+                required: ["offeredBookId", "desiredBookId", "requesterId", "receiverId"]
+            }
+        }
     },
     paths: {
-        "/register": {
+        "/users": {
+            get: {
+                summary: "Obtener todos los usuarios",
+                responses: {
+                    200: {
+                        description: "Lista de usuarios",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "array",
+                                    items: { $ref: "#/components/schemas/User" }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             post: {
                 summary: "Registrar un nuevo usuario",
                 requestBody: {
                     required: true,
                     content: {
-                        "application/json": { schema: { $ref: "#/components/schemas/User" } },
-                    },
+                        "application/json": { schema: { $ref: "#/components/schemas/User" } }
+                    }
                 },
                 responses: {
                     201: { description: "Usuario registrado con éxito" },
-                    400: { description: "Solicitud inválida" },
-                },
-            },
+                    400: { description: "Solicitud inválida" }
+                }
+            }
         },
-        "/login": {
-            post: {
-                summary: "Iniciar sesión",
+        "/users/{id}": {
+            get: {
+                summary: "Obtener un usuario por ID",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del usuario",
+                        schema: { type: "string" }
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "Detalles del usuario",
+                        content: {
+                            "application/json": { schema: { $ref: "#/components/schemas/User" } }
+                        }
+                    },
+                    404: { description: "Usuario no encontrado" }
+                }
+            },
+            put: {
+                summary: "Actualizar un usuario por ID",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del usuario",
+                        schema: { type: "string" }
+                    }
+                ],
                 requestBody: {
                     required: true,
                     content: {
-                        "application/json": { schema: { $ref: "#/components/schemas/User" } },
-                    },
+                        "application/json": { schema: { $ref: "#/components/schemas/User" } }
+                    }
                 },
                 responses: {
-                    200: { description: "Inicio de sesión exitoso" },
-                    401: { description: "Credenciales incorrectas" },
-                },
+                    200: { description: "Usuario actualizado con éxito" },
+                    400: { description: "Solicitud inválida" },
+                    404: { description: "Usuario no encontrado" }
+                }
             },
+            delete: {
+                summary: "Eliminar un usuario por ID",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del usuario",
+                        schema: { type: "string" }
+                    }
+                ],
+                responses: {
+                    200: { description: "Usuario eliminado con éxito" },
+                    404: { description: "Usuario no encontrado" }
+                }
+            }
         },
         "/books": {
             get: {
@@ -96,88 +169,59 @@ const swaggerOptions = {
                             "application/json": {
                                 schema: {
                                     type: "array",
-                                    items: { $ref: "#/components/schemas/Book" },
-                                },
-                            },
-                        },
-                    },
-                },
+                                    items: { $ref: "#/components/schemas/Book" }
+                                }
+                            }
+                        }
+                    }
+                }
             },
             post: {
                 summary: "Añadir un nuevo libro",
                 requestBody: {
                     required: true,
                     content: {
-                        "multipart/form-data": { schema: { $ref: "#/components/schemas/Book" } },
-                    },
+                        "application/json": { schema: { $ref: "#/components/schemas/Book" } }
+                    }
                 },
                 responses: {
                     201: { description: "Libro añadido con éxito" },
-                    400: { description: "Solicitud inválida" },
-                },
-            },
+                    400: { description: "Solicitud inválida" }
+                }
+            }
         },
         "/exchanges": {
-            post: {
-                summary: "Crear un nuevo intercambio de libros",
-                requestBody: {
-                    required: true,
-                    content: {
-                        "application/json": { schema: { $ref: "#/components/schemas/BookExchange" } },
-                    },
-                },
-                responses: {
-                    201: { description: "Intercambio creado con éxito" },
-                    400: { description: "Error al crear el intercambio" },
-                },
-            },
             get: {
-                summary: "Obtener intercambios del usuario",
+                summary: "Obtener todos los intercambios",
                 responses: {
                     200: {
-                        description: "Lista de intercambios del usuario",
+                        description: "Lista de intercambios",
                         content: {
                             "application/json": {
                                 schema: {
                                     type: "array",
-                                    items: { $ref: "#/components/schemas/BookExchange" },
-                                },
-                            },
-                        },
-                    },
-                },
+                                    items: { $ref: "#/components/schemas/BookExchange" }
+                                }
+                            }
+                        }
+                    }
+                }
             },
-        },
-        "/exchanges/{id}/status": {
-            put: {
-                summary: "Actualizar el estado de un intercambio",
-                parameters: [
-                    {
-                        name: "id",
-                        in: "path",
-                        required: true,
-                        description: "ID del intercambio",
-                        schema: { type: "string" },
-                    },
-                ],
+            post: {
+                summary: "Crear un nuevo intercambio",
                 requestBody: {
                     required: true,
                     content: {
-                        "application/json": {
-                            schema: {
-                                $ref: "#/components/schemas/BookExchange",
-                            },
-                        },
-                    },
+                        "application/json": { schema: { $ref: "#/components/schemas/BookExchange" } }
+                    }
                 },
                 responses: {
-                    200: { description: "Estado de intercambio actualizado con éxito" },
-                    400: { description: "Solicitud inválida" },
-                    404: { description: "Intercambio no encontrado" },
-                },
-            },
-        },
-    },
+                    201: { description: "Intercambio creado con éxito" },
+                    400: { description: "Solicitud inválida" }
+                }
+            }
+        }
+    }
 };
 
 module.exports = swaggerOptions;
