@@ -78,6 +78,37 @@ const swaggerOptions = {
         },
     ],
     paths: {
+        // Usuarios
+        "/register": {
+            post: {
+                summary: "Registrar un nuevo usuario",
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": { schema: { $ref: "#/components/schemas/User" } },
+                    },
+                },
+                responses: {
+                    201: { description: "Usuario registrado con éxito" },
+                    400: { description: "Solicitud inválida" },
+                },
+            },
+        },
+        "/login": {
+            post: {
+                summary: "Iniciar sesión",
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": { schema: { $ref: "#/components/schemas/User" } },
+                    },
+                },
+                responses: {
+                    200: { description: "Inicio de sesión exitoso" },
+                    401: { description: "Credenciales incorrectas" },
+                },
+            },
+        },
         "/users": {
             get: {
                 summary: "Obtener todos los usuarios",
@@ -96,85 +127,8 @@ const swaggerOptions = {
                     }
                 }
             },
-            post: {
-                summary: "Registrar un nuevo usuario",
-                requestBody: {
-                    required: true,
-                    content: {
-                        "application/json": { schema: { $ref: "#/components/schemas/User" } }
-                    }
-                },
-                responses: {
-                    201: { description: "Usuario registrado con éxito" },
-                    400: { description: "Solicitud inválida" }
-                }
-            }
         },
-        "/users/{id}": {
-            get: {
-                summary: "Obtener un usuario por ID",
-                security: [{ BearerAuth: [] }],
-                parameters: [
-                    {
-                        name: "id",
-                        in: "path",
-                        required: true,
-                        description: "ID del usuario",
-                        schema: { type: "string" }
-                    }
-                ],
-                responses: {
-                    200: {
-                        description: "Detalles del usuario",
-                        content: {
-                            "application/json": { schema: { $ref: "#/components/schemas/User" } }
-                        }
-                    },
-                    404: { description: "Usuario no encontrado" }
-                }
-            },
-            put: {
-                summary: "Actualizar un usuario por ID",
-                security: [{ BearerAuth: [] }],
-                parameters: [
-                    {
-                        name: "id",
-                        in: "path",
-                        required: true,
-                        description: "ID del usuario",
-                        schema: { type: "string" }
-                    }
-                ],
-                requestBody: {
-                    required: true,
-                    content: {
-                        "application/json": { schema: { $ref: "#/components/schemas/User" } }
-                    }
-                },
-                responses: {
-                    200: { description: "Usuario actualizado con éxito" },
-                    400: { description: "Solicitud inválida" },
-                    404: { description: "Usuario no encontrado" }
-                }
-            },
-            delete: {
-                summary: "Eliminar un usuario por ID",
-                security: [{ BearerAuth: [] }],
-                parameters: [
-                    {
-                        name: "id",
-                        in: "path",
-                        required: true,
-                        description: "ID del usuario",
-                        schema: { type: "string" }
-                    }
-                ],
-                responses: {
-                    200: { description: "Usuario eliminado con éxito" },
-                    404: { description: "Usuario no encontrado" }
-                }
-            }
-        },
+        // Libros
         "/books": {
             get: {
                 summary: "Obtener todos los libros",
@@ -208,6 +162,7 @@ const swaggerOptions = {
                 }
             }
         },
+        // Intercambios
         "/exchanges": {
             get: {
                 summary: "Obtener todos los intercambios",
