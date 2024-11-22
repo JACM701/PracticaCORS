@@ -244,4 +244,4 @@ const swaggerOptions = {
     }
 };
 
-export default swaggerOptions;
+module.exports = swaggerOptions;
