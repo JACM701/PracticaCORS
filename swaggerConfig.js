@@ -81,6 +81,7 @@ const swaggerOptions = {
         // Usuarios
         "/register": {
             post: {
+                tags:["Registro y login"],
                 summary: "Registrar un nuevo usuario",
                 requestBody: {
                     required: true,
@@ -96,6 +97,7 @@ const swaggerOptions = {
         },
         "/login": {
             post: {
+                tags:["Registro y login"],
                 summary: "Iniciar sesión",
                 requestBody: {
                     required: true,
@@ -145,6 +147,7 @@ const swaggerOptions = {
         },
         "/users/{id}": {
             get: {
+                tags:["Users"],
                 summary: "Obtener un usuario por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
@@ -167,6 +170,7 @@ const swaggerOptions = {
                 }
             },
             put: {
+                tags:["Users"],
                 summary: "Actualizar un usuario por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
@@ -191,6 +195,7 @@ const swaggerOptions = {
                 }
             },
             delete: {
+                tags:["Users"],
                 summary: "Eliminar un usuario por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
@@ -229,6 +234,7 @@ const swaggerOptions = {
                 }
             },
             post: {
+                tags:["Books"],
                 summary: "Añadir un nuevo libro",
                 security: [{ BearerAuth: [] }],
                 requestBody: {
@@ -245,6 +251,7 @@ const swaggerOptions = {
         },
         "/books/{id}": {
             get: {
+                tags:["Books"],
                 summary: "Obtener un libro por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
@@ -267,6 +274,7 @@ const swaggerOptions = {
                 }
             },
             put: {
+                tags:["Books"],
                 summary: "Actualizar un libro por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
@@ -291,6 +299,7 @@ const swaggerOptions = {
                 }
             },
             delete: {
+                tags:["Books"],
                 summary: "Eliminar un libro por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
@@ -329,6 +338,7 @@ const swaggerOptions = {
                 }
             },
             post: {
+                tags:["Intercambios"],
                 summary: "Crear un nuevo intercambio",
                 security: [{ BearerAuth: [] }],
                 requestBody: {
@@ -345,6 +355,7 @@ const swaggerOptions = {
         },
         "/exchanges/{id}": {
             get: {
+                tags:["Intercambios"],
                 summary: "Obtener un intercambio por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
@@ -367,6 +378,7 @@ const swaggerOptions = {
                 }
             },
             put: {
+                tags:["Intercambios"],
                 summary: "Actualizar un intercambio por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
@@ -391,6 +403,7 @@ const swaggerOptions = {
                 }
             },
             delete: {
+                tags:["Intercambios"],
                 summary: "Eliminar un intercambio por ID",
                 security: [{ BearerAuth: [] }],
                 parameters: [
