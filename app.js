@@ -31,6 +31,11 @@ mongoose.connect(mongoURI, {
 // Middleware para Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Endpoint de esquema json para postman
+app.get("/api-docs-json", (req, res) => {
+    res.json(swaggerDocument);
+});
+
 // Configurar CORS
 const corsOptions = {
     origin: '*', // Cambiar esto a process.env.CORS_ORIGIN en producción
