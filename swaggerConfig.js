@@ -111,6 +111,7 @@ const swaggerOptions = {
         },
         "/users": {
             get: {
+                tags:["Users"],
                 summary: "Obtener todos los usuarios",
                 security: [{ BearerAuth: [] }],
                 responses: {
@@ -128,6 +129,7 @@ const swaggerOptions = {
                 }
             },
             post: {
+                tags:["Users"],
                 summary: "Registrar un nuevo usuario",
                 requestBody: {
                     required: true,
@@ -209,6 +211,7 @@ const swaggerOptions = {
         // Libros
         "/books": {
             get: {
+                tags:["Books"],
                 summary: "Obtener todos los libros",
                 security: [{ BearerAuth: [] }],
                 responses: {
@@ -308,6 +311,7 @@ const swaggerOptions = {
         // Intercambios
         "/exchanges": {
             get: {
+                tags:["Intercambios"],
                 summary: "Obtener todos los intercambios",
                 security: [{ BearerAuth: [] }],
                 responses: {
