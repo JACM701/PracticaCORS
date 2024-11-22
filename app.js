@@ -8,7 +8,8 @@ const authenticateToken = require('./middlewares/authMiddleware');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swaggerConfig');
 require('dotenv').config();
-const swaggerSpec = require('./swaggerOptions');
+
+const swaggerOptions = require('./swaggerOptions');
 
 const userController = require('./controllers/userController');
 const bookController = require('./controllers/bookController');
