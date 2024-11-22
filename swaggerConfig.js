@@ -16,6 +16,13 @@ const swaggerOptions = {
         }
     ],
     components: {
+        securitySchemes: {
+            BearerAuth: {
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "JWT",
+            },
+        },
         schemas: {
             User: {
                 type: "object",
@@ -65,10 +72,16 @@ const swaggerOptions = {
             }
         }
     },
+    security: [
+        {
+            BearerAuth: [],
+        },
+    ],
     paths: {
         "/users": {
             get: {
                 summary: "Obtener todos los usuarios",
+                security: [{ BearerAuth: [] }],
                 responses: {
                     200: {
                         description: "Lista de usuarios",
@@ -100,6 +113,7 @@ const swaggerOptions = {
         "/users/{id}": {
             get: {
                 summary: "Obtener un usuario por ID",
+                security: [{ BearerAuth: [] }],
                 parameters: [
                     {
                         name: "id",
@@ -121,6 +135,7 @@ const swaggerOptions = {
             },
             put: {
                 summary: "Actualizar un usuario por ID",
+                security: [{ BearerAuth: [] }],
                 parameters: [
                     {
                         name: "id",
@@ -144,6 +159,7 @@ const swaggerOptions = {
             },
             delete: {
                 summary: "Eliminar un usuario por ID",
+                security: [{ BearerAuth: [] }],
                 parameters: [
                     {
                         name: "id",
@@ -162,6 +178,7 @@ const swaggerOptions = {
         "/books": {
             get: {
                 summary: "Obtener todos los libros",
+                security: [{ BearerAuth: [] }],
                 responses: {
                     200: {
                         description: "Lista de libros",
@@ -178,6 +195,7 @@ const swaggerOptions = {
             },
             post: {
                 summary: "Añadir un nuevo libro",
+                security: [{ BearerAuth: [] }],
                 requestBody: {
                     required: true,
                     content: {
@@ -193,6 +211,7 @@ const swaggerOptions = {
         "/exchanges": {
             get: {
                 summary: "Obtener todos los intercambios",
+                security: [{ BearerAuth: [] }],
                 responses: {
                     200: {
                         description: "Lista de intercambios",
@@ -209,6 +228,7 @@ const swaggerOptions = {
             },
             post: {
                 summary: "Crear un nuevo intercambio",
+                security: [{ BearerAuth: [] }],
                 requestBody: {
                     required: true,
                     content: {
@@ -224,4 +244,4 @@ const swaggerOptions = {
     }
 };
 
-module.exports = swaggerOptions;
+export default swaggerOptions;
