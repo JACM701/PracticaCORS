@@ -127,6 +127,84 @@ const swaggerOptions = {
                     }
                 }
             },
+            post: {
+                summary: "Registrar un nuevo usuario",
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": { schema: { $ref: "#/components/schemas/User" } }
+                    }
+                },
+                responses: {
+                    201: { description: "Usuario registrado con éxito" },
+                    400: { description: "Solicitud inválida" }
+                }
+            }
+        },
+        "/users/{id}": {
+            get: {
+                summary: "Obtener un usuario por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del usuario",
+                        schema: { type: "string" }
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "Detalles del usuario",
+                        content: {
+                            "application/json": { schema: { $ref: "#/components/schemas/User" } }
+                        }
+                    },
+                    404: { description: "Usuario no encontrado" }
+                }
+            },
+            put: {
+                summary: "Actualizar un usuario por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del usuario",
+                        schema: { type: "string" }
+                    }
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": { schema: { $ref: "#/components/schemas/User" } }
+                    }
+                },
+                responses: {
+                    200: { description: "Usuario actualizado con éxito" },
+                    400: { description: "Solicitud inválida" },
+                    404: { description: "Usuario no encontrado" }
+                }
+            },
+            delete: {
+                summary: "Eliminar un usuario por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del usuario",
+                        schema: { type: "string" }
+                    }
+                ],
+                responses: {
+                    200: { description: "Usuario eliminado con éxito" },
+                    404: { description: "Usuario no encontrado" }
+                }
+            }
         },
         // Libros
         "/books": {
@@ -162,6 +240,71 @@ const swaggerOptions = {
                 }
             }
         },
+        "/books/{id}": {
+            get: {
+                summary: "Obtener un libro por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del libro",
+                        schema: { type: "string" }
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "Detalles del libro",
+                        content: {
+                            "application/json": { schema: { $ref: "#/components/schemas/Book" } }
+                        }
+                    },
+                    404: { description: "Libro no encontrado" }
+                }
+            },
+            put: {
+                summary: "Actualizar un libro por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del libro",
+                        schema: { type: "string" }
+                    }
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": { schema: { $ref: "#/components/schemas/Book" } }
+                    }
+                },
+                responses: {
+                    200: { description: "Libro actualizado con éxito" },
+                    400: { description: "Solicitud inválida" },
+                    404: { description: "Libro no encontrado" }
+                }
+            },
+            delete: {
+                summary: "Eliminar un libro por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del libro",
+                        schema: { type: "string" }
+                    }
+                ],
+                responses: {
+                    200: { description: "Libro eliminado con éxito" },
+                    404: { description: "Libro no encontrado" }
+                }
+            }
+        },
         // Intercambios
         "/exchanges": {
             get: {
@@ -193,6 +336,71 @@ const swaggerOptions = {
                 responses: {
                     201: { description: "Intercambio creado con éxito" },
                     400: { description: "Solicitud inválida" }
+                }
+            }
+        },
+        "/exchanges/{id}": {
+            get: {
+                summary: "Obtener un intercambio por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del intercambio",
+                        schema: { type: "string" }
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "Detalles del intercambio",
+                        content: {
+                            "application/json": { schema: { $ref: "#/components/schemas/BookExchange" } }
+                        }
+                    },
+                    404: { description: "Intercambio no encontrado" }
+                }
+            },
+            put: {
+                summary: "Actualizar un intercambio por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del intercambio",
+                        schema: { type: "string" }
+                    }
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": { schema: { $ref: "#/components/schemas/BookExchange" } }
+                    }
+                },
+                responses: {
+                    200: { description: "Intercambio actualizado con éxito" },
+                    400: { description: "Solicitud inválida" },
+                    404: { description: "Intercambio no encontrado" }
+                }
+            },
+            delete: {
+                summary: "Eliminar un intercambio por ID",
+                security: [{ BearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        required: true,
+                        description: "ID del intercambio",
+                        schema: { type: "string" }
+                    }
+                ],
+                responses: {
+                    200: { description: "Intercambio eliminado con éxito" },
+                    404: { description: "Intercambio no encontrado" }
                 }
             }
         }
