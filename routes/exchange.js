@@ -13,4 +13,7 @@ router.patch('/:id', authenticateToken, exchangeController.updateExchangeStatus)
 // Ruta para obtener todos los intercambios
 router.get('/', authenticateToken, exchangeController.getAllExchanges);
 
+// *** Nueva ruta para obtener un intercambio específico por su ID ***
+router.get('/:id', authenticateToken, exchangeController.getExchangeById);
+
 module.exports = router;

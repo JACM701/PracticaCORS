@@ -72,3 +72,23 @@ exports.getAllExchanges = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Obtener un intercambio específico por su ID
+exports.getExchangeById = async (req, res) => {
+    try {
+        const exchangeId = req.params.id;
+
+        // Buscar el intercambio en la base de datos
+        const exchange = await BookExchange.findById(exchangeId)
+            .populate('libroOfrecido libroDeseado usuarioSolicitante usuarioReceptor');
+
+        if (!exchange) {
+            return res.status(404).json({ message: 'Intercambio no encontrado' });
+        }
+
+        res.status(200).json(exchange);
+    } catch (error) {
+        console.error('Error al obtener el intercambio:', error);
+        res.status(500).json({ message: 'Error del servidor al obtener el intercambio' });
+    }
+};
