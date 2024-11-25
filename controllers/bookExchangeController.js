@@ -3,8 +3,6 @@ const bookExchangeService = require('../services/bookExchangeService');
 const BookExchange = require('../models/bookExchangeModel'); // Asegúrate de que la ruta sea correcta
 
 // Crear un nuevo intercambio de libros
-const bookExchangeService = require('../services/bookExchangeService');
-
 exports.createExchange = async (req, res) => {
     try {
         const exchangeData = {
