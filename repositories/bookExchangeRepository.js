@@ -20,3 +20,8 @@ exports.findExchangesByUser = (userId) => {
 exports.countExchangesByUser = (userId) => {
     return BookExchange.countDocuments({ usuarioSolicitante: userId });
 };
+
+// Obtener todos los intercambios
+exports.findAllExchanges = async () => {
+    return await BookExchange.find(); // Devuelve todos los documentos en la colección
+};

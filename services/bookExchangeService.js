@@ -34,3 +34,8 @@ exports.findExchangesByUser = async (userId, page, limit) => {
 exports.countExchangesByUser = async (userId) => {
     return bookExchangeRepository.countExchangesByUser(userId);
 };
+
+// Obtener todos los intercambios
+exports.findAllExchanges = async () => {
+    return await bookExchangeRepository.findAllExchanges();
+};

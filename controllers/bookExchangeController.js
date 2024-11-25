@@ -55,6 +55,14 @@ exports.getUserExchanges = async (req, res) => {
     }
 };
 
-
-
+// Obtener todos los intercambios
+exports.getAllExchanges = async (req, res) => {
+    try {
+        const exchanges = await bookExchangeService.findAllExchanges();
+        res.json(exchanges); // Devuelve todos los intercambios
+    } catch (error) {
+        console.error('Error al obtener todos los intercambios:', error.message);
+        res.status(500).json({ message: 'Error al obtener los intercambios' });
+    }
+};
 
