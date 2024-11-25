@@ -92,6 +92,8 @@ app.delete('/users/:id', authenticateToken, userController.deleteUser);
 
 // Rutas para intercambio de libros
 app.use('/api/exchange', authenticateToken, exchangeRoutes); // Rutas de intercambio de libros protegidas
+// Ruta para obtener todos los intercambios
+router.get('/exchanges', bookExchangeController.getAllExchanges);
 
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
