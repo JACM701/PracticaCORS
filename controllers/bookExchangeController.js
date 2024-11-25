@@ -96,25 +96,24 @@ exports.getExchangeById = async (req, res) => {
 // Controlador para eliminar un intercambio por ID
 exports.deleteExchange = async (req, res) => {
     try {
-      const exchangeId = req.params.id;
-  
-      // Buscar el intercambio
-      const exchange = await BookExchange.findById(exchangeId);
-      if (!exchange) {
-        return res.status(404).json({ message: 'Intercambio no encontrado' });
-      }
-  
-      // Validar si el usuario autenticado es el solicitante
-      if (exchange.usuarioSolicitante.toString() !== req.user.id) {
-        return res.status(403).json({ message: 'No tienes permiso para eliminar este intercambio' });
-      }
-  
-      // Eliminar el intercambio
-      await BookExchange.deleteOne({ _id: exchangeId });
-      res.status(200).json({ message: 'Intercambio eliminado exitosamente' });
+        const exchangeId = req.params.id;
+
+        // Buscar el intercambio
+        const exchange = await BookExchange.findById(exchangeId);
+        if (!exchange) {
+            return res.status(404).json({ message: 'Intercambio no encontrado' });
+        }
+
+        // Validar si el usuario autenticado es el solicitante
+        if (exchange.usuarioSolicitante.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'No tienes permiso para eliminar este intercambio' });
+        }
+
+        // Eliminar el intercambio
+        await BookExchange.deleteOne({ _id: exchangeId });
+        res.status(200).json({ message: 'Intercambio eliminado exitosamente' });
     } catch (error) {
-      console.error('Error al eliminar el intercambio:', error);
-      res.status(500).json({ message: 'Error del servidor' });
+        console.error('Error al eliminar el intercambio:', error);
+        res.status(500).json({ message: 'Error del servidor' });
     }
-  };
-  
+};
