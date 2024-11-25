@@ -78,20 +78,20 @@ app.get('/protected', authenticateToken, (req, res) => {
 });
 
 // Rutas CRUD para libros
-app.get('/books', authenticateToken, bookController.getAllBooks);
+app.get('/books', bookController.getAllBooks);
 app.get('/books/:id', authenticateToken, bookController.getBookById);
 app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook);
 app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook);
 app.delete('/books/:id', authenticateToken, bookController.deleteBook);
 
 // Rutas para gestión de usuarios
-app.get('/users', authenticateToken, userController.getAllUsers);
+app.get('/users', userController.getAllUsers);
 app.get('/users/:id', authenticateToken, userController.getUserById);
 app.put('/users/:id', authenticateToken, userController.updateUser);
 app.delete('/users/:id', authenticateToken, userController.deleteUser);
 
 // Rutas para intercambio de libros
-app.use('/api/exchange', authenticateToken, exchangeRoutes); // Rutas de intercambio de libros protegidas
+app.use('/api/exchange', exchangeRoutes); // Rutas de intercambio de libros sin proteger con authenticateToken para la ruta GET
 
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;

@@ -35,30 +35,27 @@ exports.updateExchangeStatus = async (req, res) => {
     }
 };
 
-
-// Obtener todos los intercambios (sin filtro por usuario)
+// Obtener todos los intercambios de libros
 exports.getAllExchanges = async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
-
     try {
-        // Recuperar todos los intercambios sin filtro
-        const exchanges = await bookExchangeService.findAllExchanges(page, limit);
-        const total = await bookExchangeService.countAllExchanges();
-
-        if (!exchanges || exchanges.length === 0) {
-            return res.status(404).json({
-                message: "No se encontraron intercambios.",
-            });
-        }
-
-        res.json({
-            data: exchanges,
-            currentPage: parseInt(page),
-            totalPages: Math.ceil(total / limit),
-            totalExchanges: total,
-        });
+      const exchanges = await BookExchange.find()
+        .populate('libroOfrecido')
+        .populate('libroDeseado')
+        .populate('usuarioSolicitante')
+        .populate('usuarioReceptor')
+        .exec();
+  
+      if (exchanges.length === 0) {
+        return res.status(404).json({ message: 'No se encontraron intercambios de libros.' });
+      }
+  
+      res.json({
+        data: exchanges,
+        totalExchanges: exchanges.length
+      });
+  
     } catch (error) {
-        console.error('Error al obtener todos los intercambios:', error.message);
-        res.status(500).json({ message: 'Error al obtener los intercambios' });
+      console.error('Error al obtener los intercambios:', error);
+      res.status(500).json({ message: 'Error al obtener los intercambios de libros.' });
     }
-};
+  };
