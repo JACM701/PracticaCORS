@@ -38,30 +38,27 @@ exports.updateExchangeStatus = async (req, res) => {
 
 // Obtener todos los intercambios (sin filtro por usuario)
 exports.getAllExchanges = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+
     try {
-      // Obtener todos los intercambios sin filtrar por usuario
-      const exchanges = await BookExchange.find()
-        .populate('libroOfrecido')   // Resuelve el libro ofrecido
-        .populate('libroDeseado')    // Resuelve el libro deseado
-        .populate('usuarioSolicitante')  // Resuelve el usuario solicitante
-        .populate('usuarioReceptor')     // Resuelve el usuario receptor
-        .exec();
-  
-      // Si no hay intercambios, responder con un mensaje
-      if (exchanges.length === 0) {
-        return res.status(404).json({ message: 'No se encontraron intercambios de libros.' });
-      }
-  
-      // Responder con todos los intercambios encontrados
-      res.json({
-        data: exchanges, 
-        totalExchanges: exchanges.length
-      });
-  
+        // Recuperar todos los intercambios sin filtro
+        const exchanges = await bookExchangeService.findAllExchanges(page, limit);
+        const total = await bookExchangeService.countAllExchanges();
+
+        if (!exchanges || exchanges.length === 0) {
+            return res.status(404).json({
+                message: "No se encontraron intercambios.",
+            });
+        }
+
+        res.json({
+            data: exchanges,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(total / limit),
+            totalExchanges: total,
+        });
     } catch (error) {
-      console.error('Error al obtener los intercambios:', error);
-      res.status(500).json({ message: 'Error al obtener los intercambios de libros.' });
+        console.error('Error al obtener todos los intercambios:', error.message);
+        res.status(500).json({ message: 'Error al obtener los intercambios' });
     }
-  };
-
-
+};
