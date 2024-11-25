@@ -1,36 +1,16 @@
-// models/bookExchangeModel.js
 const mongoose = require('mongoose');
 
 const bookExchangeSchema = new mongoose.Schema({
-  libroOfrecido: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Book', 
-    required: true 
+  libroOfrecido: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+  libroDeseado: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+  usuarioSolicitante: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  usuarioReceptor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  estado: {
+    type: String,
+    enum: ['pending', 'accepted', 'rejected'],
+    default: 'pending'
   },
-  libroDeseado: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Book', 
-    required: true 
-  },
-  usuarioSolicitante: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
-  },
-  usuarioReceptor: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
-  },
-  fechaIntercambio: { 
-    type: Date, 
-    default: Date.now 
-  },
-  estado: { 
-    type: String, 
-    enum: ['pending', 'completed', 'canceled'], 
-    default: 'pending' 
-  }
+  exchangeDate: Date
 });
 
 module.exports = mongoose.model('BookExchange', bookExchangeSchema);
