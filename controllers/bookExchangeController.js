@@ -37,29 +37,36 @@ exports.updateExchangeStatus = async (req, res) => {
 
 
 // Obtener todos los intercambios (sin filtro por usuario)
-exports.getAllExchanges = async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
-
+exports.getAllExchangedBooks = async (req, res) => {
     try {
-        // Obtener todos los intercambios con paginación
-        const exchanges = await bookExchangeService.findAllExchanges(page, limit);
-        
-        // Contar el número total de intercambios
-        const total = await bookExchangeService.countAllExchanges();
-
-        res.json({
-            data: exchanges,
-            currentPage: parseInt(page),
-            totalPages: Math.ceil(total / limit),
-            totalExchanges: total,
-        });
+      // Obtener todos los intercambios y sus libros ofrecidos y deseados
+      const exchanges = await BookExchange.find()
+        .populate('libroOfrecido') // Resuelve el libro ofrecido
+        .populate('libroDeseado') // Resuelve el libro deseado
+        .exec();
+  
+      // Si no hay intercambios
+      if (!exchanges || exchanges.length === 0) {
+        return res.status(404).json({ message: 'No se encontraron intercambios de libros.' });
+      }
+  
+      // Recopilamos todos los libros ofrecidos y deseados
+      const exchangedBooks = exchanges.map(exchange => ({
+        libroOfrecido: exchange.libroOfrecido,
+        libroDeseado: exchange.libroDeseado
+      }));
+  
+      // Retornamos los libros intercambiados
+      res.json({
+        data: exchangedBooks,
+        totalExchanges: exchangedBooks.length
+      });
+  
     } catch (error) {
-        console.error('Error al obtener todos los intercambios:', error.message);
-        res.status(500).json({ message: 'Error al obtener los intercambios' });
+      console.error('Error al obtener los libros intercambiados:', error.message);
+      res.status(500).json({ message: 'Error al obtener los libros intercambiados' });
     }
-};
-
-
+  };
 
 
 // Obtener intercambios del usuario con paginación

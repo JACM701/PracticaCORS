@@ -6,6 +6,7 @@ const exchangeController = require('../controllers/bookExchangeController');
 // Rutas para intercambio de libros
 router.post('/', exchangeController.createExchange);
 router.patch('/:id', exchangeController.updateExchangeStatus);
+// Ruta para obtener todos los intercambios
 router.get('/', exchangeController.getUserExchanges);
 
 module.exports = router;
