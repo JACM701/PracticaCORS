@@ -11,7 +11,7 @@ const authenticateToken = (req, res, next) => {
 
     try {
         const verified = jwt.verify(token, SECRET_KEY);
-        req.user = verified; // Esto debería contener { id, role }
+        req.user = verified; // Esto contiene { id, role }
         next();
     } catch (error) {
         res.status(403).json({ message: 'Token no válido' });
