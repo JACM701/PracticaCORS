@@ -35,24 +35,18 @@ exports.updateExchangeStatus = async (req, res) => {
     }
 };
 
+//Todos los libros intercambiados
 exports.getAllExchanges = async (req, res) => {
-    const { page = 1, limit = 10 } = req.query; // Valores por defecto si no se proporcionan
-
     try {
-        const exchanges = await bookExchangeService.findAllExchanges(page, limit);
-        const total = await bookExchangeService.countAllExchanges(); // Total de intercambios
-
-        res.status(200).json({
-            data: exchanges,
-            currentPage: parseInt(page, 10),
-            totalPages: Math.ceil(total / limit),
-            totalExchanges: total,
-        });
+        const exchanges = await BookExchange.find();
+        console.log('Intercambios encontrados:', exchanges);
+        res.json(exchanges);
     } catch (error) {
-        console.error('Error al obtener todos los intercambios:', error.message);
-        res.status(500).json({ message: 'Error al obtener los intercambios' });
+        console.error('Error al obtener intercambios:', error.message);
+        res.status(500).json({ message: 'Error al obtener intercambios' });
     }
 };
+
 
 
 // Obtener intercambios del usuario con paginación
