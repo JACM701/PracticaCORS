@@ -1,5 +1,6 @@
 // controllers/bookExchangeController.js
 const bookExchangeService = require('../services/bookExchangeService');
+const BookExchange = require('../models/bookExchangeModel'); // Asegúrate de que la ruta sea correcta
 
 // Crear un nuevo intercambio de libros
 exports.createExchange = async (req, res) => {
