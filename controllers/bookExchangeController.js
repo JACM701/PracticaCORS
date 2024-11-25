@@ -3,108 +3,54 @@ const bookExchangeService = require('../services/bookExchangeService');
 const BookExchange = require('../models/bookExchangeModel'); // Asegúrate de que la ruta sea correcta
 
 // Crear un nuevo intercambio de libros
+const bookExchangeService = require('../services/bookExchangeService');
+
 exports.createExchange = async (req, res) => {
     try {
-        console.log('Iniciando creación de intercambio');
-        
-        // Asegurarse de que los datos recibidos contienen los IDs necesarios
-        const { libroOfrecido, libroDeseado, usuarioSolicitante, usuarioReceptor, exchangeDate } = req.body;
-
-        // Comprobar si los libros existen
-        const libroOfrecidoExistente = await Book.findById(libroOfrecido);
-        const libroDeseadoExistente = await Book.findById(libroDeseado);
-
-        if (!libroOfrecidoExistente || !libroDeseadoExistente) {
-            return res.status(400).json({ message: 'Uno de los libros no existe.' });
-        }
-
-        // Verificar que los libros pertenezcan a los usuarios correctos
-        if (libroOfrecidoExistente.owner.toString() !== usuarioSolicitante) {
-            return res.status(400).json({ message: 'El libro ofrecido no pertenece al solicitante.' });
-        }
-
-        if (libroDeseadoExistente.owner.toString() !== usuarioReceptor) {
-            return res.status(400).json({ message: 'El libro deseado no pertenece al receptor.' });
-        }
-
-        // Datos para crear el intercambio
         const exchangeData = {
-            libroOfrecido: libroOfrecido,
-            libroDeseado: libroDeseado,
-            usuarioSolicitante: usuarioSolicitante,
-            usuarioReceptor: usuarioReceptor,
-            exchangeDate: exchangeDate || new Date(),
-            estado: "pending" // Estado inicial del intercambio
+            libroOfrecido: req.body.libroOfrecido,
+            libroDeseado: req.body.libroDeseado,
+            usuarioSolicitante: req.user.id,
+            usuarioReceptor: req.body.usuarioReceptor
         };
 
-        console.log('Datos recibidos para el intercambio:', exchangeData);
-
-        // Llamada al servicio para crear el intercambio
-        const newExchange = await bookExchangeService.createExchange(exchangeData);
-        console.log('Intercambio creado exitosamente:', newExchange);
-
-        // Responder con el intercambio creado
-        res.status(201).json(newExchange);
-
+        const exchange = await bookExchangeService.createExchange(exchangeData);
+        res.status(201).json(exchange);
     } catch (error) {
-        console.error('Error al crear intercambio:', error.message);
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
-
-// Actualizar el estado del intercambio
 exports.updateExchangeStatus = async (req, res) => {
     try {
-        console.log('Iniciando actualización de estado de intercambio');
-        console.log('ID del intercambio a actualizar:', req.params.id);
-        console.log('Nuevo estado:', req.body.estado);
+        const { id } = req.params;
+        const { estado } = req.body;
 
-        const updatedExchange = await bookExchangeService.updateExchangeStatus(req.params.id, req.body.estado);
-        console.log('Estado del intercambio actualizado exitosamente:', updatedExchange);
+        const updatedExchange = await bookExchangeService.updateExchangeStatus(id, estado);
+        if (!updatedExchange) {
+            return res.status(404).json({ message: 'Intercambio no encontrado' });
+        }
 
         res.json(updatedExchange);
     } catch (error) {
-        console.error('Error al actualizar estado de intercambio:', error.message);
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Obtener todos los intercambios de libros
 exports.getAllExchanges = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+
     try {
-        const page = parseInt(req.query.page) || 1; // Página por defecto es la 1
-        const limit = parseInt(req.query.limit) || 10; // Límite por defecto es 10 resultados por página
-        const skip = (page - 1) * limit;
+        const exchanges = await bookExchangeService.findAllExchanges(page, limit);
+        const total = await bookExchangeService.countAllExchanges();
 
-        // Consultar los intercambios con paginación
-        const exchanges = await BookExchange.find()
-            .populate('libroOfrecido')
-            .populate('libroDeseado')
-            .populate('usuarioSolicitante')
-            .populate('usuarioReceptor')
-            .skip(skip)
-            .limit(limit)
-            .exec();
-
-        // Obtener el total de intercambios para calcular el número total de páginas
-        const totalExchanges = await BookExchange.countDocuments();
-
-        if (exchanges.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron intercambios de libros.' });
-        }
-
-        // Responder con los intercambios y la información de paginación
         res.json({
             data: exchanges,
-            totalExchanges: totalExchanges,
-            totalPages: Math.ceil(totalExchanges / limit),
-            currentPage: page,
-            perPage: limit
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(total / limit),
+            totalExchanges: total
         });
-
     } catch (error) {
-        console.error('Error al obtener los intercambios:', error);
-        res.status(500).json({ message: 'Error al obtener los intercambios de libros.' });
+        res.status(500).json({ message: error.message });
     }
 };

@@ -4,22 +4,22 @@ const mongoose = require('mongoose');
 const bookExchangeSchema = new mongoose.Schema({
   libroOfrecido: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Book', // Referencia al modelo de Book
+    ref: 'Book', 
     required: true 
   },
   libroDeseado: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Book', // Referencia al modelo de Book
+    ref: 'Book', 
     required: true 
   },
   usuarioSolicitante: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', // Referencia al modelo de User
+    ref: 'User', 
     required: true 
   },
   usuarioReceptor: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', // Referencia al modelo de User
+    ref: 'User', 
     required: true 
   },
   fechaIntercambio: { 
