@@ -4,19 +4,24 @@ const bookRepository = require('../repositories/bookRepository'); // Para verifi
 
 // Crear intercambio de libros
 exports.createExchange = async (exchangeData) => {
-    // Verificar que ambos libros existen y pertenecen a los usuarios adecuados
-    const libroOfrecido = await bookRepository.getBookById(exchangeData.libroOfrecido);
-    const libroDeseado = await bookRepository.getBookById(exchangeData.libroDeseado);
-    
-    if (!libroOfrecido || !libroDeseado) throw new Error('Uno de los libros no existe');
-    if (libroOfrecido.owner.toString() !== exchangeData.usuarioSolicitante.toString() ||
-        libroDeseado.owner.toString() !== exchangeData.usuarioReceptor.toString()) {
-        throw new Error('Los libros no pertenecen a los usuarios correspondientes');
-    }    
+    try {
+        // Verificar que ambos libros existen y pertenecen a los usuarios adecuados
+        const libroOfrecido = await bookRepository.getBookById(exchangeData.libroOfrecido);
+        const libroDeseado = await bookRepository.getBookById(exchangeData.libroDeseado);
+        
+        if (!libroOfrecido || !libroDeseado) throw new Error('Uno de los libros no existe');
+        if (libroOfrecido.owner.toString() !== exchangeData.usuarioSolicitante.toString() ||
+            libroDeseado.owner.toString() !== exchangeData.usuarioReceptor.toString()) {
+            throw new Error('Los libros no pertenecen a los usuarios correspondientes');
+        }    
 
-    // Crear el intercambio
-    return await bookExchangeRepository.createExchange(exchangeData);
+        // Crear el intercambio
+        return await bookExchangeRepository.createExchange(exchangeData);
+    } catch (error) {
+        throw new Error('Error al crear el intercambio: ' + error.message);
+    }
 };
+
 
 // Actualizar el estado del intercambio
 exports.updateExchangeStatus = async (id, estado) => {
