@@ -39,24 +39,38 @@ exports.updateExchangeStatus = async (req, res) => {
 // Obtener todos los intercambios de libros
 exports.getAllExchanges = async (req, res) => {
     try {
-      const exchanges = await BookExchange.find()
-        .populate('libroOfrecido')
-        .populate('libroDeseado')
-        .populate('usuarioSolicitante')
-        .populate('usuarioReceptor')
-        .exec();
-  
-      if (exchanges.length === 0) {
-        return res.status(404).json({ message: 'No se encontraron intercambios de libros.' });
-      }
-  
-      res.json({
-        data: exchanges,
-        totalExchanges: exchanges.length
-      });
-  
+        const page = parseInt(req.query.page) || 1; // Página por defecto es la 1
+        const limit = parseInt(req.query.limit) || 10; // Límite por defecto es 10 resultados por página
+        const skip = (page - 1) * limit;
+
+        // Consultar los intercambios con paginación
+        const exchanges = await BookExchange.find()
+            .populate('libroOfrecido')
+            .populate('libroDeseado')
+            .populate('usuarioSolicitante')
+            .populate('usuarioReceptor')
+            .skip(skip)
+            .limit(limit)
+            .exec();
+
+        // Obtener el total de intercambios para calcular el número total de páginas
+        const totalExchanges = await BookExchange.countDocuments();
+
+        if (exchanges.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron intercambios de libros.' });
+        }
+
+        // Responder con los intercambios y la información de paginación
+        res.json({
+            data: exchanges,
+            totalExchanges: totalExchanges,
+            totalPages: Math.ceil(totalExchanges / limit),
+            currentPage: page,
+            perPage: limit
+        });
+
     } catch (error) {
-      console.error('Error al obtener los intercambios:', error);
-      res.status(500).json({ message: 'Error al obtener los intercambios de libros.' });
+        console.error('Error al obtener los intercambios:', error);
+        res.status(500).json({ message: 'Error al obtener los intercambios de libros.' });
     }
-  };
+};
