@@ -318,7 +318,7 @@ const swaggerOptions = {
             }
         },
         // Intercambios
-        "/exchanges": {
+        "/api/exchange": {
             get: {
                 tags:["Intercambios"],
                 summary: "Obtener todos los intercambios",
@@ -353,7 +353,7 @@ const swaggerOptions = {
                 }
             }
         },
-        "/exchanges/{id}": {
+        "/api/exchange/{id}": {
             get: {
                 tags:["Intercambios"],
                 summary: "Obtener un intercambio por ID",
