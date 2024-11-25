@@ -2,35 +2,17 @@
 const bookExchangeService = require('../services/bookExchangeService');
 const BookExchange = require('../models/bookExchangeModel'); // Asegúrate de que la ruta sea correcta
 
-// Crear un nuevo intercambio de libros
-const createExchange = async (req, res) => {
+// Crear un nuevo intercambio
+exports.createExchange = async (req, res) => {
     try {
-        const usuarioReceptor = req.user.id; // ID del receptor autenticado desde el token
-        const { libroOfrecido, libroDeseado, usuarioSolicitante, estado, exchangeDate } = req.body;
+        const exchangeData = {
+            libroOfrecido: req.body.libroOfrecido,
+            libroDeseado: req.body.libroDeseado,
+            usuarioSolicitante: req.user.id,
+            usuarioReceptor: req.body.usuarioReceptor
+        };
 
-        // Verificar que el usuario solicitante existe
-        const solicitante = await User.findById(usuarioSolicitante);
-        if (!solicitante) {
-            return res.status(404).json({ message: 'Usuario solicitante no encontrado' });
-        }
-
-        // Verificar que los libros existen
-        const libroOfrecidoData = await Book.findById(libroOfrecido);
-        const libroDeseadoData = await Book.findById(libroDeseado);
-        if (!libroOfrecidoData || !libroDeseadoData) {
-            return res.status(404).json({ message: 'Uno o ambos libros no encontrados' });
-        }
-
-        // Crear el intercambio
-        const exchange = await Exchange.create({
-            libroOfrecido,
-            libroDeseado,
-            usuarioSolicitante,
-            usuarioReceptor,
-            estado,
-            exchangeDate
-        });
-
+        const exchange = await bookExchangeService.createExchange(exchangeData);
         res.status(201).json(exchange);
     } catch (error) {
         res.status(500).json({ message: error.message });

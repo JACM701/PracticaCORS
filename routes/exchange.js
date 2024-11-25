@@ -9,6 +9,4 @@ router.post('/', authenticateToken, exchangeController.createExchange);
 router.patch('/:id', authenticateToken, exchangeController.updateExchangeStatus); 
 router.get('/', authenticateToken, exchangeController.getAllExchanges);
 
-router.post('/exchange', authenticateToken, createExchange);
-
 module.exports = router;
