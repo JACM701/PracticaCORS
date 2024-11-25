@@ -23,8 +23,20 @@ exports.updateExchangeStatus = async (id, estado) => {
     return await bookExchangeRepository.updateExchangeStatus(id, estado);
 };
 
-// Obtener intercambios de un usuario
+//Obtener todos los intercambios
+exports.findAllExchanges = async (page, limit) => {
+    return bookExchangeRepository.findAllExchanges() // Devuelve la consulta
+        .skip((page - 1) * limit) // Desplaza los resultados según la página actual
+        .limit(parseInt(limit, 10)); // Limita el número de resultados por página
+};
 
+exports.countAllExchanges = async () => {
+    return bookExchangeRepository.countAllExchanges(); // Total de documentos
+};
+
+
+
+// Obtener intercambios de un usuario
 exports.findExchangesByUser = async (userId, page, limit) => {
     return bookExchangeRepository.findExchangesByUser(userId) // Devuelve la consulta de MongoDB
         .skip((page - 1) * limit)    // Aplica la paginación
@@ -35,7 +47,3 @@ exports.countExchangesByUser = async (userId) => {
     return bookExchangeRepository.countExchangesByUser(userId);
 };
 
-// Obtener todos los intercambios
-exports.findAllExchanges = async () => {
-    return await bookExchangeRepository.findAllExchanges();
-};

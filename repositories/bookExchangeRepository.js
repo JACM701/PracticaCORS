@@ -22,6 +22,11 @@ exports.countExchangesByUser = (userId) => {
 };
 
 // Obtener todos los intercambios
-exports.findAllExchanges = async () => {
-    return await BookExchange.find(); // Devuelve todos los documentos en la colección
+exports.findAllExchanges = () => {
+    return BookExchange.find(); // Devuelve la consulta base sin ejecutarla aún
 };
+
+exports.countAllExchanges = () => {
+    return BookExchange.countDocuments(); // Cuenta todos los documentos
+};
+

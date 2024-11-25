@@ -35,6 +35,26 @@ exports.updateExchangeStatus = async (req, res) => {
     }
 };
 
+exports.getAllExchanges = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query; // Valores por defecto si no se proporcionan
+
+    try {
+        const exchanges = await bookExchangeService.findAllExchanges(page, limit);
+        const total = await bookExchangeService.countAllExchanges(); // Total de intercambios
+
+        res.status(200).json({
+            data: exchanges,
+            currentPage: parseInt(page, 10),
+            totalPages: Math.ceil(total / limit),
+            totalExchanges: total,
+        });
+    } catch (error) {
+        console.error('Error al obtener todos los intercambios:', error.message);
+        res.status(500).json({ message: 'Error al obtener los intercambios' });
+    }
+};
+
+
 // Obtener intercambios del usuario con paginación
 exports.getUserExchanges = async (req, res) => {
     const { page = 1, limit = 10 } = req.query;
@@ -52,17 +72,6 @@ exports.getUserExchanges = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener los intercambios del usuario:', error.message);
         res.status(500).json({ message: 'Error al obtener los intercambios del usuario' });
-    }
-};
-
-// Obtener todos los intercambios
-exports.getAllExchanges = async (req, res) => {
-    try {
-        const exchanges = await bookExchangeService.findAllExchanges();
-        res.json(exchanges); // Devuelve todos los intercambios
-    } catch (error) {
-        console.error('Error al obtener todos los intercambios:', error.message);
-        res.status(500).json({ message: 'Error al obtener los intercambios' });
     }
 };
 
