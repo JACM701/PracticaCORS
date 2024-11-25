@@ -92,3 +92,22 @@ exports.getExchangeById = async (req, res) => {
         res.status(500).json({ message: 'Error del servidor al obtener el intercambio' });
     }
 };
+
+// Controlador para eliminar un intercambio por ID
+exports.deleteExchange = async (req, res) => {
+    try {
+        const exchangeId = req.params.id;
+
+        // Buscar y eliminar el intercambio
+        const exchange = await BookExchange.findByIdAndDelete(exchangeId);
+
+        if (!exchange) {
+            return res.status(404).json({ message: 'Intercambio no encontrado' });
+        }
+
+        res.status(200).json({ message: 'Intercambio eliminado exitosamente' });
+    } catch (error) {
+        console.error('Error al eliminar el intercambio:', error);
+        res.status(500).json({ message: 'Error del servidor al eliminar el intercambio' });
+    }
+};
