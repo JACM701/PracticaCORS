@@ -37,55 +37,31 @@ exports.updateExchangeStatus = async (req, res) => {
 
 
 // Obtener todos los intercambios (sin filtro por usuario)
-exports.getAllExchangedBooks = async (req, res) => {
+exports.getAllExchanges = async (req, res) => {
     try {
-      // Obtener todos los intercambios y sus libros ofrecidos y deseados
+      // Obtener todos los intercambios sin filtrar por usuario
       const exchanges = await BookExchange.find()
-        .populate('libroOfrecido') // Resuelve el libro ofrecido
-        .populate('libroDeseado') // Resuelve el libro deseado
+        .populate('libroOfrecido')   // Resuelve el libro ofrecido
+        .populate('libroDeseado')    // Resuelve el libro deseado
+        .populate('usuarioSolicitante')  // Resuelve el usuario solicitante
+        .populate('usuarioReceptor')     // Resuelve el usuario receptor
         .exec();
   
-      // Si no hay intercambios
-      if (!exchanges || exchanges.length === 0) {
+      // Si no hay intercambios, responder con un mensaje
+      if (exchanges.length === 0) {
         return res.status(404).json({ message: 'No se encontraron intercambios de libros.' });
       }
   
-      // Recopilamos todos los libros ofrecidos y deseados
-      const exchangedBooks = exchanges.map(exchange => ({
-        libroOfrecido: exchange.libroOfrecido,
-        libroDeseado: exchange.libroDeseado
-      }));
-  
-      // Retornamos los libros intercambiados
+      // Responder con todos los intercambios encontrados
       res.json({
-        data: exchangedBooks,
-        totalExchanges: exchangedBooks.length
+        data: exchanges, 
+        totalExchanges: exchanges.length
       });
   
     } catch (error) {
-      console.error('Error al obtener los libros intercambiados:', error.message);
-      res.status(500).json({ message: 'Error al obtener los libros intercambiados' });
+      console.error('Error al obtener los intercambios:', error);
+      res.status(500).json({ message: 'Error al obtener los intercambios de libros.' });
     }
   };
 
-
-// Obtener intercambios del usuario con paginación
-exports.getUserExchanges = async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
-
-    try {
-        const exchanges = await bookExchangeService.findExchangesByUser(req.user.id, page, limit);
-        const total = await bookExchangeService.countExchangesByUser(req.user.id);
-
-        res.json({
-            data: exchanges,
-            currentPage: parseInt(page),
-            totalPages: Math.ceil(total / limit),
-            totalExchanges: total,
-        });
-    } catch (error) {
-        console.error('Error al obtener los intercambios del usuario:', error.message);
-        res.status(500).json({ message: 'Error al obtener los intercambios del usuario' });
-    }
-};
 
