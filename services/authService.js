@@ -24,13 +24,20 @@ exports.registerUser = async (username, email, password) => {
             role: 'user',
         });
 
-        await newUser.save();
-        return { username, email }; // Devuelve los datos del nuevo usuario sin la contraseña
+        const savedUser = await newUser.save();
+
+        // Devuelve el _id, username y email del usuario registrado
+        return { 
+            _id: savedUser._id, 
+            username: savedUser.username, 
+            email: savedUser.email 
+        };
     } catch (error) {
         console.error('Error al registrar usuario:', error);
         throw new Error(error.message); // Lanza el error para que lo maneje el controlador
     }
 };
+
 
 // Autenticación de usuario
 exports.authenticateUser = async (username, password) => {

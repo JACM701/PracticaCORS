@@ -19,7 +19,6 @@ exports.register = async (req, res) => {
     }
 };
 
-
 // Inicio de sesión y generación de tokens
 exports.login = async (req, res) => {
     console.log('Datos de inicio de sesión recibidos:', req.body);
