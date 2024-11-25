@@ -21,12 +21,16 @@ exports.countExchangesByUser = (userId) => {
     return BookExchange.countDocuments({ usuarioSolicitante: userId });
 };
 
-// Obtener todos los intercambios
-exports.findAllExchanges = () => {
-    return BookExchange.find(); // Devuelve la consulta base sin ejecutarla aún
+// Obtener todos los intercambios con paginación
+exports.findAllExchanges = (page, limit) => {
+    return BookExchange.find()  // No tiene filtro
+        .skip((page - 1) * limit)   // Aplica la paginación
+        .limit(parseInt(limit));    // Limita la cantidad de resultados
 };
 
+// Contar el total de intercambios
 exports.countAllExchanges = () => {
-    return BookExchange.countDocuments(); // Cuenta todos los documentos
+    return BookExchange.countDocuments();  // Cuenta todos los documentos de la colección
 };
+
 

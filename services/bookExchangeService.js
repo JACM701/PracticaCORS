@@ -23,16 +23,16 @@ exports.updateExchangeStatus = async (id, estado) => {
     return await bookExchangeRepository.updateExchangeStatus(id, estado);
 };
 
-//Obtener todos los intercambios
+// Obtener todos los intercambios sin filtro
 exports.findAllExchanges = async (page, limit) => {
-    return bookExchangeRepository.findAllExchanges() // Devuelve la consulta
-        .skip((page - 1) * limit) // Desplaza los resultados según la página actual
-        .limit(parseInt(limit, 10)); // Limita el número de resultados por página
+    return bookExchangeRepository.findAllExchanges(page, limit);  // No pasa ningún filtro
 };
 
+// Contar el total de intercambios
 exports.countAllExchanges = async () => {
-    return bookExchangeRepository.countAllExchanges(); // Total de documentos
+    return bookExchangeRepository.countAllExchanges();  // Devuelve el total de intercambios
 };
+
 
 
 
