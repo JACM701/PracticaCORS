@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
 const authenticateToken = require('../middlewares/authMiddleware');
-const upload = require('../middlewares/uploadMiddleware'); // Asumiendo que tienes un middleware para manejar la subida de archivos
+const upload = require('../middlewares/uploadMiddleware');
 
 // GET all books (no authentication needed)
 router.get('/', bookController.getAllBooks); 
@@ -21,4 +21,3 @@ router.put('/:id', authenticateToken, upload.single('imagen'), bookController.up
 router.delete('/:id', authenticateToken, bookController.deleteBook);
 
 module.exports = router;
-

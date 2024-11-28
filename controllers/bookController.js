@@ -23,7 +23,6 @@ exports.getAllBooks = async (req, res) => {
     }
 };
 
-
 // Obtener un libro por ID
 exports.getBookById = async (req, res) => {
     try {
@@ -37,7 +36,6 @@ exports.getBookById = async (req, res) => {
     }
 };
 
-// Añadir un libro
 // Añadir un libro
 exports.addBook = async (req, res) => {
     try {
@@ -63,8 +61,7 @@ exports.addBook = async (req, res) => {
             imagen: req.file ? `/uploads/${req.file.filename}` : null, // Subida opcional de imagen
         };
 
-        // Llamada al repositorio para añadir el libro
-        const savedBook = await bookRepository.addBook(newBook); // Usamos el repositorio
+        const savedBook = await Book.create(newBook); // Usamos el modelo para añadir el libro
         res.status(201).json(savedBook); // Retorna el libro guardado
     } catch (error) {
         res.status(500).json({ message: 'Error al añadir el libro', error: error.message });
@@ -82,7 +79,7 @@ exports.updateBook = async (req, res) => {
                 descripcion: req.body.descripcion,
                 fecha_publicacion: req.body.fecha_publicacion,
                 genero: req.body.genero,
-                imagen: req.file ? `/uploads/${req.file.filename}` : req.body.imagen,
+                imagen: req.file ? `/uploads/${req.file.filename}` : req.body.imagen, // Subir nueva imagen o mantener la existente
                 edicion: req.body.edicion,
                 ano_publicado: req.body.ano_publicado,
                 tipo_pasta: req.body.tipo_pasta,
@@ -91,6 +88,7 @@ exports.updateBook = async (req, res) => {
             },
             { new: true }
         );
+
         if (!updatedBook) {
             return res.status(404).json({ message: 'Libro no encontrado' });
         }
