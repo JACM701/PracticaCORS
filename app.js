@@ -87,6 +87,9 @@ app.delete('/users/:id', authenticateToken, userController.deleteUser);
 // Rutas para intercambio de libros
 app.use('/api/exchange', exchangeRoutes); // Rutas de intercambio de libros sin proteger con authenticateToken para la ruta GET
 
+// Usa las rutas de libros en '/books'
+app.use('/books', bookRoutes);
+
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
