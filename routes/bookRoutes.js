@@ -3,21 +3,20 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
 const authenticateToken = require('../middlewares/authMiddleware');
-const upload = require('../middlewares/uploadMiddleware');
 
-// GET all books (no authentication needed)
-router.get('/', bookController.getAllBooks); 
+const verifyRole = require('../middlewares/roleMiddleware');
 
-// GET book by ID (authentication required)
-router.get('/:id', authenticateToken, bookController.getBookById);
+// Ruta para aprobar un libro (requiere rol approver)
+router.put('/books/:id/approve', authenticateToken, verifyRole('approver'), bookController.approveBook);
 
-// POST new book (authentication required)
-router.post('/', authenticateToken, upload.single('imagen'), bookController.addBook);
+// Ruta para rechazar un libro (requiere rol approver)
+router.put('/books/:id/reject', authenticateToken, verifyRole('approver'), bookController.rejectBook);
 
-// PUT update book (authentication required)
-router.put('/:id', authenticateToken, upload.single('imagen'), bookController.updateBook);
-
-// DELETE book (authentication required)
-router.delete('/:id', authenticateToken, bookController.deleteBook);
+// Rutas CRUD para libros (ya existentes)
+router.get('/books', bookController.getAllBooks);
+router.get('/books/:id', authenticateToken, bookController.getBookById);
+router.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook);
+router.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook);
+router.delete('/books/:id', authenticateToken, bookController.deleteBook);
 
 module.exports = router;

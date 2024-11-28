@@ -14,10 +14,16 @@ const bookSchema = new mongoose.Schema({
   editorial: { type: String, required: true },
   incluye_accesorios: { type: Boolean, default: false },
   propietario: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+  },
+  status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'], // Nuevo campo de estado
+      default: 'pending',                       // Por defecto, el estado es "pending"
   }
 });
+
 
 module.exports = mongoose.model('Book', bookSchema);

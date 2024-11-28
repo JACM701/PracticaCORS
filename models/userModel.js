@@ -4,29 +4,17 @@ const bcrypt = require('bcryptjs');
 
 // Definir el esquema de usuario
 const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    refreshToken: {
-        type: String,
-    },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    refreshToken: { type: String },
     role: {
         type: String,
-        enum: ['user', 'admin'],
-        default: 'user',
+        enum: ['uploader', 'approver'], // Cambiamos los roles disponibles
+        default: 'uploader',           // Por defecto será "uploader"
     },
 }, { timestamps: true });
+
 
 // Middleware para encriptar la contraseña antes de guardarla
 userSchema.pre('save', async function (next) {

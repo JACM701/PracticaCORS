@@ -15,6 +15,7 @@ const userController = require('./controllers/userController');
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
 const exchangeRoutes = require('./routes/exchange'); // Importa las rutas de intercambio de libros
+const exchangeRoutes = require('./routes/bookRoutes'); // Importa las rutas de libros
 
 const app = express();
 
@@ -76,13 +77,6 @@ app.post('/refresh-token', authController.refreshToken);
 app.get('/protected', authenticateToken, (req, res) => {
     res.json({ message: 'Acceso permitido', user: req.user });
 });
-
-// Rutas CRUD para libros
-app.get('/books', bookController.getAllBooks);
-app.get('/books/:id', authenticateToken, bookController.getBookById);
-app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook);
-app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook);
-app.delete('/books/:id', authenticateToken, bookController.deleteBook);
 
 // Rutas para gestión de usuarios
 app.get('/users', userController.getAllUsers);

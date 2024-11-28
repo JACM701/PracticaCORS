@@ -61,6 +61,53 @@ exports.addBook = async (req, res) => {
     }
 };
 
+// Aprobar un libro
+exports.approveBook = async (req, res) => {
+    try {
+        // Verificamos si el usuario tiene rol "approver"
+        if (req.user.role !== 'approver') {
+            return res.status(403).json({ message: 'No tienes permisos para aprobar libros.' });
+        }
+
+        const book = await Book.findById(req.params.id);
+        if (!book) {
+            return res.status(404).json({ message: 'Libro no encontrado.' });
+        }
+
+        // Cambiamos el estado a "approved"
+        book.status = 'approved';
+        await book.save();
+
+        res.json({ message: 'Libro aprobado exitosamente.', book });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al aprobar el libro.', error });
+    }
+};
+
+// Rechazar un libro
+exports.rejectBook = async (req, res) => {
+    try {
+        // Verificamos si el usuario tiene rol "approver"
+        if (req.user.role !== 'approver') {
+            return res.status(403).json({ message: 'No tienes permisos para rechazar libros.' });
+        }
+
+        const book = await Book.findById(req.params.id);
+        if (!book) {
+            return res.status(404).json({ message: 'Libro no encontrado.' });
+        }
+
+        // Cambiamos el estado a "rejected"
+        book.status = 'rejected';
+        await book.save();
+
+        res.json({ message: 'Libro rechazado exitosamente.', book });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al rechazar el libro.', error });
+    }
+};
+
+
 // Actualizar un libro
 exports.updateBook = async (req, res) => {
     try {
