@@ -15,7 +15,7 @@ const userController = require('./controllers/userController');
 const bookController = require('./controllers/bookController');
 const authController = require('./controllers/authController');
 const exchangeRoutes = require('./routes/exchange'); // Importa las rutas de intercambio de libros
-const exchangeRoutes = require('./routes/bookRoutes'); // Importa las rutas de libros
+const bookRoutes = require('./routes/bookRoutes'); // Importa las rutas de libros
 
 const app = express();
 
