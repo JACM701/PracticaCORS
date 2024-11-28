@@ -37,27 +37,35 @@ exports.getBookById = async (req, res) => {
     }
 };
 
-// Agregar un nuevo libro
+// Añadir un libro
 exports.addBook = async (req, res) => {
     try {
-        const newBook = new Book({
-            titulo: req.body.titulo,
-            autor: req.body.autor,
-            descripcion: req.body.descripcion,
-            fecha_publicacion: req.body.fecha_publicacion,
-            genero: req.body.genero,
-            imagen: req.file ? `/uploads/${req.file.filename}` : null,
-            edicion: req.body.edicion,
-            ano_publicado: req.body.ano_publicado,
-            tipo_pasta: req.body.tipo_pasta,
-            editorial: req.body.editorial,
-            incluye_accesorios: req.body.incluye_accesorios,
-            propietario: req.user.id // Asignamos el ID del usuario autenticado
-        });
-        const savedBook = await newBook.save();
+        const { titulo, autor, descripcion, fecha_publicacion, genero, edicion, ano_publicado, tipo_pasta, editorial, incluye_accesorios } = req.body;
+
+        // Validación de entrada
+        if (!titulo || !autor || !fecha_publicacion || !genero || !ano_publicado || !editorial) {
+            return res.status(400).json({ message: 'Por favor, proporciona todos los campos requeridos' });
+        }
+
+        const newBook = {
+            titulo,
+            autor,
+            descripcion,
+            fecha_publicacion,
+            genero,
+            edicion,
+            ano_publicado,
+            tipo_pasta,
+            editorial,
+            incluye_accesorios,
+            propietario: req.user.id, // Asegura que el usuario autenticado sea el propietario
+            imagen: req.file ? `/uploads/${req.file.filename}` : null, // Subida opcional de imagen
+        };
+
+        const savedBook = await bookService.addBook(newBook);
         res.status(201).json(savedBook);
     } catch (error) {
-        res.status(500).json({ message: 'Error al agregar el libro' });
+        res.status(500).json({ message: 'Error al añadir el libro', error: error.message });
     }
 };
 
