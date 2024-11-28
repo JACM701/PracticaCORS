@@ -38,6 +38,7 @@ exports.getBookById = async (req, res) => {
 };
 
 // Añadir un libro
+// Añadir un libro
 exports.addBook = async (req, res) => {
     try {
         const { titulo, autor, descripcion, fecha_publicacion, genero, edicion, ano_publicado, tipo_pasta, editorial, incluye_accesorios } = req.body;
@@ -62,8 +63,9 @@ exports.addBook = async (req, res) => {
             imagen: req.file ? `/uploads/${req.file.filename}` : null, // Subida opcional de imagen
         };
 
-        const savedBook = await bookService.addBook(newBook);
-        res.status(201).json(savedBook);
+        // Llamada al repositorio para añadir el libro
+        const savedBook = await bookRepository.addBook(newBook); // Usamos el repositorio
+        res.status(201).json(savedBook); // Retorna el libro guardado
     } catch (error) {
         res.status(500).json({ message: 'Error al añadir el libro', error: error.message });
     }
