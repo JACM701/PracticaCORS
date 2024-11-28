@@ -7,7 +7,6 @@ const cors = require('cors');
 const authenticateToken = require('./middlewares/authMiddleware');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swaggerConfig');
-const bookRoutes = require('./routes/bookRoutes'); // Importa las rutas de libros
 require('dotenv').config();
 
 const swaggerOptions = require('./swaggerOptions');
@@ -78,6 +77,13 @@ app.get('/protected', authenticateToken, (req, res) => {
     res.json({ message: 'Acceso permitido', user: req.user });
 });
 
+// Rutas CRUD para libros
+app.get('/books', bookController.getAllBooks);
+app.get('/books/:id', authenticateToken, bookController.getBookById);
+app.post('/books', authenticateToken, upload.single('imagen'), bookController.addBook);
+app.put('/books/:id', authenticateToken, upload.single('imagen'), bookController.updateBook);
+app.delete('/books/:id', authenticateToken, bookController.deleteBook);
+
 // Rutas para gestión de usuarios
 app.get('/users', userController.getAllUsers);
 app.get('/users/:id', authenticateToken, userController.getUserById);
@@ -86,9 +92,6 @@ app.delete('/users/:id', authenticateToken, userController.deleteUser);
 
 // Rutas para intercambio de libros
 app.use('/api/exchange', exchangeRoutes); // Rutas de intercambio de libros sin proteger con authenticateToken para la ruta GET
-
-// Rutas
-app.use('/api/books', bookRoutes); // Prefijo '/api/books' para las rutas de libros
 
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
